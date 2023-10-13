@@ -1,0 +1,17 @@
+{
+    "name": "frame-junkie",
+    "version": "1.0.0",
+    "main": "main.js",
+    "dependencies": {
+        "bootstrap": "^5.0.2",
+        "electron": "^26.2.4",
+        "electron-rebuild": "^3.2.9",
+        "jquery": "^3.7.1",
+        "knex": "^2.5.1",
+        "sqlite3": "^5.1.6"
+    },
+    "scripts": {
+        "start": "electron .",
+        "rebuild": "electron-rebuild -f -w sqlite3"
+    }
+}
