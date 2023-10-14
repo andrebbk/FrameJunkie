@@ -1,6 +1,10 @@
 const electron = require("electron");
 const ipc = electron.ipcRenderer;
 
+//Load partial views
+$('#topbar').load('./Views/Main/top_bar.html');
+$('#main-container').load('./Views/Main/menu.html');
+
 document.addEventListener("DOMContentLoaded", function () {
     ipc.send("mainWindowLoaded");
 
@@ -19,13 +23,3 @@ document.addEventListener("DOMContentLoaded", function () {
         countEl.innerHTML = "Movies: " + result.length.toString();
     });*/
 });
-
-//BUTTONS
-$('#btn_minimize').on('click', function(event){   
-    ipc.send('minimize-app');
-});
-
-$('#btn_exit').on('click', function(event){   
-    ipc.send('close-app');
-});
-

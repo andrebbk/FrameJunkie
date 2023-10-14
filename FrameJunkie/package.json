@@ -4,6 +4,7 @@
     "main": "main.js",
     "dependencies": {
         "bootstrap": "^5.0.2",
+        "compass-mixins": "^0.12.12",
         "electron": "^26.2.4",
         "electron-rebuild": "^3.2.9",
         "jquery": "^3.7.1",
