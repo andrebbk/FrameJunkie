@@ -37,7 +37,7 @@ function createWindow() {
         resizable: false,
         minimizable: true,
         maximizable: false,
-        icon: __dirname + '/Content/Icons/framejunkie_icon.ico',
+        icon: __dirname + '/Content/Icons/action-movie.ico',
     });
 
     win.loadURL(url.format({
