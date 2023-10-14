@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="./css/Main/menu.css" />
+
+<input type="checkbox" id="navcheck" role="button" title="menu">
+<label for="navcheck" aria-hidden="true" title="menu">
+	<span class="burger">
+		<span class="bar">
+			<span class="visuallyhidden">Menu</span>
+		</span>
+	</span>
+</label>
+<nav id="menu">
+	<a href="#" id="btnHome">Home</a>
+	<a href="#" id="btnMovies">Movies</a>
+	<a href="#" id="btnNewMovie">New Movie</a>
+	<a href="#" id="btnTvShows">Tv Shows</a>
+	<a href="#" id="btnNewTvShow">New Tv Show</a>
+	<a href="#" id="btnSettings">Settings</a>
+</nav>
+
+<main>
+</main>
+
+
+<script>
+    var $ = require('jQuery');
+    require('./Controllers/Main/menu.js');            
+</script>
