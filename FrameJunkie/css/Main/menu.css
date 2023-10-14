@@ -70,7 +70,7 @@ label {
 input:focus + label,
 label:hover {
 	.burger {
-		opacity: .75;
+		/*opacity: .75;*/
 	}
 }
 
