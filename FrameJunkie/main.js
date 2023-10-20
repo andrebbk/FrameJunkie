@@ -60,25 +60,9 @@ function createWindow() {
         app.quit(); //to garbage collector
     });
 
-    win.once("ready-to-show", () => { win.show(); }) //without this event (with show parameter set to false) u might see a blank window for a while
+    win.once("ready-to-show", () => { win.show(); }) //without this event (with show parameter set to false) u might see a blank window for a while    
 
-    //IPC
-    ipcMain.on("mainWindowLoaded", function() {
-        //let result = knex.select("MovieTitle").from("Movies");
-
-        let result = knex('Movies')
-            .join('MovieCovers', function () {
-                this
-                .on('Movies.MovieId', 'MovieCovers.MovieId')
-                //.on('users.state', 'accounts.state'); join with multiple fields  
-            })
-            .select('Movies.MovieTitle', 'MovieCovers.CoverPath', 'MovieCovers.CoverName');
-
-        result.then(function (rows){
-            win.webContents.send("resultSent", rows);
-        });
-    })
-
+        //IPC
     ipcMain.on('minimize-app', () => {
         win.isMinimized() ? win.restore() : win.minimize()
         // or alternatively: win.isVisible() ? win.hide() : win.show()
@@ -86,6 +70,27 @@ function createWindow() {
 
     ipcMain.on('close-app', () => {
         app.quit(0); //to garbage collector
+    });
+
+    //QUERYS KNEX
+    //************************************************************************************************************************************************************//
+
+    //Get movies views count
+    ipcMain.on("getMoviesViewsCount", function() {
+        let result = knex.select('*').from('v_MoviesViews');
+
+        result.then(function (rows){
+            win.webContents.send("resultSent_mvc", rows);
+        });
+    });
+
+    //Get tvshows views count
+    ipcMain.on("getTvShowsViewsCount", function() {
+        let result = knex.select('*').from('v_TvShowsViews');
+
+        result.then(function (rows){
+            win.webContents.send("resultSent_tsvc", rows);
+        });
     });
 }
 
