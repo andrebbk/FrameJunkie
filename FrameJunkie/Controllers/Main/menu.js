@@ -1,34 +1,44 @@
 const electron = require("electron");
 const ipc = electron.ipcRenderer;
 const fs = require('fs')
+const path = require('path');
+
+let knex = require("knex")({
+    client: "sqlite3",
+    connection: {
+        filename: "./Northwind.sl3"
+    },
+    useNullAsDefault: true
+});
 
 //INIT WITH HOME
 /*fs.readFile('./Views/Home/home.html', (err, data) => {
     document.getElementById('content-main-app').innerHTML = data;
     loadDashBoardData();
 });*/
-fs.readFile('./Views/Movies/movies.html', (err, data) => {
+fs.readFile(path.join(__dirname, '../../Views/Movies/movies.html'), (err, data) => {
 	document.getElementById('content-main-app').innerHTML = data;
-
 	loadMovies();
+	if(err != null) alert(err);
 });
 
 
  //BUTTONS
 $('#btnHome').on('click', function (event){
-    fs.readFile('./Views/Home/home.html', (err, data) => {
+    fs.readFile(path.join(__dirname, '../../Views/Home/home.html'), (err, data) => {
         document.getElementById('content-main-app').innerHTML = data;
         loadDashBoardData();
+		if(err != null) alert(err);
      });
 
     hideMenu();
 });
 
 $('#btnMovies').on('click', function (event){
-	fs.readFile('./Views/Movies/movies.html', (err, data) => {
-        document.getElementById('content-main-app').innerHTML = data;
-		
+	fs.readFile(path.join(__dirname, '../../Views/Movies/movies.html'), (err, data) => {
+		document.getElementById('content-main-app').innerHTML = data;
 		loadMovies();
+		if(err != null) alert(err);
     });
 
     hideMenu();
@@ -145,5 +155,21 @@ function loadMovies(){
 
 			$('#gridMovies').append($(movieElm));
 		}
-	});	
+	});
+
+	/*for(var i = 0; i < movies.length; i++){
+		let movieElm = '<div class="movie-card">' +
+		`<div class="movie-header" style="background: url('file://` + movies[i].CoverPath.trim() + `');  background-size: cover;">` +
+		'<div class="header-icon-container">' +
+		'</div>' +
+		'</div>' +
+		'<div class="movie-content">' +
+		'<div class="movie-content-header">' +
+		'<a href="#"><h3 class="movie-title">' + movies[i].MovieTitle + '  &nbsp; &#9733;</h3>' +
+		'</a>' +
+		'<h3 class="movie-year">' + movies[i].MovieYear + '<span style="margin-left:200px;">' + movies[i].MovieRating + '/10</span></h3>' +
+		'</div></div></div>';
+
+		$('#gridMovies').append($(movieElm));
+	}*/
 }

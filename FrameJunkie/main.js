@@ -31,11 +31,11 @@ function createWindow() {
         height: 1080,
         webPreferences: {          
             enableRemoteModule: true,  
-            nodeIntegration: true,
             contextIsolation: false,
             nodeIntegrationInWorker: true,
-            webSecurity: false
-            //preload: path.join(__dirname, '/contents/chart/js/Chart.min.js')
+            webSecurity: false,
+            nodeIntegration: true,
+            preload: __dirname + '/preload.js'
         }, 
         resizable: false,
         minimizable: true,
@@ -74,45 +74,46 @@ function createWindow() {
 
     //QUERYS KNEX
     //************************************************************************************************************************************************************//
+    win.webContents.on('dom-ready', () => {
+        //Get stats
+        ipcMain.on("getStats", function() {
+            let result = knex.select('*').from('v_MovieTvShowStats');
 
-    //Get stats
-    ipcMain.on("getStats", function() {
-        let result = knex.select('*').from('v_MovieTvShowStats');
-
-        result.then(function (rows){
-            win.webContents.send("resultSent_stats", rows);
-        });       
-    });
-
-    //Get movies views count
-    ipcMain.on("getMoviesViewsCount", function() {
-        let result = knex.select('*').from('v_MoviesViews');
-
-        result.then(function (rows){
-            win.webContents.send("resultSent_mvc", rows);
+            result.then(function (rows){
+                win.webContents.send("resultSent_stats", rows);
+            });       
         });
-    });
 
-    //Get tvshows views count
-    ipcMain.on("getTvShowsViewsCount", function() {
-        let result = knex.select('*').from('v_TvShowsViews');
+        //Get movies views count
+        ipcMain.on("getMoviesViewsCount", function() {
+            let result = knex.select('*').from('v_MoviesViews');
 
-        result.then(function (rows){
-            win.webContents.send("resultSent_tsvc", rows);
+            result.then(function (rows){
+                win.webContents.send("resultSent_mvc", rows);
+            });
         });
-    });
 
-    //get movies
-    ipcMain.on("getMovies", function() {
-        let currentYear = new Date().getFullYear();
-        let result = knex
-        .select('*')
-        .from('v_Movies')
-        .where('MovieYear', currentYear)
-        .orderBy('MovieTitle');
+        //Get tvshows views count
+        ipcMain.on("getTvShowsViewsCount", function() {
+            let result = knex.select('*').from('v_TvShowsViews');
+        
+            result.then(function (rows){
+                win.webContents.send('resultSent_tsvc', rows);
+            });
+        });
 
-        result.then(function (rows){
-            win.webContents.send("resultSent_movies", rows);
+        //get movies
+        ipcMain.on("getMovies", function() {
+            let currentYear = new Date().getFullYear();
+            let result = knex
+            .select('*')
+            .from('v_Movies')
+            .where('MovieYear', currentYear)
+            .orderBy('MovieTitle');
+    
+            result.then(function (rows){          
+                win.webContents.send('resultSent_movies', rows);
+            });  
         });
     });
 }
