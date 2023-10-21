@@ -3,7 +3,7 @@
 $('#content-main-app').load('./Views/Home/home.html');
 
 $('#btnHome').on('click', function (event){
-    $('#content-main-app').load('./Views/Home/home.html');
+    $('#content-main-app').load('./Views/Home/home.html');    
     hideMenu();
 });
 

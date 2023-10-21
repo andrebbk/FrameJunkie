@@ -34,8 +34,8 @@ function createWindow() {
             nodeIntegration: true,
             contextIsolation: false,
             nodeIntegrationInWorker: true,
-            webSecurity: false,
-            preload: path.join(__dirname, '/contents/chart/js/Chart.min.js')
+            webSecurity: false
+            //preload: path.join(__dirname, '/contents/chart/js/Chart.min.js')
         }, 
         resizable: false,
         minimizable: true,

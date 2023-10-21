@@ -9,19 +9,23 @@
 				<div style="width:40%; float:left; padding-top: 20px;">
 					<div id="img_movies" style="width:200px; height:200px;"></div>
 				</div>
-				<div style="width:60%; float:left; padding-top: 60px; padding-left: 70px;">
+				<div style="width:60%; float:left; padding-top: 40px; padding-left: 70px;">
 					<h1>Movies</h1>
 					<h2>5384</h2>
+					<h3>Total views:</h3>
+					<h3>0</h3>
 				</div>		
 			</div>
 		
-			<div class="cover atvImg homecard" style="float:left; margin-left:390px;">
+			<div class="cover atvImg homecard" style="float:left; margin-left:290px;">
 				<div style="width:40%; float:left; padding-top: 20px;">
 					<div id="img_tvshows" style="width:180px; height:180px;"></div>
 				</div>
-				<div style="width:60%; float:left; padding-top: 60px; padding-left: 55px;">
+				<div style="width:60%; float:left; padding-top: 40px; padding-left: 55px;">
 					<h1>Tv Shows</h1>
 					<h2>36</h2>
+					<h3>Total views:</h3>
+					<h3>0</h3>
 				</div>		
 			</div>
 		</div>		
@@ -29,19 +33,47 @@
 		<div style="width: 100%; margin-top: 50px;">
 			<div class="cover-graph atvImg homecard" style="float:left;">
 				<h1>Movies Views</h1>
-				<canvas id="chart_moviesViews" style="width:100%;max-width:600px; margin-top:20px;"></canvas>
+				<ul id="movies_month_views" style="width:60%; margin-top: 15px;  margin-left: 20px;">
+					<li>Janeiro</li>					
+					<li>Fevereiro</li>
+					<li>Março</li>
+					<li>Abril</li>
+					<li>Maio</li>
+					<li>Junho</li>
+					<li>Julho</li>
+					<li>Agosto</li>
+					<li>Setembro</li>
+					<li>Outubro</li>
+					<li>Novembro</li>
+					<li>Dezembro</li>
+				  </ul>
 			</div>
 		
 			<div class="cover-graph atvImg homecard" style="float:left; margin-left: 290px;">
 				<h1>Tv Shows Views</h1>
-				<canvas id="chart_tvshowsViews" style="width:100%;max-width:600px; margin-top:20px;"></canvas>
+				<ul id="tvshows_month_views" style="width:60%; margin-top: 15px; margin-left: 20px;">
+					<li>Janeiro</li>					
+					<li>Fevereiro</li>
+					<li>Março</li>
+					<li>Abril</li>
+					<li>Maio</li>
+					<li>Junho</li>
+					<li>Julho</li>
+					<li>Agosto</li>
+					<li>Setembro</li>
+					<li>Outubro</li>
+					<li>Novembro</li>
+					<li>Dezembro</li>
+				  </ul>
 			</div>
 		</div>
 		
 	</div>	
 </div>
 
+<!--script src="./contents/chart/js/Chart.min.js" onload="window.$ = window.jQuery = module.exports;"></script-->
+
 <script>
-    var $ = require('jQuery');	     
+    var $ = require('jQuery');	   
     require('./Controllers/Home/home.js');            
 </script>

@@ -1,11 +1,13 @@
 {
     "name": "frame-junkie",
     "version": "1.0.0",
+    "description": "Desktop App Movies Manager",
     "main": "main.js",
+    "author": "Andre Silva",
+    "license": "BBK",
     "dependencies": {
         "bootstrap": "^5.0.2",
         "compass-mixins": "^0.12.12",
-        "electron": "^26.2.4",
         "electron-rebuild": "^3.2.9",
         "jquery": "^3.7.1",
         "knex": "^2.5.1",
@@ -13,6 +15,11 @@
     },
     "scripts": {
         "start": "electron .",
-        "rebuild": "electron-rebuild -f -w sqlite3"
+        "rebuild": "electron-rebuild -f -w sqlite3",
+        "package": "electron-packager ./ FrameJunkie --all --version 1.0.0 --overwrite --icon=./Content/Images/action-movie.png"
+    },
+    "devDependencies": {
+        "electron": "^26.2.4",
+        "electron-packager": "^17.1.2"
     }
 }
