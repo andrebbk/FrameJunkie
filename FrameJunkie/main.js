@@ -81,7 +81,7 @@ function createWindow() {
 
         result.then(function (rows){
             win.webContents.send("resultSent_stats", rows);
-        });
+        });       
     });
 
     //Get movies views count
@@ -101,6 +101,8 @@ function createWindow() {
             win.webContents.send("resultSent_tsvc", rows);
         });
     });
+
+
 }
 
 app.on('ready', createWindow);
