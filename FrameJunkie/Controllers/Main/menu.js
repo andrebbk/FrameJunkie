@@ -147,29 +147,17 @@ function loadMovies(){
 			'</div>' +
 			'</div>' +
 			'<div class="movie-content">' +
-			'<div class="movie-content-header">' +
-			'<a href="#"><h3 class="movie-title">' + result[i].MovieTitle + '  &nbsp; &#9733;</h3>' +
-			'</a>' +
-			'<h3 class="movie-year">' + result[i].MovieYear + '<span style="margin-left:200px;">' + result[i].MovieRating + '/10</span></h3>' +
+			'<div class="movie-content-header">';
+
+			if(result[i].IsFavorite === 1)
+				movieElm += '<a href="#"><h3 class="movie-title">' + result[i].MovieTitle + '  &nbsp; &#9733;</h3></a>';
+			else
+				movieElm += '<a href="#"><h3 class="movie-title">' + result[i].MovieTitle + '</h3></a>';
+
+			movieElm += '<h3 class="movie-year">' + result[i].MovieYear + '<span style="margin-left:200px;">' + result[i].MovieRating + '/10</span></h3>' +
 			'</div></div></div>';
 
 			$('#gridMovies').append($(movieElm));
 		}
 	});
-
-	/*for(var i = 0; i < movies.length; i++){
-		let movieElm = '<div class="movie-card">' +
-		`<div class="movie-header" style="background: url('file://` + movies[i].CoverPath.trim() + `');  background-size: cover;">` +
-		'<div class="header-icon-container">' +
-		'</div>' +
-		'</div>' +
-		'<div class="movie-content">' +
-		'<div class="movie-content-header">' +
-		'<a href="#"><h3 class="movie-title">' + movies[i].MovieTitle + '  &nbsp; &#9733;</h3>' +
-		'</a>' +
-		'<h3 class="movie-year">' + movies[i].MovieYear + '<span style="margin-left:200px;">' + movies[i].MovieRating + '/10</span></h3>' +
-		'</div></div></div>';
-
-		$('#gridMovies').append($(movieElm));
-	}*/
 }
