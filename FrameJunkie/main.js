@@ -75,6 +75,15 @@ function createWindow() {
     //QUERYS KNEX
     //************************************************************************************************************************************************************//
 
+    //Get stats
+    ipcMain.on("getStats", function() {
+        let result = knex.select('*').from('v_MovieTvShowStats');
+
+        result.then(function (rows){
+            win.webContents.send("resultSent_stats", rows);
+        });
+    });
+
     //Get movies views count
     ipcMain.on("getMoviesViewsCount", function() {
         let result = knex.select('*').from('v_MoviesViews');
