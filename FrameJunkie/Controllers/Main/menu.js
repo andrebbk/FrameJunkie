@@ -3,10 +3,16 @@ const ipc = electron.ipcRenderer;
 const fs = require('fs')
 
 //INIT WITH HOME
-fs.readFile('./Views/Home/home.html', (err, data) => {
+/*fs.readFile('./Views/Home/home.html', (err, data) => {
     document.getElementById('content-main-app').innerHTML = data;
     loadDashBoardData();
+});*/
+fs.readFile('./Views/Movies/movies.html', (err, data) => {
+	document.getElementById('content-main-app').innerHTML = data;
+
+	loadMovies();
 });
+
 
  //BUTTONS
 $('#btnHome').on('click', function (event){
@@ -19,7 +25,12 @@ $('#btnHome').on('click', function (event){
 });
 
 $('#btnMovies').on('click', function (event){
-    $('#content-main-app').load('./Views/Movies/movies.html');
+	fs.readFile('./Views/Movies/movies.html', (err, data) => {
+        document.getElementById('content-main-app').innerHTML = data;
+		
+		loadMovies();
+    });
+
     hideMenu();
 });
 
@@ -47,6 +58,7 @@ function hideMenu(){
     $('#navcheck').click();
 }
 
+//HOME
 function loadDashBoardData(){
 	//STATS
 	ipc.send("getStats");
@@ -109,6 +121,29 @@ function loadDashBoardData(){
 			let newLi = document.createElement("li");
 			newLi.appendChild(document.createTextNode(tvshowsViews[i].toString()));
 			ul_tv.appendChild(newLi);
+		}
+	});	
+}
+
+//MOVIES
+function loadMovies(){
+	//Get movies
+	ipc.send("getMovies");
+	ipc.on("resultSent_movies", function (event, result) {
+		for(var i = 0; i < result.length; i++){
+			let movieElm = '<div class="movie-card">' +
+			`<div class="movie-header" style="background: url('file://` + result[i].CoverPath.trim() + `');  background-size: cover;">` +
+			'<div class="header-icon-container">' +
+			'</div>' +
+			'</div>' +
+			'<div class="movie-content">' +
+			'<div class="movie-content-header">' +
+			'<a href="#"><h3 class="movie-title">' + result[i].MovieTitle + '  &nbsp; &#9733;</h3>' +
+			'</a>' +
+			'<h3 class="movie-year">' + result[i].MovieYear + '<span style="margin-left:200px;">' + result[i].MovieRating + '/10</span></h3>' +
+			'</div></div></div>';
+
+			$('#gridMovies').append($(movieElm));
 		}
 	});	
 }

@@ -102,7 +102,19 @@ function createWindow() {
         });
     });
 
+    //get movies
+    ipcMain.on("getMovies", function() {
+        let currentYear = new Date().getFullYear();
+        let result = knex
+        .select('*')
+        .from('v_Movies')
+        .where('MovieYear', currentYear)
+        .orderBy('MovieTitle');
 
+        result.then(function (rows){
+            win.webContents.send("resultSent_movies", rows);
+        });
+    });
 }
 
 app.on('ready', createWindow);
