@@ -5,7 +5,7 @@
     --nav-item-nb       : 6;
 }
 
-input {
+input[type=checkbox] {
 	position: fixed;
 	opacity: 0;
 }

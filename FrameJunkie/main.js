@@ -20,6 +20,7 @@ var knex = require("knex")({
     useNullAsDefault: true
 });
 
+const env = process.env.NODE_ENV || 'development';
 process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 
 function createWindow() {
@@ -43,11 +44,24 @@ function createWindow() {
         icon: __dirname + '/Content/Icons/action-movie.ico',
     });
 
-    win.loadURL(url.format({
+      // and load the index.html of the app.
+    win.loadURL(`file://${__dirname}/index.html`)
+
+    /*win.loadURL(url.format({
         pathname: path.join(__dirname, 'index.html'),
         protocol: "file",
         slashes: true
-    }));
+    }));*/
+
+    // If development environment 
+    if (env === 'development') { 
+        require('electron-reload')(__dirname, { 
+            electron: path.join(__dirname, 'node_modules', '.bin', 'electron'), 
+            hardResetMethod: 'exit'
+        }); 
+    }
+
+    win.webContents.clearHistory(); //deleting cookies
 
     //with chromium we can access to dev tools on running time
     //win.webContents.openDevTools();
