@@ -137,6 +137,18 @@ function loadDashBoardData(){
 
 //MOVIES
 function loadMovies(){
+
+	//Load Filters
+	var crrYear = new Date().getFullYear();
+	$('#MovieYearFilter').html('');
+	for (let y = Number(crrYear); y > 1979; y--) {
+		var optionHtml = '<option value="' + y + '">' + y + '</option>';
+		$('#MovieYearFilter').append(optionHtml);
+	}
+
+	//Filters
+	var isFavorites = $('#IsFavorite').is(':checked');
+
 	//Get movies
 	ipc.send("getMovies");
 	ipc.on("resultSent_movies", function (event, result) {
