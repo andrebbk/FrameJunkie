@@ -6,6 +6,7 @@
     "author": "Andre Silva",
     "license": "BBK",
     "dependencies": {
+        "@preline/input-number": "^2.0.2",
         "bootstrap": "^5.0.2",
         "compass-mixins": "^0.12.12",
         "electron-rebuild": "^3.2.9",

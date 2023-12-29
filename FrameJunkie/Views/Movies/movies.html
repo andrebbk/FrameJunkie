@@ -8,7 +8,7 @@
         <img style="margin-left: 5px; margin-right: 10px;">
     </button>
     <div class="content-search-menu">
-        <div class="search-content">
+        <div class="search-content" style="zoom:0.8;">
             <!--MOVIE TITLE-->
             <div class="form__group field">
                 <input type="input" class="form__field" placeholder="" name="fltr-movie-title" id='fltr-movie-title' required />
@@ -32,6 +32,17 @@
                     <input type="checkbox" id="IsFavorite" class="toggleBtn" /><label class="toggleLabel" for="IsFavorite">Toggle</label>
                 </div>
             </div>   
+
+            <!--RATING-->
+            <div style="margin-left: 40px; padding-top: 5px;">
+                <div style="float: left; margin-top: 26px; margin-right: 1px;">
+                    <label style="font-size:18px; display:contents;">Rating: </label>
+                </div>                
+                <div style="float:right;">
+                    <input class="numberstyle" type="number" min="0" step="1" value="0" max="10">
+                </div>
+            </div>            
+            
         </div>           
     </div>
 </div>

@@ -1,3 +1,6 @@
+/* Including one css file into other */
+@import "./input-number.css";
+
 body {
     height: 100%;
     width: 100%;
@@ -397,6 +400,8 @@ select {
 }
 
 .toggleLabel:active:after {
-  width: 130px;
+  width: 80px;
 }
 /* END FAVORITE */
+
+
