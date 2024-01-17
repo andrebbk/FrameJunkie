@@ -140,14 +140,14 @@ function loadMovies(){
 
 	//Load Filters
 	var crrYear = new Date().getFullYear();
-	$('#MovieYearFilter').html('');
+	$('#fltr-movie-year').html('');
 	for (let y = Number(crrYear); y > 1979; y--) {
 		var optionHtml = '<option value="' + y + '">' + y + '</option>';
-		$('#MovieYearFilter').append(optionHtml);
+		$('#fltr-movie-year').append(optionHtml);
 	}
 
 	//Filters
-	var isFavorites = $('#IsFavorite').is(':checked');
+	var isFavorites = $('#fltr-movie-isfav').is(':checked');
 
 	$.fn.numberstyle = function(options) {
 	  
@@ -291,4 +291,59 @@ function loadMovies(){
 			}
 		});
 	}
+
+	//BUTTONS
+	$('#btnClearMovieFilters').on('click', function (event){
+		
+		$('#fltr-movie-title').val(''); //Title
+
+		var crrYear = new Date().getFullYear();
+		$('#fltr-movie-year').val(crrYear); //Year
+
+		$('#fltr-movie-isfav').prop("checked", false); //Is Favorite
+
+		$('#fltr-movie-rating').val('0'); //Rating
+	});
+
+	$('#btnSearchMovies').on('click', function (event){
+		
+		var mTitle = null, mYear = null, mIsFav = null, mRating = null;
+
+		if($('#fltr-movie-title').val() != null && $('#fltr-movie-title').val() != '' && $('#fltr-movie-title').val() != ' ')
+			mTitle = $('#fltr-movie-title').val();
+
+		if($('#fltr-movie-year').val() != null && $('#fltr-movie-year').val() != '' && $('#fltr-movie-year').val() != ' ')
+			mYear = $('#fltr-movie-year').val();
+
+		if($('#fltr-movie-isfav').val() != null && $('#fltr-movie-isfav').val() !== false)
+			mIsFav = $('#fltr-movie-isfav').val();
+
+		if($('#fltr-movie-rating').val() != null && $('#fltr-movie-rating').val() != '' && $('#fltr-movie-rating').val() != '0')
+			mRating = $('#fltr-movie-rating').val();
+
+		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating);
+		ipc.on("resultSent_movies", function (event, result) {
+			$('#gridMovies').html('');
+
+			for(var i = 0; i < result.length; i++){
+				let movieElm = '<div class="movie-card">' +
+				`<div class="movie-header" style="background: url('file://` + result[i].CoverPath.trim() + `');  background-size: cover;">` +
+				'<div class="header-icon-container">' +
+				'</div>' +
+				'</div>' +
+				'<div class="movie-content">' +
+				'<div class="movie-content-header">';
+	
+				if(result[i].IsFavorite === 1)
+					movieElm += '<a href="#"><h3 class="movie-title">' + result[i].MovieTitle + '  &nbsp; &#9733;</h3></a>';
+				else
+					movieElm += '<a href="#"><h3 class="movie-title">' + result[i].MovieTitle + '</h3></a>';
+	
+				movieElm += '<h3 class="movie-year">' + result[i].MovieYear + '<span style="margin-left:200px;">' + result[i].MovieRating + '/10</span></h3>' +
+				'</div></div></div>';
+	
+				$('#gridMovies').append($(movieElm));
+			}
+		});
+	});
 }

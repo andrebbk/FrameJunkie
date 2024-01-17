@@ -117,12 +117,11 @@ function createWindow() {
         });
 
         //get movies
-        ipcMain.on("getMovies", function() {
-            let currentYear = new Date().getFullYear();
+        ipcMain.on("getMovies", function(e, mTitle, mYear, mIsFav, mRating) {
             let result = knex
             .select('*')
             .from('v_Movies')
-            .where('MovieYear', currentYear)
+            .where('MovieYear', mYear)
             .orderBy('MovieTitle');
     
             result.then(function (rows){          

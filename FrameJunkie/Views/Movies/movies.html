@@ -11,14 +11,14 @@
         <div class="search-content" style="zoom:0.8;">
             <!--MOVIE TITLE-->
             <div class="form__group field">
-                <input type="input" class="form__field" placeholder="" name="fltr-movie-title" id='fltr-movie-title' required />
+                <input id='fltr-movie-title' type="input" class="form__field" placeholder="" name="fltr-movie-title" required />
                 <label for="fltr-movie-title" class="form__label">Title</label>
             </div>
 
             <!--MOVIE YEAR-->
             <div style="display:block;">
                 <div class="custom-select">
-                    <select id="MovieYearFilter">                    
+                    <select id="fltr-movie-year">                    
                     </select>
                 </div>
             </div>     
@@ -29,7 +29,7 @@
                     <label style="font-size:18px; display:contents;">Favorites: </label>
                 </div>                
                 <div style="float:right;">
-                    <input type="checkbox" id="IsFavorite" class="toggleBtn" /><label class="toggleLabel" for="IsFavorite">Toggle</label>
+                    <input type="checkbox" id="fltr-movie-isfav" class="toggleBtn" /><label class="toggleLabel" for="fltr-movie-isfav">Toggle</label>
                 </div>
             </div>   
 
@@ -39,7 +39,7 @@
                     <label style="font-size:18px; display:contents;">Rating: </label>
                 </div>                
                 <div style="float:right;">
-                    <input class="numberstyle" type="number" min="0" step="1" value="0" max="10">
+                    <input id="fltr-movie-rating" class="numberstyle" type="number" min="0" step="1" value="0" max="10">
                 </div>
             </div>     
             
