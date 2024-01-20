@@ -139,12 +139,17 @@ function loadDashBoardData(){
 function loadMovies(){
 
 	//Load Filters
-	var crrYear = new Date().getFullYear();
 	$('#fltr-movie-year').html('');
+	var optionHtml = '<option value="0">Select movie year</option>';
+	$('#fltr-movie-year').append(optionHtml);
+
+	var crrYear = new Date().getFullYear();	
 	for (let y = Number(crrYear); y > 1979; y--) {
 		var optionHtml = '<option value="' + y + '">' + y + '</option>';
 		$('#fltr-movie-year').append(optionHtml);
 	}
+
+	$('#fltr-movie-year').val(crrYear); //init Movie Year
 
 	//Filters
 	var isFavorites = $('#fltr-movie-isfav').is(':checked');
@@ -284,10 +289,10 @@ function loadMovies(){
 		coll[i].addEventListener("click", function() {
 			this.classList.toggle("active");
 			var content = this.nextElementSibling;
-			if (content.style.display === "block") {
+			if (content.style.display === "inline-block") {
 			content.style.display = "none";
 			} else {
-			content.style.display = "block";
+			content.style.display = "inline-block";
 			}
 		});
 	}
@@ -297,8 +302,7 @@ function loadMovies(){
 		
 		$('#fltr-movie-title').val(''); //Title
 
-		var crrYear = new Date().getFullYear();
-		$('#fltr-movie-year').val(crrYear); //Year
+		$('#fltr-movie-year').val(0); //Year
 
 		$('#fltr-movie-isfav').prop("checked", false); //Is Favorite
 
@@ -312,11 +316,11 @@ function loadMovies(){
 		if($('#fltr-movie-title').val() != null && $('#fltr-movie-title').val() != '' && $('#fltr-movie-title').val() != ' ')
 			mTitle = $('#fltr-movie-title').val();
 
-		if($('#fltr-movie-year').val() != null && $('#fltr-movie-year').val() != '' && $('#fltr-movie-year').val() != ' ')
+		if($('#fltr-movie-year').val() != null && $('#fltr-movie-year').val() != '' && $('#fltr-movie-year').val() != ' ' && $('#fltr-movie-year').val() != '0')
 			mYear = $('#fltr-movie-year').val();
 
-		if($('#fltr-movie-isfav').val() != null && $('#fltr-movie-isfav').val() !== false)
-			mIsFav = $('#fltr-movie-isfav').val();
+		if($('#fltr-movie-isfav').prop("checked") != null && $('#fltr-movie-isfav').prop("checked"))
+			mIsFav = $('#fltr-movie-isfav').prop("checked");
 
 		if($('#fltr-movie-rating').val() != null && $('#fltr-movie-rating').val() != '' && $('#fltr-movie-rating').val() != '0')
 			mRating = $('#fltr-movie-rating').val();

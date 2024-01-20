@@ -211,7 +211,6 @@ body {
 }
 
 .content-search-menu {
-  margin-left: 163px;
   width: 82%;
   padding: 0 18px;
   display: none;
@@ -315,7 +314,7 @@ body {
 
 /* MOVIE YEAR */
 .custom-select {
-  width: 250px;
+  width: 270px;
   position: relative;
   margin-top: 20px;
 }

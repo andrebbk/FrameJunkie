@@ -121,8 +121,21 @@ function createWindow() {
             let result = knex
             .select('*')
             .from('v_Movies')
-            .where('MovieYear', mYear)
             .orderBy('MovieTitle');
+
+            if(mTitle && mTitle != '' && mTitle != ' '){
+                let queryStrTile = '%' + mTitle + '%';
+                result = result.whereLike('MovieTitle', queryStrTile);
+            }                
+
+            if(mYear && mYear != '' && mYear.length > 3)
+            result = result.whereLike('MovieYear', mYear);
+
+            if(mIsFav)
+                result = result.where('IsFavorite', 1);
+
+            if(mRating && mRating > 0 && mRating < 10)
+                result = result.where('MovieRating', mRating);
     
             result.then(function (rows){          
                 win.webContents.send('resultSent_movies', rows);
