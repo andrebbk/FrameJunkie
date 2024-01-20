@@ -121,7 +121,12 @@ function createWindow() {
             let result = knex
             .select('*')
             .from('v_Movies')
-            .orderBy('MovieTitle');
+            .orderBy([
+                { column: 'MovieYear', order: 'desc' }, 
+                { column: 'MovieTitle', order: 'asc' }
+            ])
+            .limit(200)
+            .offset(0);
 
             if(mTitle && mTitle != '' && mTitle != ' '){
                 let queryStrTile = '%' + mTitle + '%';
@@ -134,7 +139,7 @@ function createWindow() {
             if(mIsFav)
                 result = result.where('IsFavorite', 1);
 
-            if(mRating && mRating > 0 && mRating < 10)
+            if(mRating && mRating > 0 && mRating <= 10)
                 result = result.where('MovieRating', mRating);
     
             result.then(function (rows){          
