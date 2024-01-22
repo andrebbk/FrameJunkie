@@ -3,6 +3,10 @@ const ipc = electron.ipcRenderer;
 const fs = require('fs')
 const path = require('path');
 
+//pagination
+let currentPage = 0;
+let MaxPage = 1000;
+
 let knex = require("knex")({
     client: "sqlite3",
     connection: {
@@ -149,7 +153,7 @@ function loadMovies(){
 		$('#fltr-movie-year').append(optionHtml);
 	}
 
-	$('#fltr-movie-year').val(crrYear); //init Movie Year
+	$('#fltr-movie-year').val(0); //init Movie Year
 
 	//Filters
 	var isFavorites = $('#fltr-movie-isfav').is(':checked');
@@ -258,7 +262,8 @@ function loadMovies(){
 	$('.numberstyle').numberstyle();
 	
 	//Get movies
-	ipc.send("getMovies");
+	currentPage = 0;
+	ipc.send("getMovies", null, null, null, null, currentPage);
 	ipc.on("resultSent_movies", function (event, result) {
 		for(var i = 0; i < result.length; i++){
 			let movieElm = '<div class="movie-card">' +
@@ -280,7 +285,7 @@ function loadMovies(){
 			$('#gridMovies').append($(movieElm));
 		}
 
-		//show pagination controls
+		//show pagination controls	
 		if(result.length > 0){
 			var paginationControlsContainer = document.getElementById('pagination-controls-container');
 			paginationControlsContainer.style.display = "block";
@@ -331,7 +336,8 @@ function loadMovies(){
 		if($('#fltr-movie-rating').val() != null && $('#fltr-movie-rating').val() != '' && $('#fltr-movie-rating').val() != '0')
 			mRating = $('#fltr-movie-rating').val();
 
-		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating);
+		currentPage = 0;
+		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);
 		ipc.on("resultSent_movies", function (event, result) {
 			var paginationControlsContainer = document.getElementById('pagination-controls-container');
 			paginationControlsContainer.style.display = "none";
@@ -361,6 +367,119 @@ function loadMovies(){
 			if(result.length > 0){
 				//show pagination controls
 				paginationControlsContainer.style.display = "block";
+			}
+		});
+	});
+
+	$('#btn_previous').on('click', function (event){
+		
+		if(currentPage === 0) return;
+
+		var mTitle = null, mYear = null, mIsFav = null, mRating = null;
+
+		if($('#fltr-movie-title').val() != null && $('#fltr-movie-title').val() != '' && $('#fltr-movie-title').val() != ' ')
+			mTitle = $('#fltr-movie-title').val();
+
+		if($('#fltr-movie-year').val() != null && $('#fltr-movie-year').val() != '' && $('#fltr-movie-year').val() != ' ' && $('#fltr-movie-year').val() != '0')
+			mYear = $('#fltr-movie-year').val();
+
+		if($('#fltr-movie-isfav').prop("checked") != null && $('#fltr-movie-isfav').prop("checked"))
+			mIsFav = $('#fltr-movie-isfav').prop("checked");
+
+		if($('#fltr-movie-rating').val() != null && $('#fltr-movie-rating').val() != '' && $('#fltr-movie-rating').val() != '0')
+			mRating = $('#fltr-movie-rating').val();
+
+		currentPage -= 1;
+		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);
+		ipc.on("resultSent_movies", function (event, result) {
+			var paginationControlsContainer = document.getElementById('pagination-controls-container');
+			paginationControlsContainer.style.display = "none";
+
+			$('#gridMovies').html('');
+			
+			for(var i = 0; i < result.length; i++){
+				let movieElm = '<div class="movie-card">' +
+				`<div class="movie-header" style="background: url('file://` + result[i].CoverPath.trim() + `');  background-size: cover;">` +
+				'<div class="header-icon-container">' +
+				'</div>' +
+				'</div>' +
+				'<div class="movie-content">' +
+				'<div class="movie-content-header">';
+	
+				if(result[i].IsFavorite === 1)
+					movieElm += '<a href="#"><h3 class="movie-title">' + result[i].MovieTitle + '  &nbsp; &#9733;</h3></a>';
+				else
+					movieElm += '<a href="#"><h3 class="movie-title">' + result[i].MovieTitle + '</h3></a>';
+	
+				movieElm += '<h3 class="movie-year">' + result[i].MovieYear + '<span style="margin-left:200px;">' + result[i].MovieRating + '/10</span></h3>' +
+				'</div></div></div>';
+	
+				$('#gridMovies').append($(movieElm));
+			}
+
+			if(result.length > 0){
+				//show pagination controls
+				paginationControlsContainer.style.display = "block";
+
+				$("#content-main-app").animate({ scrollTop: 0 }, 0, 'linear');
+			}
+		});
+	});
+
+	$('#btn_next').on('click', function (event){
+		
+		if(currentPage >= MaxPage) return;
+
+		var mTitle = null, mYear = null, mIsFav = null, mRating = null;
+
+		if($('#fltr-movie-title').val() != null && $('#fltr-movie-title').val() != '' && $('#fltr-movie-title').val() != ' ')
+			mTitle = $('#fltr-movie-title').val();
+
+		if($('#fltr-movie-year').val() != null && $('#fltr-movie-year').val() != '' && $('#fltr-movie-year').val() != ' ' && $('#fltr-movie-year').val() != '0')
+			mYear = $('#fltr-movie-year').val();
+
+		if($('#fltr-movie-isfav').prop("checked") != null && $('#fltr-movie-isfav').prop("checked"))
+			mIsFav = $('#fltr-movie-isfav').prop("checked");
+
+		if($('#fltr-movie-rating').val() != null && $('#fltr-movie-rating').val() != '' && $('#fltr-movie-rating').val() != '0')
+			mRating = $('#fltr-movie-rating').val();
+
+		currentPage += 1;
+		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);
+		ipc.on("resultSent_movies", function (event, result) {
+			var paginationControlsContainer = document.getElementById('pagination-controls-container');
+			paginationControlsContainer.style.display = "none";
+
+			$('#gridMovies').html('');
+			
+			if(result.length < 50) MaxPage = currentPage;
+			else MaxPage = 1000;
+
+			for(var i = 0; i < result.length; i++){
+				let movieElm = '<div class="movie-card">' +
+				`<div class="movie-header" style="background: url('file://` + result[i].CoverPath.trim() + `');  background-size: cover;">` +
+				'<div class="header-icon-container">' +
+				'</div>' +
+				'</div>' +
+				'<div class="movie-content">' +
+				'<div class="movie-content-header">';
+	
+				if(result[i].IsFavorite === 1)
+					movieElm += '<a href="#"><h3 class="movie-title">' + result[i].MovieTitle + '  &nbsp; &#9733;</h3></a>';
+				else
+					movieElm += '<a href="#"><h3 class="movie-title">' + result[i].MovieTitle + '</h3></a>';
+	
+				movieElm += '<h3 class="movie-year">' + result[i].MovieYear + '<span style="margin-left:200px;">' + result[i].MovieRating + '/10</span></h3>' +
+				'</div></div></div>';
+	
+				$('#gridMovies').append($(movieElm));
+			}
+
+			if(result.length > 0){
+				//show pagination controls
+				paginationControlsContainer.style.display = "block";
+
+				$("#content-main-app").animate({ scrollTop: 0 }, 0, 'linear');
 			}
 		});
 	});

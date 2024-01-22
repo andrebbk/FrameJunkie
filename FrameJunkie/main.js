@@ -117,7 +117,7 @@ function createWindow() {
         });
 
         //get movies
-        ipcMain.on("getMovies", function(e, mTitle, mYear, mIsFav, mRating) {
+        ipcMain.on("getMovies", function(e, mTitle, mYear, mIsFav, mRating, crrPage) {
             let result = knex
             .select('*')
             .from('v_Movies')
@@ -125,8 +125,8 @@ function createWindow() {
                 { column: 'MovieYear', order: 'desc' }, 
                 { column: 'MovieTitle', order: 'asc' }
             ])
-            .limit(200)
-            .offset(0);
+            .limit(50)
+            .offset(crrPage * 50);
 
             if(mTitle && mTitle != '' && mTitle != ' '){
                 let queryStrTile = '%' + mTitle + '%';
