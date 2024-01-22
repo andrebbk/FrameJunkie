@@ -279,6 +279,12 @@ function loadMovies(){
 
 			$('#gridMovies').append($(movieElm));
 		}
+
+		//show pagination controls
+		if(result.length > 0){
+			var paginationControlsContainer = document.getElementById('pagination-controls-container');
+			paginationControlsContainer.style.display = "block";
+		}
 	});
 
 	//Search menu
@@ -327,8 +333,11 @@ function loadMovies(){
 
 		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating);
 		ipc.on("resultSent_movies", function (event, result) {
-			$('#gridMovies').html('');
+			var paginationControlsContainer = document.getElementById('pagination-controls-container');
+			paginationControlsContainer.style.display = "none";
 
+			$('#gridMovies').html('');
+			
 			for(var i = 0; i < result.length; i++){
 				let movieElm = '<div class="movie-card">' +
 				`<div class="movie-header" style="background: url('file://` + result[i].CoverPath.trim() + `');  background-size: cover;">` +
@@ -347,6 +356,11 @@ function loadMovies(){
 				'</div></div></div>';
 	
 				$('#gridMovies').append($(movieElm));
+			}
+
+			if(result.length > 0){
+				//show pagination controls
+				paginationControlsContainer.style.display = "block";
 			}
 		});
 	});
