@@ -61,7 +61,11 @@ function createWindow() {
         }); 
     }
 
-    win.webContents.clearHistory(); //deleting cookies
+    //clear cache
+    win.webContents.session.clearCache(function(){});
+
+    win.webContents.clearHistory(); //clear cookies
+    win.webContents.session.clearStorageData() //clear login sessions
 
     //with chromium we can access to dev tools on running time
     //win.webContents.openDevTools();
