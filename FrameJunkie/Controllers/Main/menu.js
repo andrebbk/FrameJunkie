@@ -19,10 +19,10 @@ let knex = require("knex")({
     document.getElementById('content-main-app').innerHTML = data;
     loadDashBoardData();
 });*/
-fs.readFile(path.join(__dirname, '../../Views/Movies/movies.html'), (err, data) => {
-	document.getElementById('content-main-app').innerHTML = data;
-	loadMovies();
-	if(err != null) alert(err);
+fs.readFile(path.join(__dirname, '../../Views/Movies/new-movie.html'), (err, data) => {
+    document.getElementById('content-main-app').innerHTML = data;
+    loadNewMovie();
+    if(err != null) alert(err);
 });
 
  //BUTTONS
@@ -47,7 +47,12 @@ $('#btnMovies').on('click', function (event){
 });
 
 $('#btnNewMovie').on('click', function (event){
-    $('#content-main-app').load(' ');
+    fs.readFile(path.join(__dirname, '../../Views/Movies/new-movie.html'), (err, data) => {
+		document.getElementById('content-main-app').innerHTML = data;
+
+		if(err != null) alert(err);
+    });
+
     hideMenu();
 });
 
@@ -68,4 +73,17 @@ $('#btnSettings').on('click', function (event){
 
 function hideMenu(){
     $('#navcheck').click();
+}
+
+function loadNewMovie() {
+    //Load Filters
+	$('#movie-year').html('');
+
+	var crrYear = new Date().getFullYear();	
+	for (let y = Number(crrYear); y > 1979; y--) {
+		var optionHtml = '<option value="' + y + '">' + y + '</option>';
+		$('#movie-year').append(optionHtml);
+	}
+
+	$('#movie-year').val(Number(crrYear)); //init Movie Year
 }
