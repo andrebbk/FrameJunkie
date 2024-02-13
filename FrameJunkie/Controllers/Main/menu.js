@@ -2,6 +2,7 @@ const electron = require("electron");
 const ipc = electron.ipcRenderer;
 const fs = require('fs')
 const path = require('path');
+const { pathToFileURL } = require('node:url');
 
 const { loadDashBoardData } = require('./menu_dashboard');
 const { loadMovies } = require('./menu_movies'); 
@@ -49,7 +50,7 @@ $('#btnMovies').on('click', function (event){
 $('#btnNewMovie').on('click', function (event){
     fs.readFile(path.join(__dirname, '../../Views/Movies/new-movie.html'), (err, data) => {
 		document.getElementById('content-main-app').innerHTML = data;
-
+        loadNewMovie();
 		if(err != null) alert(err);
     });
 
@@ -86,4 +87,21 @@ function loadNewMovie() {
 	}
 
 	$('#movie-year').val(Number(crrYear)); //init Movie Year
+
+    $('#btnSelectCover').on('click', function(){
+        $('#movie-cover-upload').click();
+    });    
+
+    $('#movie-cover-upload').on('change', function(event){
+        var reader = new FileReader();
+        reader.onload = function(){
+            if(event.target.files[0] != null){
+                var output = document.getElementById('movie-cover-output');
+                //output.style.backgroundImage = "Url('" + pathToFileURL(event.target.files[0].path) + "')";
+
+                output.src = pathToFileURL(event.target.files[0].path);
+            }          
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    });    
 }

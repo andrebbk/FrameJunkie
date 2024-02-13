@@ -6,58 +6,77 @@
 <div class="new-movie-container">
     <div class="form-new-movie">
 
-        <h1>New Movie</h1>
-        <div class="new-movies-fields-pt1">
+        <div class="flex-container">
 
-            <!--MOVIE TITLE-->
-            <div class="form__group field">
-                <input id='movie-title' type="input" class="form__field" placeholder="" name="movie-title" required />
-                <label for="movie-title" class="form__label">Title</label>
-            </div>
+            <div style="width: 40%;">
 
-            <div class="flex-container">
-                <!--MOVIE YEAR-->
-                <div class="custom-select-container" style="display:block; width: 30%;">
-                    <text class="label-form-field">Movie Year</text>
-                    <div class="custom-select">
-                        <select id="movie-year">                    
-                        </select>
+                <h1 class="form-header1">New Movie</h1>
+                <div class="new-movies-fields-pt1">
+
+                    <!--MOVIE TITLE-->
+                    <div class="form__group field">
+                        <input id='movie-title' type="input" class="form__field" placeholder="" name="movie-title" required />
+                        <label for="movie-title" class="form__label">Title</label>
                     </div>
-                </div>  
 
-                <div style="width: 70%;">
+                    <!--MOVIE YEAR-->
+                    <div class="custom-select-container" style="display:block; width: 30%;">
+                        <text class="label-form-field">Movie Year</text>
+                        <div class="custom-select">
+                            <select id="movie-year">                    
+                            </select>
+                        </div>
+                    </div>            
+
+                    <!--IS FAVORITE-->
+                    <div class="is-favorite-container">
+                        <div style="margin-top: 26px; margin-right: 10px;">
+                            <text class="label-form-field">Is Favorite</text>
+                        </div>                
+                        <div>
+                            <input type="checkbox" id="fltr-movie-isfav" class="toggleBtn" /><label class="toggleLabel" for="fltr-movie-isfav">Toggle</label>
+                        </div>
+                    </div>   
+
+
+                    <!--MOVIE RATING-->
+                    <div class="movie-rating-container">
+                        <text class="label-form-field">Movie Rating</text>
+                        <div class="star-group">
+                            <input type="radio" class="star" id="one" name="star_rating">
+                            <input type="radio" class="star" id="two" name="star_rating">
+                            <input type="radio" class="star" id="three" name="star_rating">
+                            <input type="radio" class="star" id="four" name="star_rating">
+                            <input type="radio" class="star" id="five" name="star_rating">
+                            <input type="radio" class="star" id="six" name="star_rating">
+                            <input type="radio" class="star" id="seven" name="star_rating">
+                            <input type="radio" class="star" id="eight" name="star_rating">
+                            <input type="radio" class="star" id="nine" name="star_rating">
+                            <input type="radio" class="star" id="ten" name="star_rating">
+                        </div>
+                    </div>
                     
-                </div>
-            </div>               
-
-            <!--IS FAVORITE-->
-            <div class="is-favorite-container">
-                <div style="margin-top: 26px; margin-right: 10px;">
-                    <text class="label-form-field">Is Favorite</text>
-                </div>                
-                <div>
-                    <input type="checkbox" id="fltr-movie-isfav" class="toggleBtn" /><label class="toggleLabel" for="fltr-movie-isfav">Toggle</label>
-                </div>
-            </div>   
-
-
-            <!--MOVIE Rating-->
-            <div class="movie-rating-container">
-                <text class="label-form-field">Movie Rating</text>
-                <div class="star-group">
-                    <input type="radio" class="star" id="one" name="star_rating">
-                    <input type="radio" class="star" id="two" name="star_rating">
-                    <input type="radio" class="star" id="three" name="star_rating">
-                    <input type="radio" class="star" id="four" name="star_rating">
-                    <input type="radio" class="star" id="five" name="star_rating">
-                    <input type="radio" class="star" id="six" name="star_rating">
-                    <input type="radio" class="star" id="seven" name="star_rating">
-                    <input type="radio" class="star" id="eight" name="star_rating">
-                    <input type="radio" class="star" id="nine" name="star_rating">
-                    <input type="radio" class="star" id="ten" name="star_rating">
+                    <!--MOVIE OBSERVATIONS-->
+                    <div class="movie-observations-container">
+                        <text class="label-form-field">Observations</text>
+                        <textarea class="movie-observations"></textarea>
+                    </div>
                 </div>
             </div>
-        </div>
 
+            <div style="width: 60%;">
+
+                <div class="movie-cover-container" style=" position:relative; z-index:1;">
+                    <input id="movie-cover-upload" type="file" accept="image/*" style="display: none;"/>
+                    <img id="movie-cover-output" width="420px" height="530px" src="./Content/Images/No-Image-Placeholder.png"/>
+                </div>
+                <div class="form-buttons-container">
+                    <button id="btnSelectCover" class="button-form"><span>Select Cover</span></a>
+                    <button id="btnClearNewMovie" class="button-form"><span>Clear</span></a>
+                    <button id="btnSaveNewMovie" class="button-form"><span>Save</span></a>
+                </div>
+            </div>
+
+        </div>  
     </div>
 </div>

@@ -1,13 +1,16 @@
 //creating a window and it's main events
-console.log('main process working');
+//console.log('main process working');
 
 const { app, BrowserWindow, ipcMain } = require('electron');
+const debug = require('electron-debug');
 
 /*const electron = require("electron");
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow*/
 const path = require("path");
 const url = require("url");
+
+//debug();
 
 //window
 let win;
