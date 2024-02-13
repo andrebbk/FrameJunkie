@@ -15,15 +15,48 @@
                 <label for="movie-title" class="form__label">Title</label>
             </div>
 
-             <!--MOVIE YEAR-->
-             <div class="custom-select-container" style="display:block;">
-                <text class="label-select">Movie Year</text>
-                <div class="custom-select">
-                    <select id="movie-year">                    
-                    </select>
-                </div>
-            </div>     
+            <div class="flex-container">
+                <!--MOVIE YEAR-->
+                <div class="custom-select-container" style="display:block; width: 30%;">
+                    <text class="label-form-field">Movie Year</text>
+                    <div class="custom-select">
+                        <select id="movie-year">                    
+                        </select>
+                    </div>
+                </div>  
 
+                <div style="width: 70%;">
+                    
+                </div>
+            </div>               
+
+            <!--IS FAVORITE-->
+            <div class="is-favorite-container">
+                <div style="margin-top: 26px; margin-right: 10px;">
+                    <text class="label-form-field">Is Favorite</text>
+                </div>                
+                <div>
+                    <input type="checkbox" id="fltr-movie-isfav" class="toggleBtn" /><label class="toggleLabel" for="fltr-movie-isfav">Toggle</label>
+                </div>
+            </div>   
+
+
+            <!--MOVIE Rating-->
+            <div class="movie-rating-container">
+                <text class="label-form-field">Movie Rating</text>
+                <div class="star-group">
+                    <input type="radio" class="star" id="one" name="star_rating">
+                    <input type="radio" class="star" id="two" name="star_rating">
+                    <input type="radio" class="star" id="three" name="star_rating">
+                    <input type="radio" class="star" id="four" name="star_rating">
+                    <input type="radio" class="star" id="five" name="star_rating">
+                    <input type="radio" class="star" id="six" name="star_rating">
+                    <input type="radio" class="star" id="seven" name="star_rating">
+                    <input type="radio" class="star" id="eight" name="star_rating">
+                    <input type="radio" class="star" id="nine" name="star_rating">
+                    <input type="radio" class="star" id="ten" name="star_rating">
+                </div>
+            </div>
         </div>
 
     </div>

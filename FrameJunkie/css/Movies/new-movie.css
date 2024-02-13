@@ -1,3 +1,10 @@
+:root {
+	--enlarge: scale(1.25);
+	--page-color: steelblue;
+	--star-primary-color: gold;
+	--star-secondary-color: darkgoldenrod;
+}
+
 .new-movie-container {
     display: block;
     position: relative;
@@ -86,15 +93,19 @@
   /*END Movie Title INPUT STYLE*/
 
 
+.flex-container{
+  display: flex;
+}
+
   /* MOVIE YEAR */
 .custom-select-container {
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 .custom-select {
     width: 270px;
     position: relative;
-    margin-top: 20px;
+    margin-top: 10px;
 }
   
 select {
@@ -135,9 +146,305 @@ border-top: var(--size) solid black;
 top: 55%;
 }
 
-.label-select {
+.label-form-field {
 font-size: 1rem;
 color: #9b9b9b;
 font-weight: 600;
 }
 /* END MOVIE YEAR */
+
+
+
+
+/*MOVIE RATING STYLE*/
+.movie-rating-container {
+	padding: 30px 0px 0px 0px;
+}
+
+.star-group {
+  width: 30%;
+  margin-top: 70px;
+	display: grid;
+	font-size: clamp(1.5em, 10vw, 8em);
+	grid-auto-flow: column;
+  zoom: 0.3;
+}
+
+/* reset native input styles */
+.star {
+	-webkit-appearance: none;
+	align-items: center;
+	appearance: none;
+	cursor: pointer;
+	display: grid;
+	font: inherit;
+	height: 1.15em;
+	justify-items: center;
+	margin: 0;
+	place-content: center;
+	position: relative;
+	width: 1.15em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.star {
+		transition: all 0.25s;
+	}
+
+	.star:before,
+	.star:after {
+		transition: all 0.25s;
+	}
+}
+
+.star:before,
+.star:after {
+	color: var(--star-primary-color);
+	position: absolute;
+}
+
+.star:before {
+	content: "☆";
+}
+
+.star:after {
+	content: "✦";
+	font-size: 25%;
+	opacity: 0;
+	right: 20%;
+	top: 20%;
+}
+
+/* The checked radio button and each radio button preceding */
+.star:checked:before,
+.star:has(~ .star:checked):before {
+	content: "★";
+}
+
+#two:checked:after,
+.star:has(~ #two:checked):after {
+	opacity: 1;
+	right: 14%;
+	top: 10%;
+}
+
+#three:checked:before,
+.star:has(~ #three:checked):before {
+	transform: var(--enlarge);
+}
+
+#three:checked:after,
+.star:has(~ #three:checked):after {
+	opacity: 1;
+	right: 8%;
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#four:checked:before,
+.star:has(~ #four:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#four:checked:after,
+.star:has(~ #four:checked):after {
+	opacity: 1;
+	right: 8%;
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#five:checked:before,
+.star:has(~ #five:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#five:checked:after,
+.star:has(~ #five:checked):after {
+	opacity: 1;
+	right: 8%;
+	text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#six:checked:before,
+.star:has(~ #six:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#six:checked:after,
+.star:has(~ #six:checked):after {
+	opacity: 1;
+	right: 8%;
+	text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#seven:checked:before,
+.star:has(~ #seven:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#seven:checked:after,
+.star:has(~ #seven:checked):after {
+	opacity: 1;
+	right: 8%;
+	text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#eight:checked:before,
+.star:has(~ #eight:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#eight:checked:after,
+.star:has(~ #eight:checked):after {
+	opacity: 1;
+	right: 8%;
+	text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#nine:checked:before,
+.star:has(~ #nine:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#nine:checked:after,
+.star:has(~ #nine:checked):after {
+	opacity: 1;
+	right: 8%;
+	text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#ten:checked:before,
+.star:has(~ #ten:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#ten:checked:after,
+.star:has(~ #ten:checked):after {
+	opacity: 1;
+	right: 8%;
+	text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+.star-group:has(> #ten:checked) {
+	#one {
+		transform: rotate(-4deg);
+	}
+
+	#two {
+    transform: translateY(-20%) rotate(-7.5deg);		
+	}
+
+	#three {
+    transform: translateY(-35%) rotate(-7.5deg);		
+	}
+
+	#four {
+    transform: translateY(-45%) rotate(-7.5deg);
+	}
+
+	#five {
+		transform: translateY(-60%);
+	}
+
+  #six {
+		transform: translateY(-60%);
+	}
+
+	#seven {
+		transform: translateY(-45%) rotate(7.5deg);
+	}
+
+	#eight {
+		transform: translateY(-35%) rotate(7.5deg);
+	}
+
+	#nine {
+		transform: translateY(-20%) rotate(7.5deg);
+	}
+
+	#ten {
+		transform: rotate(4deg);
+	}
+}
+
+.star:focus {
+	outline: none;
+}
+
+.star:focus-visible {
+	border-radius: 8px;
+	outline: 2px dashed var(--star-primary-color);
+	outline-offset: 8px;
+	transition: all 0s;
+}
+/*MOVIE RATING STYLE END*/
+
+
+.is-favorite-container {
+  display: block;
+  position: relative;
+}
+
+/* IS FAVORITE */
+.toggleBtn {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.toggleLabel {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 80px;
+  height: 40px;
+  background: grey;
+  border-radius: 100px;
+  position: relative;
+  margin-top: 10px;
+}
+
+.toggleLabel:after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  border-radius: 90px;
+  transition: 0.3s;
+}
+
+.toggleBtn:checked + .toggleLabel {
+  background: #800000;
+}
+
+.toggleBtn:checked + .toggleLabel:after {
+  left: calc(100% - 5px);
+  transform: translateX(-100%);
+}
+
+.toggleLabel:active:after {
+  width: 80px;
+}
+/* END FAVORITE */
