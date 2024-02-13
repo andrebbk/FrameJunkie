@@ -100,8 +100,22 @@ function loadNewMovie() {
                 //output.style.backgroundImage = "Url('" + pathToFileURL(event.target.files[0].path) + "')";
 
                 output.src = pathToFileURL(event.target.files[0].path);
+
+                //show refresh button
+                var btnRefresh = document.getElementById('btnRefreshMovieCover');
+                if(!document.getElementById('btnRefreshMovieCover').classList.contains("change"))
+                { document.querySelector('.refresh-movie-cover').classList.toggle('change'); }                    
             }          
         };
         reader.readAsDataURL(event.target.files[0]);
+    });    
+
+    $('#btnRefreshMovieCover').on('click', function(){
+        var output = document.getElementById('movie-cover-output');
+        output.src = pathToFileURL("./Content/Images/No-Image-Placeholder.png");
+
+        document.querySelector('.refresh-movie-cover').classList.toggle('change');
+        //this.style.visibility = "hidden";
+        //btnRefresh.style.opacity = "0";
     });    
 }

@@ -533,3 +533,23 @@ font-weight: 600;
   right: 0;
 }
 /*END SEARCH */
+
+
+
+.refresh-movie-cover {
+  position: absolute;
+  top:-15px;
+  left: 635px;
+  object-fit: contain;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  visibility: hidden;	
+  opacity: 0;
+}
+
+.refresh-movie-cover.change {
+  visibility: visible;	
+  opacity: 1;
+  transition: all 3s ease-in-out;
+}
