@@ -1,4 +1,5 @@
 body {
+  overflow-x: hidden;
   padding:20px;
   background-image: url("../Content/Images/movies_background.png"); 
   -webkit-background-size: cover;
@@ -149,7 +150,8 @@ h1 em {
 
 
   /*MAIN CONTAINER*/
-  #main-container {
+  .body-main-container {
+    z-index: -1;
     border-radius: 10px;
     position: absolute; 
     top: 13%;

@@ -21,6 +21,7 @@
         "package": "electron-packager ./ FrameJunkie --all --version 1.0.0 --overwrite --icon=./Content/Images/action-movie.png"
     },
     "devDependencies": {
+        "@electron/rebuild": "^3.6.0",
         "electron": "^26.2.4",
         "electron-packager": "^17.1.2",
         "electron-reload": "^2.0.0-alpha.1",

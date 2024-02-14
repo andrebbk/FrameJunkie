@@ -6,6 +6,7 @@ const { pathToFileURL } = require('node:url');
 
 const { loadDashBoardData } = require('./menu_dashboard');
 const { loadMovies } = require('./menu_movies'); 
+const { showToastMessage, closeToastMessage } = require('../../index.js'); 
 
 let knex = require("knex")({
     client: "sqlite3",
@@ -73,7 +74,9 @@ $('#btnSettings').on('click', function (event){
 });
 
 function hideMenu(){
-    $('#navcheck').click();
+    closeToastMessage();
+
+    $('#navcheck').click();    
 }
 
 function loadNewMovie() {
@@ -173,5 +176,11 @@ function loadNewMovie() {
 
         if(document.getElementById('btnRefreshMovieCover').classList.contains("change"))
         { document.querySelector('.refresh-movie-cover').classList.toggle('change'); }    
+
+        showToastMessage("Frame Junkie", "New movie form cleared with success!");
+    });
+
+    $('#btnSaveNewMovie').on('click', function(){
+        showToastMessage("Frame Junkie", "Save new movie test");
     });
 }

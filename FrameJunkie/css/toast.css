@@ -1,0 +1,97 @@
+.toastt {
+    font-family: "Poppins", sans-serif;
+    position: absolute;
+    width: 400px;
+    height: 90px;
+    top: 135px;
+    right: 0px;
+    border-radius: 12px;
+    /*background: #fff;*/
+    padding: 15px 5px 2px 10px;
+    /*box-shadow: 0 6px 20px -5px rgba(0, 0, 0, 0.1);*/
+
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    background: #4b3a27;
+
+    overflow: hidden;
+    transform: translateX(calc(100%));
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35);
+  }
+  
+  .toastt.active {
+    transform: translateX(calc(0% - 50px));
+  }
+  
+  .toastt .toastt-content {
+    display: flex;
+  }
+ 
+  .toastt-content .message-toastt {
+    display: flex;
+    flex-direction: column;
+    margin: 0px 0px 0px 10px;
+  }
+  
+  .message-toastt .toastt-text-title {
+    font-weight: 600;
+    opacity: 0.8;
+    color: #ffffff;
+  }
+
+  .message-toastt .toastt-text-msg {
+    font-size: 16px;
+    font-weight: 400;
+    opacity: 0.8;
+    color: #ffffff;
+  } 
+  
+ .toastt-alert {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+ }
+
+  .toastt .close-toastt {
+    position: absolute;
+    top: 1px;
+    right: 10px;
+    padding: 5px;
+    cursor: pointer;
+    opacity: 1;
+    color: white;
+    font-family: cursive;
+    font-style: normal;
+    font-size: small;
+  }
+  
+  .toastt .close-toastt:hover {
+    opacity: 1;
+  }
+  
+  .toastt .progress-toastt {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;  
+  }
+  
+  .toastt .progress-toastt:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #800000;
+  }
+  
+  .progress-toastt.active:before {
+    animation: progress 3s linear forwards;
+  }
+  
+  @keyframes progress {
+    100% {
+      right: 100%;
+    }
+  }

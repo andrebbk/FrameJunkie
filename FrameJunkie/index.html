@@ -8,15 +8,31 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="./contents/bootstrap/5.0.2/css/bootstrap.min.css" />
         <link rel="stylesheet" href="./css/main.css" />
+        <link rel="stylesheet" href="./css/toast.css" />
 
         <title>Frame Junkie</title>
     </head>
     <body>  
-        <div id="topbar"></div>        
+        <div id="topbar" style="position: relative;"></div>        
 
-        <div id="main-container" style="backdrop-filter: blur(10px); overflow: hidden;">
+        <div id="main-container" class="body-main-container" style="backdrop-filter: blur(10px); overflow: hidden;">
             
         </div>
+
+        <div class="toastt">
+  
+            <div class="toastt-content">
+              <img src="./Content/Icons/alert-icon-red.png" class="toastt-alert"/>
+          
+              <div class="message-toastt">
+                <span id="toastt-title" class="toastt-text-title">Success</span>
+                <span id="toastt-msg" class="toastt-text-msg">Your changes has been saved</span>
+              </div>
+            </div>
+            <i class="close-toastt">x</i>
+          
+            <div class="progress-toastt"></div>
+        </div>          
 
         <!-- Bootstrap Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
