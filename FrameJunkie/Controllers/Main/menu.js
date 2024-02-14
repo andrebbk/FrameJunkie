@@ -115,7 +115,26 @@ function loadNewMovie() {
         output.src = pathToFileURL("./Content/Images/No-Image-Placeholder.png");
 
         document.querySelector('.refresh-movie-cover').classList.toggle('change');
-        //this.style.visibility = "hidden";
-        //btnRefresh.style.opacity = "0";
+    });    
+
+    //add star events
+    const stars = document.querySelectorAll('.star');
+    stars.forEach(el => el.addEventListener('click', event => {
+        var btnRefresh = document.getElementById('btnRefreshMovieRating');
+                
+        if(!document.getElementById('btnRefreshMovieRating').classList.contains("change"))
+        { document.querySelector('.refresh-movie-rating').classList.toggle('change'); }      
+    }));
+
+    $('#btnRefreshMovieRating').on('click', function(){
+        var starElements = document.getElementsByClassName("star");
+        if(starElements != null && starElements.length > 0){
+
+            $.each(starElements, function(idx, value){
+                value.checked = false;
+            });
+        }
+
+        document.querySelector('.refresh-movie-rating').classList.toggle('change');
     });    
 }

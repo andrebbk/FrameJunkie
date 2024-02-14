@@ -170,6 +170,7 @@ font-weight: 600;
 
 /*MOVIE RATING STYLE*/
 .movie-rating-container {
+  position: relative;
 	padding: 30px 0px 0px 0px;
 }
 
@@ -549,7 +550,25 @@ font-weight: 600;
 }
 
 .refresh-movie-cover.change {
-  visibility: visible;	
+  visibility: visible;
+  opacity: 1;
+  transition: all 3s ease-in-out;
+}
+
+.refresh-movie-rating {
+  position: absolute;
+  top: 50px;
+  left: 440px;
+  object-fit: contain;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  visibility: hidden;	
+  opacity: 0;
+}
+
+.refresh-movie-rating.change {
+  visibility: visible;
   opacity: 1;
   transition: all 3s ease-in-out;
 }
