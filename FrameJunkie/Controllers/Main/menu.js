@@ -88,6 +88,7 @@ function loadNewMovie() {
 
 	$('#movie-year').val(Number(crrYear)); //init Movie Year
 
+    //BUTTONS SECTION
     $('#btnSelectCover').on('click', function(){
         $('#movie-cover-upload').click();
     });    
@@ -137,4 +138,40 @@ function loadNewMovie() {
 
         document.querySelector('.refresh-movie-rating').classList.toggle('change');
     });    
+
+
+    $('#btnClearNewMovie').on('click', function(){
+
+        //Movie Title
+        $('#movie-title').val('');
+
+        //Movie Year
+        var crrYear = new Date().getFullYear();	
+		$('#movie-year').val(Number(crrYear)); 
+
+         //Is Favorite
+		$('#movie-isfav').prop("checked", false);
+
+        //Movie Rating
+        var starElements = document.getElementsByClassName("star");
+        if(starElements != null && starElements.length > 0){
+
+            $.each(starElements, function(idx, value){
+                value.checked = false;
+            });
+        }
+
+        if(document.getElementById('btnRefreshMovieRating').classList.contains("change"))
+        { document.querySelector('.refresh-movie-rating').classList.toggle('change'); } 
+
+        //Movie Observations
+        $('#movie-observations-id').val('');
+
+        //Movie Cover
+        var output = document.getElementById('movie-cover-output');
+        output.src = pathToFileURL("./Content/Images/No-Image-Placeholder.png");
+
+        if(document.getElementById('btnRefreshMovieCover').classList.contains("change"))
+        { document.querySelector('.refresh-movie-cover').classList.toggle('change'); }    
+    });
 }

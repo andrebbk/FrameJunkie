@@ -34,7 +34,7 @@
                             <text class="label-form-field">Is Favorite</text>
                         </div>                
                         <div>
-                            <input type="checkbox" id="fltr-movie-isfav" class="toggleBtn" /><label class="toggleLabel" for="fltr-movie-isfav">Toggle</label>
+                            <input type="checkbox" id="movie-isfav" class="toggleBtn" /><label class="toggleLabel" for="movie-isfav">Toggle</label>
                         </div>
                     </div>   
 
@@ -44,23 +44,23 @@
                         <img id="btnRefreshMovieRating" class="refresh-movie-rating" src="./Content/Icons/refresh-icon.jpg"/>
                         <text class="label-form-field">Movie Rating</text>
                         <div class="star-group">
-                            <input type="radio" class="star" id="one" name="star_rating">
-                            <input type="radio" class="star" id="two" name="star_rating">
-                            <input type="radio" class="star" id="three" name="star_rating">
-                            <input type="radio" class="star" id="four" name="star_rating">
-                            <input type="radio" class="star" id="five" name="star_rating">
-                            <input type="radio" class="star" id="six" name="star_rating">
-                            <input type="radio" class="star" id="seven" name="star_rating">
-                            <input type="radio" class="star" id="eight" name="star_rating">
-                            <input type="radio" class="star" id="nine" name="star_rating">
-                            <input type="radio" class="star" id="ten" name="star_rating">
+                            <input type="radio" class="star" id="one" data-starvalue="1" name="star_rating">
+                            <input type="radio" class="star" id="two" data-starvalue="2" name="star_rating">
+                            <input type="radio" class="star" id="three" data-starvalue="3" name="star_rating">
+                            <input type="radio" class="star" id="four" data-starvalue="4" name="star_rating">
+                            <input type="radio" class="star" id="five" data-starvalue="5" name="star_rating">
+                            <input type="radio" class="star" id="six" data-starvalue="6" name="star_rating">
+                            <input type="radio" class="star" id="seven" data-starvalue="7" name="star_rating">
+                            <input type="radio" class="star" id="eight" data-starvalue="8" name="star_rating">
+                            <input type="radio" class="star" id="nine" data-starvalue="9" name="star_rating">
+                            <input type="radio" class="star" id="ten" data-starvalue="10" name="star_rating">
                         </div>
                     </div>
                     
                     <!--MOVIE OBSERVATIONS-->
                     <div class="movie-observations-container">
                         <text class="label-form-field">Observations</text>
-                        <textarea class="movie-observations"></textarea>
+                        <textarea id="movie-observations-id" class="movie-observations"></textarea>
                     </div>
                 </div>
             </div>
