@@ -1,9 +1,9 @@
-const electron = require("electron");
-const ipc = electron.ipcRenderer;
 const { pathToFileURL } = require('node:url');
 const { showToastMessage, closeToastMessage } = require('../../index.js'); 
 const { nanoid } = require("nanoid");
 const fs = require('fs').promises;
+
+const logger = require('@electron/remote').require('./logger');
 
 let knex = require("knex")({
     client: "sqlite3",
@@ -15,7 +15,7 @@ let knex = require("knex")({
 
 let hasNewMovieCover = false, newMovieCover = "";
 //INIT
-function loadNewMovie() {
+function loadNewMovie() {   
     //Load Filters
 	$('#movie-year').html('');
 
@@ -245,7 +245,8 @@ async function saveMovie(movieTitle, movieYear, isFavMovie, movieRating, movieOb
     //insert new movie and keep db id
     const [idNewMovie] = await knex('Movies').insert(movieData)
     .catch(function(error) {
-        console.error(error)
+        logger.error(error);
+        console.error(error);
     });
 
     if(idNewMovie != null && idNewMovie > 0){        
@@ -257,7 +258,8 @@ async function saveMovie(movieTitle, movieYear, isFavMovie, movieRating, movieOb
         //insert new movie view
         await knex('MovieView').insert(movieViewData)
         .catch(function(error) {
-            console.error(error)
+            logger.error(error);
+            console.error(error);
         });
 
         //save new movie cover
@@ -274,7 +276,8 @@ async function saveMovie(movieTitle, movieYear, isFavMovie, movieRating, movieOb
             //insert new movie cover
             await knex('MovieCovers').insert(movieCoverData)
             .catch(function(error) {
-                console.error(error)
+                logger.error(error);
+                console.error(error);
             });
         }
 
@@ -320,11 +323,15 @@ let saveMovieCover = (movieTitle, newMovieCover) => {
 }
 
 async function renameFile(oldPath, newPath) {
-    try {
-      await fs.rename(oldPath, newPath);
-      console.log('Rename complete!');
-    } catch (err) {
-      console.error(err);
+    try 
+    {
+        await fs.rename(oldPath, newPath);
+        console.log('Rename complete!');
+        
+    } catch (err) 
+    {
+        logger.error(error);
+        console.error(error);
     }
 }
 

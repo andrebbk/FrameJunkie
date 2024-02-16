@@ -10,6 +10,9 @@ const BrowserWindow = electron.BrowserWindow*/
 const path = require("path");
 const url = require("url");
 
+
+require('@electron/remote/main').initialize();
+
 //debug();
 
 //window
@@ -48,6 +51,8 @@ function createWindow() {
         maximizable: false,
         icon: __dirname + '/Content/Icons/action-movie.ico',
     });
+
+    require('@electron/remote/main').enable(win.webContents);
 
       // and load the index.html of the app.
     win.loadURL(`file://${__dirname}/index.html`)
