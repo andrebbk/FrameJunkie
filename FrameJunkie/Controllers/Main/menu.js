@@ -79,6 +79,8 @@ function hideMenu(){
     $('#navcheck').click();    
 }
 
+let hasNewMovieCover = false;
+
 function loadNewMovie() {
     //Load Filters
 	$('#movie-year').html('');
@@ -93,7 +95,7 @@ function loadNewMovie() {
 
     //BUTTONS SECTION
     $('#btnSelectCover').on('click', function(){
-        $('#movie-cover-upload').click();
+        $('#movie-cover-upload').trigger("click"); //.click() call is deprecated
     });    
 
     $('#movie-cover-upload').on('change', function(event){
@@ -108,7 +110,9 @@ function loadNewMovie() {
                 //show refresh button
                 var btnRefresh = document.getElementById('btnRefreshMovieCover');
                 if(!document.getElementById('btnRefreshMovieCover').classList.contains("change"))
-                { document.querySelector('.refresh-movie-cover').classList.toggle('change'); }                    
+                { document.querySelector('.refresh-movie-cover').classList.toggle('change'); }      
+                
+                hasNewMovieCover = true;
             }          
         };
         reader.readAsDataURL(event.target.files[0]);
@@ -119,6 +123,8 @@ function loadNewMovie() {
         output.src = pathToFileURL("./Content/Images/No-Image-Placeholder.png");
 
         document.querySelector('.refresh-movie-cover').classList.toggle('change');
+
+        hasNewMovieCover = false;
     });    
 
     //add star events
@@ -181,6 +187,87 @@ function loadNewMovie() {
     });
 
     $('#btnSaveNewMovie').on('click', function(){
-        showToastMessage("Frame Junkie", "Save new movie test");
+        //validate form data
+        var validationResult = validateNewMovie();
+
+        if(validationResult.IsValid){
+            
+            //new movie data
+            let movieTitle = $('#movie-title').val(),
+            movieYear = $('#movie-year').val(),
+            isFavMovie = $('#movie-isfav').prop("checked"),
+            movieRating = 0;
+            movieObservations = $('#movie-observations-id').val(),
+            movieCover = document.getElementById('movie-cover-output').src;
+
+            //movie rating data
+            document.querySelectorAll(".star").forEach((ele) => {
+                if(ele.checked){
+                    movieRating = ele.getAttribute('data-starvalue');
+                    return;
+                }
+            });
+
+            //movie cover data
+            if(movieCover.includes("file:///")) movieCover = movieCover.replace("file:///", "");
+
+            console.log("Movie Data:");
+            console.log("Movie Title: " + movieTitle);
+            console.log("Movie Year: " + movieYear);
+            console.log("Movie Fav: " + isFavMovie);
+            console.log("Movie Rating: " + movieRating);
+            console.log("Movie Observations: " + movieObservations);
+            console.log("Movie Cover: " + movieCover);
+
+            showToastMessage("Frame Junkie", "New movie saved!");
+        }else{
+            showToastMessage("Frame Junkie", validationResult.ErrorMessage);
+        }
+        
     });
+}
+
+function validateNewMovie(){
+    let resultOuput = { IsValid: true, ErrorMessage: "" };
+    var crrYear = new Date().getFullYear();
+
+    //Movie Title
+    if($('#movie-title').val() == null || $('#movie-title').val() == '' || $('#movie-title').val() == ' '){
+        resultOuput.IsValid = false;
+        resultOuput.ErrorMessage = "Movie title is empty!";
+    }
+
+    //Movie Year
+    else if($('#movie-year').val() == null || ($('#movie-year').val() != null && ($('#movie-year').val() > Number(crrYear) || $('#movie-year').val() < 1980))){
+        resultOuput.IsValid = false;
+        resultOuput.ErrorMessage = "Movie year is not valid!";
+    }
+
+    //Movie Cover
+    else if(!hasNewMovieCover)
+    {
+        resultOuput.IsValid = false;
+        resultOuput.ErrorMessage = "Movie cover wasn't defined!";
+    }
+
+    //Movie Rating
+    else {
+        let hasRating = false;
+        var starElements = document.getElementsByClassName("star");
+        if(starElements != null && starElements.length > 0){
+            $.each(starElements, function(idx, value){
+                if(value.checked){
+                    hasRating = true;
+                    return;
+                }
+            });
+        }
+
+        if(!hasRating){
+            resultOuput.IsValid = false;
+            resultOuput.ErrorMessage = "Movie rating wasn't defined!";
+        }
+    }
+
+    return resultOuput;
 }
