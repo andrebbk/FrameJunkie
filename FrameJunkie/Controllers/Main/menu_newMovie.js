@@ -157,6 +157,7 @@ function clearNewMovieForm(){
     $('#movie-observations-id').val('');
 
     //Movie Cover
+    $('#movie-cover-upload').val('');
     var output = document.getElementById('movie-cover-output');
     output.src = pathToFileURL("./Content/Images/No-Image-Placeholder.png");
 
