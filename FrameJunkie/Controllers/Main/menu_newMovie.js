@@ -283,11 +283,7 @@ async function saveMovie(movieTitle, movieYear, isFavMovie, movieRating, movieOb
         }
 
         //clear form
-        clearNewMovieForm();
-
-        //test for load new id
-        //const foo = await knex('Movies').where("MovieId", idNewMovie).first();
-        //console.log(foo);
+        clearNewMovieForm();       
     }  
 
     showToastMessage("Frame Junkie", "New movie saved!");
