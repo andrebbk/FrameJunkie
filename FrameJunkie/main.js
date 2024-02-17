@@ -1,15 +1,9 @@
 //creating a window and it's main events
-//console.log('main process working');
-
 const { app, BrowserWindow, ipcMain } = require('electron');
 const debug = require('electron-debug');
 
-/*const electron = require("electron");
-const app = electron.app;
-const BrowserWindow = electron.BrowserWindow*/
 const path = require("path");
 const url = require("url");
-
 
 require('@electron/remote/main').initialize();
 
@@ -102,67 +96,67 @@ function createWindow() {
 
     //#endregion
 
-//QUERYS KNEX
-//************************************************************************************************************************************************************//
-win.webContents.on('dom-ready', () => {
-    //Get stats
-    ipcMain.on("getStats", function() {
-        let result = knex.select('*').from('v_MovieTvShowStats');
+    //QUERYS KNEX
+    //************************************************************************************************************************************************************//
+    win.webContents.on('dom-ready', () => {
+        //Get stats
+        ipcMain.on("getStats", function() {
+            let result = knex.select('*').from('v_MovieTvShowStats');
 
-        result.then(function (rows){
-            win.webContents.send("resultSent_stats", rows);
-        });       
-    });
+            result.then(function (rows){
+                win.webContents.send("resultSent_stats", rows);
+            });       
+        });
 
-    //Get movies views count
-    ipcMain.on("getMoviesViewsCount", function() {
-        let result = knex.select('*').from('v_MoviesViews');
+        //Get movies views count
+        ipcMain.on("getMoviesViewsCount", function() {
+            let result = knex.select('*').from('v_MoviesViews');
 
-        result.then(function (rows){
-            win.webContents.send("resultSent_mvc", rows);
+            result.then(function (rows){
+                win.webContents.send("resultSent_mvc", rows);
+            });
+        });
+
+        //Get tvshows views count
+        ipcMain.on("getTvShowsViewsCount", function() {
+            let result = knex.select('*').from('v_TvShowsViews');
+        
+            result.then(function (rows){
+                win.webContents.send('resultSent_tsvc', rows);
+            });
+        });
+
+        //get movies
+        ipcMain.on("getMovies", function(e, mTitle, mYear, mIsFav, mRating, crrPage) {
+            let result = knex
+            .select('*')
+            .from('v_Movies')
+            .orderBy([
+                { column: 'MovieYear', order: 'desc' }, 
+                { column: 'MovieTitle', order: 'asc' }
+            ])
+            .limit(50)
+            .offset(crrPage * 50);
+
+            if(mTitle && mTitle != '' && mTitle != ' '){
+                let queryStrTile = '%' + mTitle + '%';
+                result = result.whereLike('MovieTitle', queryStrTile);
+            }                
+
+            if(mYear && mYear != '' && mYear.length > 3)
+            result = result.whereLike('MovieYear', mYear);
+
+            if(mIsFav)
+                result = result.where('IsFavorite', 1);
+
+            if(mRating && mRating > 0 && mRating <= 10)
+                result = result.where('MovieRating', mRating);
+
+            result.then(function (rows){          
+                win.webContents.send('resultSent_movies', rows);
+            });  
         });
     });
-
-    //Get tvshows views count
-    ipcMain.on("getTvShowsViewsCount", function() {
-        let result = knex.select('*').from('v_TvShowsViews');
-    
-        result.then(function (rows){
-            win.webContents.send('resultSent_tsvc', rows);
-        });
-    });
-
-    //get movies
-    ipcMain.on("getMovies", function(e, mTitle, mYear, mIsFav, mRating, crrPage) {
-        let result = knex
-        .select('*')
-        .from('v_Movies')
-        .orderBy([
-            { column: 'MovieYear', order: 'desc' }, 
-            { column: 'MovieTitle', order: 'asc' }
-        ])
-        .limit(50)
-        .offset(crrPage * 50);
-
-        if(mTitle && mTitle != '' && mTitle != ' '){
-            let queryStrTile = '%' + mTitle + '%';
-            result = result.whereLike('MovieTitle', queryStrTile);
-        }                
-
-        if(mYear && mYear != '' && mYear.length > 3)
-        result = result.whereLike('MovieYear', mYear);
-
-        if(mIsFav)
-            result = result.where('IsFavorite', 1);
-
-        if(mRating && mRating > 0 && mRating <= 10)
-            result = result.where('MovieRating', mRating);
-
-        result.then(function (rows){          
-            win.webContents.send('resultSent_movies', rows);
-        });  
-    });
-});
 }
 
 app.on('ready', createWindow);

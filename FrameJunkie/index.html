@@ -37,11 +37,15 @@
         <!-- Bootstrap Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
-        <script src="./contents/bootstrap/5.0.2/js/bootstrap.min.js"></script>
+        <script type="text/javascript" rc="./contents/bootstrap/5.0.2/js/bootstrap.min.js"></script>
         
-        <script>
-            var $ = require('jQuery');
-            require('./index.js');    
-        </script>
+        <script>window.$ = window.jQuery = require('jQuery');</script>        
+        <script>        
+            try {
+                require('./index.js');
+            } catch (error) {
+               console.log(error);
+            }    
+        </script>          
     </body>
 </html>
