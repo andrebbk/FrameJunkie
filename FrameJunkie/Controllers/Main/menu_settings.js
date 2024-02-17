@@ -84,6 +84,8 @@ function loadAndShowMainConfig(configData){
 
             document.getElementById('loading_container').remove();
             document.getElementById('main_config_container').style.visibility = "visible";
+        
+            $("#main_config_container").animate({"opacity": 1}, 600);
         }
     });
 }

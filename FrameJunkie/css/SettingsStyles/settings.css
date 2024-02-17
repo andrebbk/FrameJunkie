@@ -38,7 +38,11 @@
     height: 100%;
 }
 
-
 .form-header1 {
     color: white;
+}
+
+.main-config-container{
+    visibility: collapse;
+    opacity: 0;
 }
