@@ -16,15 +16,15 @@
 }
 
 .form-settings::before {
-  content: ""; /* Create a pseudo-element */
-  position: absolute; /* Position the pseudo-element absolutely */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #4b3a27;
-  opacity: 0.7;
-  z-index: -1;
+    content: ""; /* Create a pseudo-element */
+    position: absolute; /* Position the pseudo-element absolutely */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #4b3a27;
+    opacity: 0.7;
+    z-index: -1;
 }
 
 .settings-head {
@@ -45,4 +45,94 @@
 .main-config-container{
     visibility: collapse;
     opacity: 0;
+    padding: 50px 0px 0px 50px;
+}
+
+
+/*Input Style*/
+.form__group {
+    position: relative;
+    padding: 15px 0 0;
+    margin-top: 20px;
+    margin-right: 40px;
+    width: 550px;
+    margin-bottom: 20px;
+  }
+  
+  .form__field {
+    font-family: inherit;
+    width: 100%;
+    border: 0;
+    border-bottom: 2px solid #9b9b9b;
+    outline: 0;
+    font-size: 1rem;
+    color: #fff;
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+  
+    &::placeholder {
+      color: transparent;
+    }
+  
+    &:placeholder-shown ~ .form__label {
+      font-size: 1.3rem;
+      cursor: text;
+      top: 20px;
+    }
+  }
+  
+  .form__label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    color: #9b9b9b;
+  }
+  
+  .form__field:focus {
+    ~ .form__label {
+      position: absolute;
+      top: 0;
+      display: block;
+      transition: 0.2s;
+      font-size: 1rem;
+      color: #9b9b9b;
+      font-weight:700;    
+    }
+    padding-bottom: 6px;  
+    font-weight: 700;
+    border-width: 3px;
+    border-image: linear-gradient(to right, #9b9b9b, #555);
+    border-image-slice: 1;
+  }
+  
+  /* reset input */
+  .form__field{
+    &:required,&:invalid { box-shadow:none; }
+  }
+  /*Input Style END*/
+
+
+.update-movie-covers-path{
+    z-index: 10;
+    position: absolute;
+    top: 90px;
+    left: 570px;
+    object-fit: contain;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.update-tvshows-covers-path{
+    z-index: 10;
+    position: absolute;
+    top: 160px;
+    left: 570px;
+    object-fit: contain;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
 }

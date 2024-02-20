@@ -50,11 +50,12 @@ const loadMainConfigurations = () => {
         });
 
         let resultOutput = { 
-        movieCoversPath: mCoversConfig != null ? mCoversConfig.Value : "", 
-        tvShowsCoversPath: tCoversConfig != null ? tCoversConfig.Value : ""
+            movieCoversPath: mCoversConfig != null ? mCoversConfig.Value : "", 
+            tvShowsCoversPath: tCoversConfig != null ? tCoversConfig.Value : ""
         };
 
         await resolve(resultOutput);  
+
       }).then(res => {      
         config = res;
         return config;
@@ -79,8 +80,8 @@ function loadAndShowMainConfig(configData){
         else{
             document.getElementById('settings_body').innerHTML += data;
             //set config data
-            document.getElementById("p1").textContent = configData.movieCoversPath;
-            document.getElementById("p2").textContent = configData.tvShowsCoversPath;
+            document.getElementById("movie-c-path").value = configData.movieCoversPath;
+            document.getElementById("tvshow-c-path").value = configData.tvShowsCoversPath;
 
             document.getElementById('loading_container').remove();
             document.getElementById('main_config_container').style.visibility = "visible";
