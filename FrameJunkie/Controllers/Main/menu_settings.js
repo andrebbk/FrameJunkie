@@ -2,6 +2,9 @@ const { showToastMessage, closeToastMessage } = require('../../index.js');
 const logger = require('@electron/remote').require('./logger');
 const fs = require('fs')
 const path = require('path');
+const { dialog } = require('@electron/remote');
+
+const { MediaTypeValues }  = require('@electron/remote').require('./enums');
 
 let knex = require("knex")({
     client: "sqlite3",
@@ -87,9 +90,35 @@ function loadAndShowMainConfig(configData){
             document.getElementById('main_config_container').style.visibility = "visible";
         
             $("#main_config_container").animate({"opacity": 1}, 600);
+
+            $("#btnUpdateMoviesCoversPath").on('click', function(event){
+                selectDirectory(MediaTypeValues.Movies.value);
+            });
+
+            $("#btnUpdateTvShowsCoversPath").on('click', function(event){
+                selectDirectory(MediaTypeValues.TvShows.value);
+            });
         }
     });
 }
 
+const selectDirectory = async (mediaTypeId) => {
+    let options = { properties: ["openDirectory"]};
 
-  module.exports = { loadSettings }
+    dialog.showOpenDialog(null, {properties: ['openDirectory']})
+    .then(result => {
+
+        if(result.filePaths != null && result.filePaths != undefined && result.filePaths.length > 0){
+            loadDirectory(mediaTypeId, result.filePaths[0] + '\\');
+        }        
+
+    }).catch(err => {
+        console.log(err);
+    });    
+}
+
+function loadDirectory(mediaTypeId, newDirectory){
+    alert(mediaTypeId.toString() + newDirectory);
+}
+
+module.exports = { loadSettings }
