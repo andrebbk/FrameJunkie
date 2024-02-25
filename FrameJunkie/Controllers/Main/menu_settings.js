@@ -4,7 +4,8 @@ const fs = require('fs')
 const path = require('path');
 const { dialog } = require('@electron/remote');
 
-const { MediaTypeValues }  = require('@electron/remote').require('./enums');
+const { MediaTypeValues } = require('@electron/remote').require('./enums');
+const { updateMainConfiguration } = require('../../Services/main-settings-service.js');
 
 let knex = require("knex")({
     client: "sqlite3",
@@ -13,8 +14,6 @@ let knex = require("knex")({
     },
     useNullAsDefault: true
 });
-
-
 
 function loadSettings(){
     const configs = loadMainConfigurations();
@@ -72,7 +71,7 @@ const loadMainConfigurations = () => {
     return {
         loader: loader
     };
-  };
+};
 
 function loadAndShowMainConfig(configData){
     fs.readFile(path.join(__dirname, '../../Views/SettingsPages/main-config.html'), (err, data) => {       
@@ -109,16 +108,23 @@ const selectDirectory = async (mediaTypeId) => {
     .then(result => {
 
         if(result.filePaths != null && result.filePaths != undefined && result.filePaths.length > 0){
-            loadDirectory(mediaTypeId, result.filePaths[0] + '\\');
+
+            //update config
+            if(updateMainConfiguration(mediaTypeId, result.filePaths[0] + '\\')){
+                if(mediaTypeId === MediaTypeValues.Movies.value){
+                    document.getElementById("movie-c-path").value = result.filePaths[0] + '\\'; //update UI
+                    showToastMessage("Frame Junkie", "Movies path configuration was updated!");
+                }
+                else if(mediaTypeId === MediaTypeValues.TvShows.value){
+                    document.getElementById("tvshow-c-path").value = result.filePaths[0] + '\\'; //update UI
+                    showToastMessage("Frame Junkie", "TvShows path configuration was updated!");
+                }
+            }
         }        
 
     }).catch(err => {
         console.log(err);
     });    
-}
-
-function loadDirectory(mediaTypeId, newDirectory){
-    alert(mediaTypeId.toString() + newDirectory);
 }
 
 module.exports = { loadSettings }
