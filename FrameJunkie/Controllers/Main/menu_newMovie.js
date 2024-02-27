@@ -210,7 +210,7 @@ function validateNewMovie(){
     return resultOuput;
 }
 
-function validateAndSaveMovie(movieTitle, movieYear, isFavMovie, movieRating, movieObservations, movieCover) {
+async function validateAndSaveMovie(movieTitle, movieYear, isFavMovie, movieRating, movieObservations, movieCover) {
     let queryStrTile = '%' + movieTitle + '%';
 
     let result = knex('Movies')
@@ -219,18 +219,33 @@ function validateAndSaveMovie(movieTitle, movieYear, isFavMovie, movieRating, mo
     .select('MovieId')
     .first();
 
-    result.then(function (rows){          
-        if(rows != null && rows.MovieId > 0)
-            showToastMessage("Frame Junkie", "This movie already exists!");
-        else{
-            //Save new movie
-            saveMovie(movieTitle, movieYear, isFavMovie, movieRating, movieObservations, movieCover);
-            
-        }            
+    //Getting covers path
+    let moviesCoversPath = await knex.select("Value").from("Configurations").where("Key", "MOVIES_COVERS_PATH").where("Deleted", 0).first()
+    .then(function(config){
+        if(config != null && config != undefined)
+            return config.Value;
+        else {
+            return "";
+        }           
     });
+
+    if(moviesCoversPath != null && moviesCoversPath != ""){
+        result.then(function (rows){          
+            if(rows != null && rows.MovieId > 0)
+                showToastMessage("Frame Junkie", "This movie already exists!");
+            else{
+                //Save new movie
+                saveMovie(moviesCoversPath, movieTitle, movieYear, isFavMovie, movieRating, movieObservations, movieCover);
+                
+            }            
+        });
+    }
+    else{
+        showToastMessage("Frame Junkie", "Movies covers path config doens't exist!");
+    }
 }
 
-async function saveMovie(movieTitle, movieYear, isFavMovie, movieRating, movieObservations, movieCover) {
+async function saveMovie(moviesCoversPath, movieTitle, movieYear, isFavMovie, movieRating, movieObservations, movieCover) {
     
     let movieData = { 
         MovieTitle: movieTitle, 
@@ -264,7 +279,7 @@ async function saveMovie(movieTitle, movieYear, isFavMovie, movieRating, movieOb
         });
 
         //save new movie cover
-        let newCover = saveMovieCover(movieTitle, movieCover);
+        let newCover = saveMovieCover(moviesCoversPath, movieTitle, movieCover);
         if(newCover != null){
             var movieCoverData = {
                 MovieId: idNewMovie,
@@ -289,7 +304,7 @@ async function saveMovie(movieTitle, movieYear, isFavMovie, movieRating, movieOb
     showToastMessage("Frame Junkie", "New movie saved!");
 }
 
-let saveMovieCover = (movieTitle, newMovieCover) => {
+let saveMovieCover = (moviesCoversPath, movieTitle, newMovieCover) => {
 
     if(movieTitle == null || movieTitle == '' || movieTitle == ' ' || newMovieCover == null)
         return null;
@@ -310,8 +325,8 @@ let saveMovieCover = (movieTitle, newMovieCover) => {
     let newCoverName = movieTitle.replace(/[^A-Z0-9]+/ig, "") + '_' + nanoid(7) + '.' + coverExtension;
    
     //TODO: Get config path for covers folder
-    let path = "C:\\Users\\AndrePC\\Downloads\\TesteFrameJunkie";
-    let newPath = path.concat('\\', newCoverName);
+    //let path = "C:\\Users\\AndrePC\\Downloads\\TesteFrameJunkie";
+    let newPath = moviesCoversPath.concat(newCoverName);
 
     //oldPath = newMovieCover
     renameFile(newMovieCover, newPath);

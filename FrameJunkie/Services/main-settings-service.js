@@ -32,7 +32,22 @@ async function updateMainConfiguration(mediaTypeId, directoryPath){
                     logger.error(err);
                     console.log(err);
                 });
-                
+            
+            //If config doens't exist, create a new one
+            if(updatedMoviesPathConfig.length < 1){
+                let configData = { 
+                    Key: 'MOVIES_COVERS_PATH', 
+                    Value: directoryPath,
+                    CreateDate: new Date().toISOString(),
+                    Deleted: 0
+                };
+
+                const [idConfig] = await knex('Configurations').insert(configData)
+                .catch(function(error) {
+                    logger.error(error);
+                    console.error(error);
+                });
+            }
         }
         else if(mediaTypeId === MediaTypeValues.TvShows.value){
             let updatedTvShowsPathConfig = await knex('Configurations')
@@ -47,6 +62,22 @@ async function updateMainConfiguration(mediaTypeId, directoryPath){
                     logger.error(err);
                     console.log(err);
                 });
+
+            //If config doens't exist, create a new one
+            if(updatedTvShowsPathConfig.length < 1){
+                let configData = { 
+                    Key: 'TV_SHOWS_COVERS_PATH', 
+                    Value: directoryPath,
+                    CreateDate: new Date().toISOString(),
+                    Deleted: 0
+                };
+
+                const [idConfig] = await knex('Configurations').insert(configData)
+                .catch(function(error) {
+                    logger.error(error);
+                    console.error(error);
+                });
+            }
         }
     }
     catch(error){
