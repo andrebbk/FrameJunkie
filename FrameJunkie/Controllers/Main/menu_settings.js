@@ -96,6 +96,12 @@ function loadAndShowMainConfig(configData){
 
             $("#btnUpdateTvShowsCoversPath").on('click', function(event){
                 selectDirectory(MediaTypeValues.TvShows.value);
+            });     
+            
+            //dropdown menu
+            $('.dropdown ul li').on('click', function(e){ 
+                e.preventDefault();
+                loadSettingsFromMenu($(this).attr("data-option"));       
             });
         }
     });
@@ -127,4 +133,14 @@ const selectDirectory = async (mediaTypeId) => {
     });    
 }
 
-module.exports = { loadSettings }
+function loadSettingsFromMenu(optionSelected){
+
+    if(optionSelected === "1"){
+        //load main settings
+    }
+
+    //close dropdown menu
+    $(".dropdown").removeAttr("open");
+}
+
+module.exports = { loadSettings, loadSettingsFromMenu }
