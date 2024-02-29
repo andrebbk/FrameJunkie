@@ -7,6 +7,9 @@ const { dialog } = require('@electron/remote');
 const { MediaTypeValues } = require('@electron/remote').require('./enums');
 const { updateMainConfiguration } = require('../../Services/main-settings-service.js');
 
+let currentLoadedOption = "1";
+const area_MainConfig = '../../Views/SettingsPages/main-config.html';
+
 let knex = require("knex")({
     client: "sqlite3",
     connection: {
@@ -74,29 +77,15 @@ const loadMainConfigurations = () => {
 };
 
 function loadAndShowMainConfig(configData){
-    fs.readFile(path.join(__dirname, '../../Views/SettingsPages/main-config.html'), (err, data) => {       
+    fs.readFile(path.join(__dirname, area_MainConfig), (err, data) => {       
         if(err != null){
             logger.error(error);
             console.error(error);
         }
         else{
             document.getElementById('settings_body').innerHTML += data;
-            //set config data
-            document.getElementById("movie-c-path").value = configData.movieCoversPath;
-            document.getElementById("tvshow-c-path").value = configData.tvShowsCoversPath;
 
-            document.getElementById('loading_container').remove();
-            document.getElementById('main_config_container').style.visibility = "visible";
-        
-            $("#main_config_container").animate({"opacity": 1}, 600);
-
-            $("#btnUpdateMoviesCoversPath").on('click', function(event){
-                selectDirectory(MediaTypeValues.Movies.value);
-            });
-
-            $("#btnUpdateTvShowsCoversPath").on('click', function(event){
-                selectDirectory(MediaTypeValues.TvShows.value);
-            });     
+            initMainConfigurationArea(configData);
             
             //dropdown menu
             $('.dropdown ul li').on('click', function(e){ 
@@ -133,14 +122,69 @@ const selectDirectory = async (mediaTypeId) => {
     });    
 }
 
+function resetContainer(){
+    var loadingHtml = '<div id="loading_container" class="loading-container">' +
+    '<img class="loading-img" src="./Content/Images/loading_animation.gif" width="60" height="60"></div>';
+
+    document.getElementById('settings_body').innerHTML = loadingHtml;
+}
+
 function loadSettingsFromMenu(optionSelected){
 
-    if(optionSelected === "1"){
+    if(optionSelected === "1" && currentLoadedOption !== optionSelected){
         //load main settings
+        resetContainer();
+
+        const configs = loadMainConfigurations();
+        setTimeout(() => configs.loader()
+            .then(result => {
+                loadAndShowArea(area_MainConfig, result);
+            }), 1000);
     }
+
+    //update current loaded option
+    currentLoadedOption = optionSelected;
 
     //close dropdown menu
     $(".dropdown").removeAttr("open");
 }
 
-module.exports = { loadSettings, loadSettingsFromMenu }
+
+module.exports = { loadSettings }
+
+//AREAS
+function loadAndShowArea(areaPath, configData){
+    fs.readFile(path.join(__dirname, areaPath), (err, data) => {       
+        if(err != null){
+            logger.error(error);
+            console.error(error);
+        }
+        else{
+            document.getElementById('settings_body').innerHTML += data;
+
+            if(currentLoadedOption === "1"){
+                initMainConfigurationArea(configData);
+            }
+            
+        }
+    });
+}
+
+function initMainConfigurationArea(configData){
+    //set config data
+    document.getElementById("movie-c-path").value = configData.movieCoversPath;
+    document.getElementById("tvshow-c-path").value = configData.tvShowsCoversPath;
+
+    document.getElementById('loading_container').remove();
+    document.getElementById('main_config_container').style.visibility = "visible";
+
+    $("#main_config_container").animate({"opacity": 1}, 600);
+
+    $("#btnUpdateMoviesCoversPath").on('click', function(event){
+        selectDirectory(MediaTypeValues.Movies.value);
+    });
+
+    $("#btnUpdateTvShowsCoversPath").on('click', function(event){
+        selectDirectory(MediaTypeValues.TvShows.value);
+    });    
+}
