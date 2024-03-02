@@ -7,8 +7,9 @@ const { dialog } = require('@electron/remote');
 const { MediaTypeValues } = require('@electron/remote').require('./enums');
 const { updateMainConfiguration } = require('../../Services/main-settings-service.js');
 
-let currentLoadedOption = "1";
+let currentLoadedOption = "2"; //TODO: Set 1 after testing
 const area_MainConfig = '../../Views/SettingsPages/main-config.html';
+const area_MoviesConfig = '../../Views/SettingsPages/movies-config.html';
 
 let knex = require("knex")({
     client: "sqlite3",
@@ -19,11 +20,15 @@ let knex = require("knex")({
 });
 
 function loadSettings(){
-    const configs = loadMainConfigurations();
+    /*const configs = loadMainConfigurations();
     setTimeout(() => configs.loader()
         .then(result => {
             loadAndShowMainConfig(result);
-        }), 1000);
+        }), 1000);*/
+
+    //TODO: Remove after testing
+    const configs = "";
+    setTimeout(() => { loadAndShowArea(area_MoviesConfig, configs); }, 1000);
 }
 
 const loadMainConfigurations = () => {
@@ -131,16 +136,23 @@ function resetContainer(){
 
 function loadSettingsFromMenu(optionSelected){
 
-    if(optionSelected === "1" && currentLoadedOption !== optionSelected){
-        //load main settings
+    if(currentLoadedOption !== optionSelected){
         resetContainer();
 
-        const configs = loadMainConfigurations();
-        setTimeout(() => configs.loader()
-            .then(result => {
-                loadAndShowArea(area_MainConfig, result);
-            }), 1000);
-    }
+        if(optionSelected === "1"){
+            //load main settings           
+            const configs = loadMainConfigurations();
+            setTimeout(() => configs.loader()
+                .then(result => {
+                    loadAndShowArea(area_MainConfig, result);
+                }), 1000);
+        }
+        else if(optionSelected === "2"){
+            //load movies settings    
+            const configs = "";
+            setTimeout(() => { loadAndShowArea(area_MoviesConfig, configs); }, 1000);
+        }
+    }    
 
     //update current loaded option
     currentLoadedOption = optionSelected;
@@ -165,6 +177,9 @@ function loadAndShowArea(areaPath, configData){
             if(currentLoadedOption === "1"){
                 initMainConfigurationArea(configData);
             }
+            else if(currentLoadedOption === "2"){
+                initMoviesConfigurationArea(configData);
+            }
             
         }
     });
@@ -187,4 +202,22 @@ function initMainConfigurationArea(configData){
     $("#btnUpdateTvShowsCoversPath").on('click', function(event){
         selectDirectory(MediaTypeValues.TvShows.value);
     });    
+}
+
+function initMoviesConfigurationArea(configData){
+    document.getElementById('loading_container').remove();
+    document.getElementById('movies_config_container').style.visibility = "visible";
+
+    $("#movies_config_container").animate({"opacity": 1}, 600);
+
+    var DataTable = require( 'datatables.net' );
+ 
+    let table = new DataTable('#myTable', {
+        bLengthChange: false,
+        bFilter: false, 
+        bInfo: true,
+        ordering: true,
+        searching: false,
+        paging: true
+    });
 }

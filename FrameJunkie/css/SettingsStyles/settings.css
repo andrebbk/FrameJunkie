@@ -1,5 +1,6 @@
 /* Including one css file into other */
 @import "../dots-dropdown.css";
+@import "./movies-settings.css";
 
 .settings-container {
     display: block;

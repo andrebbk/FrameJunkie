@@ -10,6 +10,7 @@
         "@preline/input-number": "^2.0.2",
         "bootstrap": "^5.0.2",
         "compass-mixins": "^0.12.12",
+        "datatables.net-dt": "^2.0.1",
         "electron-debug": "^3.2.0",
         "electron-log": "^5.1.1",
         "electron-rebuild": "^3.2.9",

@@ -9,7 +9,8 @@
         <link rel="stylesheet" href="./contents/bootstrap/5.0.2/css/bootstrap.min.css" />
         <link rel="stylesheet" href="./css/main.css" />
         <link rel="stylesheet" href="./css/toast.css" />
-
+        <link rel="stylesheet" href="./node_modules/datatables.net-dt/css/dataTables.dataTables.min.css">
+        
         <title>Frame Junkie</title>
     </head>
     <body>  
@@ -37,8 +38,8 @@
         <!-- Bootstrap Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" rc="./contents/bootstrap/5.0.2/js/bootstrap.min.js"></script>
-        
+        <script type="text/javascript" rc="./contents/bootstrap/5.0.2/js/bootstrap.min.js"></script>        
+
         <script>window.$ = window.jQuery = require('jQuery');</script>        
         <script>        
             try {
@@ -46,6 +47,9 @@
             } catch (error) {
                console.log(error);
             }    
-        </script>          
+        </script>     
+
+         <!-- JavaScripts that need jQuery -->
+        <script src="node_modules/datatables.net-dt/js/dataTables.dataTables.min.js"></script>
     </body>
 </html>
