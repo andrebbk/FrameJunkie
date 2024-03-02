@@ -2,12 +2,14 @@ const { showToastMessage, closeToastMessage } = require('../../index.js');
 const logger = require('@electron/remote').require('./logger');
 const fs = require('fs')
 const path = require('path');
+const  moment = require('moment');
+
 const { dialog } = require('@electron/remote');
 
 const { MediaTypeValues } = require('@electron/remote').require('./enums');
 const { updateMainConfiguration } = require('../../Services/main-settings-service.js');
 
-let currentLoadedOption = "2"; //TODO: Set 1 after testing
+let currentLoadedOption = "1";
 const area_MainConfig = '../../Views/SettingsPages/main-config.html';
 const area_MoviesConfig = '../../Views/SettingsPages/movies-config.html';
 
@@ -20,17 +22,14 @@ let knex = require("knex")({
 });
 
 function loadSettings(){
-    /*const configs = loadMainConfigurations();
+    const configs = loadMainConfigurations();
     setTimeout(() => configs.loader()
         .then(result => {
             loadAndShowMainConfig(result);
-        }), 1000);*/
-
-    //TODO: Remove after testing
-    const configs = "";
-    setTimeout(() => { loadAndShowArea(area_MoviesConfig, configs); }, 1000);
+        }), 1000);          
 }
 
+//DB
 const loadMainConfigurations = () => {
     let config = null;
   
@@ -81,6 +80,40 @@ const loadMainConfigurations = () => {
     };
 };
 
+const loadData = () => {
+    let config = null;
+  
+    const loader = () => {
+      return new Promise(async (resolve, reject) => {
+
+        //load data
+        const movies = await knex('Movies')
+        .where("Deleted", 0)
+        .orderBy('CreateDate', 'desc')
+        .select("*")
+        .catch(function(error) {
+            logger.error(error);
+            console.error(error);
+        });
+
+        await resolve(movies);  
+
+      }).then(res => {      
+        config = res;
+        return config;
+      })
+      .catch((err) => {
+        logger.error(error);
+        console.error(err);
+      });
+    };
+  
+    return {
+        loader: loader
+    };
+};
+
+//CONTROLS
 function loadAndShowMainConfig(configData){
     fs.readFile(path.join(__dirname, area_MainConfig), (err, data) => {       
         if(err != null){
@@ -149,8 +182,11 @@ function loadSettingsFromMenu(optionSelected){
         }
         else if(optionSelected === "2"){
             //load movies settings    
-            const configs = "";
-            setTimeout(() => { loadAndShowArea(area_MoviesConfig, configs); }, 1000);
+            const configs = loadData();
+            setTimeout(() => configs.loader()
+                .then(result => {
+                    loadAndShowArea(area_MoviesConfig, result);
+                }), 1000);  
         }
     }    
 
@@ -165,7 +201,7 @@ function loadSettingsFromMenu(optionSelected){
 module.exports = { loadSettings }
 
 //AREAS
-function loadAndShowArea(areaPath, configData){
+function loadAndShowArea(areaPath, areaData){
     fs.readFile(path.join(__dirname, areaPath), (err, data) => {       
         if(err != null){
             logger.error(error);
@@ -175,10 +211,10 @@ function loadAndShowArea(areaPath, configData){
             document.getElementById('settings_body').innerHTML += data;
 
             if(currentLoadedOption === "1"){
-                initMainConfigurationArea(configData);
+                initMainConfigurationArea(areaData);
             }
             else if(currentLoadedOption === "2"){
-                initMoviesConfigurationArea(configData);
+                initMoviesConfigurationArea(areaData);
             }
             
         }
@@ -204,7 +240,7 @@ function initMainConfigurationArea(configData){
     });    
 }
 
-function initMoviesConfigurationArea(configData){
+function initMoviesConfigurationArea(areaData){   
     document.getElementById('loading_container').remove();
     document.getElementById('movies_config_container').style.visibility = "visible";
 
@@ -212,12 +248,46 @@ function initMoviesConfigurationArea(configData){
 
     var DataTable = require( 'datatables.net' );
  
-    let table = new DataTable('#myTable', {
+    let table = new DataTable('#settingsGrid', {
         bLengthChange: false,
         bFilter: false, 
         bInfo: true,
         ordering: true,
         searching: false,
-        paging: true
+        paging: true,
+        processing : true,
+        pageLength: 10,
+        order: [0,'desc'],
+        columns: getSettingsGridColumns(),
+        data: areaData
     });
+}
+
+function getSettingsGridColumns(){
+    let output = [];
+
+    output.push({ name: "MovieId", data: 'MovieId', title: 'Id', visible: true, with:'20px' });
+    output.push({ name: "MovieTitle", data: 'MovieTitle', title: 'Title', visible: true  });
+    output.push({ name: "MovieYear", data: 'MovieYear', title: 'Year', visible: true  });
+    output.push({ name: "NrViews", data: 'NrViews', title: 'Views', visible: true  });
+    output.push({ name: "IsFavorite", data: 'IsFavorite', title: 'IsFavorite', visible: true  });
+    output.push({ name: "MovieRating", data: 'MovieRating', title: 'Rating', visible: true  });
+    output.push({ name: "CreateDate", data: 'CreateDate', title: 'Create Date', visible: true, render: createDateFormatter });
+    output.push({ name: "Observations", data: 'Observations', title: 'Observations', visible: true, render: observationsFormatter  });
+
+    return output;
+}
+
+function createDateFormatter(data, type, row, meta){   
+    return moment(data).format("DD-MM-YYYY HH:mm:ss");
+}
+
+function observationsFormatter(data, type, row, meta){
+    if(data != null && data != '' && data != ' '){
+        if(data.length > 24){
+            return data.substr(0, 20).concat(" ...");
+        }
+    }
+
+    return data;
 }
