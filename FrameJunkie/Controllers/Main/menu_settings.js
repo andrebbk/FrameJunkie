@@ -80,23 +80,50 @@ const loadMainConfigurations = () => {
     };
 };
 
-const loadData = (tableName) => {
+const loadData = (tableName, optionSelected) => {
     let config = null;
   
     const loader = () => {
       return new Promise(async (resolve, reject) => {
+      
+        if(optionSelected === "4"){
+            //Load movie views
+            const settingsData = await knex('MovieView')
+            .join('Movies', 'MovieView.MovieId', '=', 'Movies.MovieId')
+            .orderBy('MovieView.CreateDate', 'desc')
+            .select('MovieView.Id', 'MovieView.MovieId', 'Movies.MovieTitle', 'MovieView.CreateDate')
+            .catch(function(error) {
+                logger.error(error);
+                console.error(error);
+            });
 
-        //load data
-        const movies = await knex(tableName)
-        .where("Deleted", 0)
-        .orderBy('CreateDate', 'desc')
-        .select("*")
-        .catch(function(error) {
-            logger.error(error);
-            console.error(error);
-        });
+            await resolve(settingsData);              
+        }
+        else if(optionSelected === "7"){
+            //Load tvshow views
+            const settingsData = await knex('TvShowView')
+            .join('TvShows', 'TvShowView.TvShowId', '=', 'TvShows.TvShowId')
+            .orderBy('TvShowView.CreateDate', 'desc')
+            .select('TvShowView.Id', 'TvShowView.TvShowId', 'TvShows.TvShowTitle', 'TvShowView.CreateDate')
+            .catch(function(error) {
+                logger.error(error);
+                console.error(error);
+            });
 
-        await resolve(movies);  
+            await resolve(settingsData);    
+        } 
+        else{
+            //load data
+            const settingsData = await knex(tableName).where("Deleted", 0)
+            .orderBy('CreateDate', 'desc')
+            .select("*")
+            .catch(function(error) {
+                logger.error(error);
+                console.error(error);
+            });
+
+            await resolve(settingsData);  
+        }        
 
       }).then(res => {      
         config = res;
@@ -184,16 +211,48 @@ function loadSettingsFromMenu(optionSelected){
                 }), 1000);
         }
         else if(optionSelected === "2"){
-            //load movies settings    
-            const configs = loadData('Movies');
+            //load settings data
+            const configs = loadData('Movies', optionSelected);
             setTimeout(() => configs.loader()
                 .then(result => {
                     loadAndShowArea(area_SettingsDataConfig, result);
                 }), 1000);  
         }
         else if(optionSelected === "3"){
-            //load movies settings    
-            const configs = loadData('MovieCovers');
+            //load settings data
+            const configs = loadData('MovieCovers', optionSelected);
+            setTimeout(() => configs.loader()
+                .then(result => {
+                    loadAndShowArea(area_SettingsDataConfig, result);
+                }), 1000);  
+        }
+        else if(optionSelected === "4"){
+            //load settings data
+            const configs = loadData('MovieView', optionSelected);
+            setTimeout(() => configs.loader()
+                .then(result => {
+                    loadAndShowArea(area_SettingsDataConfig, result);
+                }), 1000);  
+        }
+        else if(optionSelected === "5"){
+            //load settings data
+            const configs = loadData('TvShows', optionSelected);
+            setTimeout(() => configs.loader()
+                .then(result => {
+                    loadAndShowArea(area_SettingsDataConfig, result);
+                }), 1000);  
+        }
+        else if(optionSelected === "6"){
+            //load settings data
+            const configs = loadData('TvShowCovers', optionSelected);
+            setTimeout(() => configs.loader()
+                .then(result => {
+                    loadAndShowArea(area_SettingsDataConfig, result);
+                }), 1000);  
+        }
+        else if(optionSelected === "7"){
+            //load settings data
+            const configs = loadData('TvShowView', optionSelected);
             setTimeout(() => configs.loader()
                 .then(result => {
                     loadAndShowArea(area_SettingsDataConfig, result);
@@ -254,8 +313,20 @@ function initSettingsDataConfigurationArea(areaData){
         document.getElementById('settings_data_header').innerHTML = "Movies";
     }   
     else if(currentLoadedOption === "3"){
-        document.getElementById('settings_data_header').innerHTML = "Movie Covers";
-    }     
+        document.getElementById('settings_data_header').innerHTML = "Movies Covers";
+    }   
+    else if(currentLoadedOption === "4"){
+        document.getElementById('settings_data_header').innerHTML = "Movies Views";
+    }   
+    else if(currentLoadedOption === "5"){
+        document.getElementById('settings_data_header').innerHTML = "Tv Shows";
+    }  
+    else if(currentLoadedOption === "6"){
+        document.getElementById('settings_data_header').innerHTML = "Tv Shows Covers";
+    }    
+    else if(currentLoadedOption === "7"){
+        document.getElementById('settings_data_header').innerHTML = "Tv Shows Views";
+    }              
 
     var DataTable = require( 'datatables.net' );
  
@@ -296,12 +367,43 @@ function getSettingsGridColumns(){
     }   
     else if(currentLoadedOption === "3") {
         output.push({ name: "MovieCoverId", data: 'MovieCoverId', title: 'Id', visible: true, width:'5%' });
-        output.push({ name: "MovieId", data: 'MovieId', title: 'Movie Id', visible: true, width:'7%'  });
-        output.push({ name: "CoverName", data: 'CoverName', title: 'Cover Name', visible: true, width:'10%' });
+        output.push({ name: "MovieId", data: 'MovieId', title: 'Movie Id', visible: true, width:'8%'  });
+        output.push({ name: "CoverName", data: 'CoverName', title: 'Cover Name', visible: true, width:'15%', render: coverNameFormatter });
         output.push({ name: "CoverPath", data: 'CoverPath', title: 'Cover Path', visible: true  });
         output.push({ name: "CreateDate", data: 'CreateDate', title: 'Create Date', visible: true, render: createDateFormatter });
     }
-    
+    else if(currentLoadedOption === "4") {
+        output.push({ name: "Id", data: 'Id', title: 'Id', visible: true, width:'0.5%' });
+        output.push({ name: "MovieId", data: 'MovieId', title: 'Movie Id', visible: true, width:'3%'  });
+        output.push({ name: "MovieTitle", data: 'MovieTitle', title: 'Title', visible: true, width:'40%' });
+        output.push({ name: "CreateDate", data: 'CreateDate', title: 'Create Date', visible: true, render: createDateFormatter, width:'10%' });
+    }
+    else if(currentLoadedOption === "5") {
+        output.push({ name: "TvShowId", data: 'TvShowId', title: 'Id', visible: true, width:'5%' });
+        output.push({ name: "TvShowTitle", data: 'TvShowTitle', title: 'Title', visible: true  });
+        output.push({ name: "TvShowYear", data: 'TvShowYear', title: 'Year', visible: true  });
+        output.push({ name: "TvShowSeasons", data: 'TvShowSeasons', title: 'Seasons', visible: true  });
+        output.push({ name: "TvShowEpisodes", data: 'TvShowEpisodes', title: 'Episodes', visible: true  });
+        output.push({ name: "NrViews", data: 'NrViews', title: 'Views', visible: true  });
+        output.push({ name: "IsFavorite", data: 'IsFavorite', title: 'IsFavorite', visible: true  });
+        output.push({ name: "TvShowRating", data: 'TvShowRating', title: 'Rating', visible: true  });
+        output.push({ name: "IsFinished", data: 'IsFinished', title: 'IsFinished', visible: true  });
+        output.push({ name: "CreateDate", data: 'CreateDate', title: 'Create Date', visible: true, render: createDateFormatter });
+        output.push({ name: "Observations", data: 'Observations', title: 'Observations', visible: true, render: observationsFormatter  });
+    }     
+    else if(currentLoadedOption === "6") {
+        output.push({ name: "TvShowCoverId", data: 'TvShowCoverId', title: 'Id', visible: true, width:'5%' });
+        output.push({ name: "TvShowId", data: 'TvShowId', title: 'TvShow Id', visible: true, width:'8%'  });
+        output.push({ name: "CoverName", data: 'CoverName', title: 'Cover Name', visible: true, width:'15%', render: coverNameFormatter });
+        output.push({ name: "CoverPath", data: 'CoverPath', title: 'Cover Path', visible: true  });
+        output.push({ name: "CreateDate", data: 'CreateDate', title: 'Create Date', visible: true, render: createDateFormatter });
+    }  
+    else if(currentLoadedOption === "7") {
+        output.push({ name: "Id", data: 'Id', title: 'Id', visible: true, width:'0.5%' });
+        output.push({ name: "TvShowId", data: 'TvShowId', title: 'Tv Show Id', visible: true, width:'6%'  });
+        output.push({ name: "TvShowTitle", data: 'TvShowTitle', title: 'Title', visible: true, width:'40%' });
+        output.push({ name: "CreateDate", data: 'CreateDate', title: 'Create Date', visible: true, render: createDateFormatter, width:'10%' });
+    }
 
     return output;
 }
@@ -314,6 +416,16 @@ function observationsFormatter(data, type, row, meta){
     if(data != null && data != '' && data != ' '){
         if(data.length > 24){
             return data.substr(0, 20).concat(" ...");
+        }
+    }
+
+    return data;
+}
+
+function coverNameFormatter(data, type, row, meta){
+    if(data != null && data != '' && data != ' '){
+        if(data.length > 33){
+            return data.substr(0, 30).concat(" ...");
         }
     }
 
