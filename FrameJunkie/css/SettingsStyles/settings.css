@@ -1,6 +1,5 @@
 /* Including one css file into other */
 @import "../dots-dropdown.css";
-@import "./movies-settings.css";
 
 .settings-container {
     display: block;
@@ -187,3 +186,16 @@
   right: 0;
 }
 /*END BUTTON FORM */
+
+.settings-data-config-container {
+  visibility: collapse;
+  opacity: 0;
+  padding: 20px 0px 0px 10px;
+}
+
+.settings-data-config-container table td {
+  transition: all .5s;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}

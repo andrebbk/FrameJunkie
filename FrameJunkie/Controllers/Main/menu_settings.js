@@ -11,7 +11,7 @@ const { updateMainConfiguration } = require('../../Services/main-settings-servic
 
 let currentLoadedOption = "1";
 const area_MainConfig = '../../Views/SettingsPages/main-config.html';
-const area_MoviesConfig = '../../Views/SettingsPages/movies-config.html';
+const area_SettingsDataConfig = '../../Views/SettingsPages/settings-data-config.html';
 
 let knex = require("knex")({
     client: "sqlite3",
@@ -80,14 +80,14 @@ const loadMainConfigurations = () => {
     };
 };
 
-const loadData = () => {
+const loadData = (tableName) => {
     let config = null;
   
     const loader = () => {
       return new Promise(async (resolve, reject) => {
 
         //load data
-        const movies = await knex('Movies')
+        const movies = await knex(tableName)
         .where("Deleted", 0)
         .orderBy('CreateDate', 'desc')
         .select("*")
@@ -172,6 +172,9 @@ function loadSettingsFromMenu(optionSelected){
     if(currentLoadedOption !== optionSelected){
         resetContainer();
 
+        //update current loaded option
+        currentLoadedOption = optionSelected;
+
         if(optionSelected === "1"){
             //load main settings           
             const configs = loadMainConfigurations();
@@ -182,16 +185,21 @@ function loadSettingsFromMenu(optionSelected){
         }
         else if(optionSelected === "2"){
             //load movies settings    
-            const configs = loadData();
+            const configs = loadData('Movies');
             setTimeout(() => configs.loader()
                 .then(result => {
-                    loadAndShowArea(area_MoviesConfig, result);
+                    loadAndShowArea(area_SettingsDataConfig, result);
                 }), 1000);  
         }
-    }    
-
-    //update current loaded option
-    currentLoadedOption = optionSelected;
+        else if(optionSelected === "3"){
+            //load movies settings    
+            const configs = loadData('MovieCovers');
+            setTimeout(() => configs.loader()
+                .then(result => {
+                    loadAndShowArea(area_SettingsDataConfig, result);
+                }), 1000);  
+        }
+    }        
 
     //close dropdown menu
     $(".dropdown").removeAttr("open");
@@ -213,8 +221,8 @@ function loadAndShowArea(areaPath, areaData){
             if(currentLoadedOption === "1"){
                 initMainConfigurationArea(areaData);
             }
-            else if(currentLoadedOption === "2"){
-                initMoviesConfigurationArea(areaData);
+            else {
+                initSettingsDataConfigurationArea(areaData);
             }
             
         }
@@ -240,11 +248,14 @@ function initMainConfigurationArea(configData){
     });    
 }
 
-function initMoviesConfigurationArea(areaData){   
-    document.getElementById('loading_container').remove();
-    document.getElementById('movies_config_container').style.visibility = "visible";
+function initSettingsDataConfigurationArea(areaData){   
 
-    $("#movies_config_container").animate({"opacity": 1}, 600);
+    if(currentLoadedOption === "2"){
+        document.getElementById('settings_data_header').innerHTML = "Movies";
+    }   
+    else if(currentLoadedOption === "3"){
+        document.getElementById('settings_data_header').innerHTML = "Movie Covers";
+    }     
 
     var DataTable = require( 'datatables.net' );
  
@@ -261,19 +272,36 @@ function initMoviesConfigurationArea(areaData){
         columns: getSettingsGridColumns(),
         data: areaData
     });
+
+    //Show data container
+    document.getElementById('loading_container').remove();
+    document.getElementById('settings_data_config_container').style.visibility = "visible";
+
+    $("#settings_data_config_container").animate({"opacity": 1}, 600);
 }
 
+//DATATABLES
 function getSettingsGridColumns(){
     let output = [];
 
-    output.push({ name: "MovieId", data: 'MovieId', title: 'Id', visible: true, with:'20px' });
-    output.push({ name: "MovieTitle", data: 'MovieTitle', title: 'Title', visible: true  });
-    output.push({ name: "MovieYear", data: 'MovieYear', title: 'Year', visible: true  });
-    output.push({ name: "NrViews", data: 'NrViews', title: 'Views', visible: true  });
-    output.push({ name: "IsFavorite", data: 'IsFavorite', title: 'IsFavorite', visible: true  });
-    output.push({ name: "MovieRating", data: 'MovieRating', title: 'Rating', visible: true  });
-    output.push({ name: "CreateDate", data: 'CreateDate', title: 'Create Date', visible: true, render: createDateFormatter });
-    output.push({ name: "Observations", data: 'Observations', title: 'Observations', visible: true, render: observationsFormatter  });
+    if(currentLoadedOption === "2") {
+        output.push({ name: "MovieId", data: 'MovieId', title: 'Id', visible: true, width:'5%' });
+        output.push({ name: "MovieTitle", data: 'MovieTitle', title: 'Title', visible: true  });
+        output.push({ name: "MovieYear", data: 'MovieYear', title: 'Year', visible: true  });
+        output.push({ name: "NrViews", data: 'NrViews', title: 'Views', visible: true  });
+        output.push({ name: "IsFavorite", data: 'IsFavorite', title: 'IsFavorite', visible: true  });
+        output.push({ name: "MovieRating", data: 'MovieRating', title: 'Rating', visible: true  });
+        output.push({ name: "CreateDate", data: 'CreateDate', title: 'Create Date', visible: true, render: createDateFormatter });
+        output.push({ name: "Observations", data: 'Observations', title: 'Observations', visible: true, render: observationsFormatter  });
+    }   
+    else if(currentLoadedOption === "3") {
+        output.push({ name: "MovieCoverId", data: 'MovieCoverId', title: 'Id', visible: true, width:'5%' });
+        output.push({ name: "MovieId", data: 'MovieId', title: 'Movie Id', visible: true, width:'7%'  });
+        output.push({ name: "CoverName", data: 'CoverName', title: 'Cover Name', visible: true, width:'10%' });
+        output.push({ name: "CoverPath", data: 'CoverPath', title: 'Cover Path', visible: true  });
+        output.push({ name: "CreateDate", data: 'CreateDate', title: 'Create Date', visible: true, render: createDateFormatter });
+    }
+    
 
     return output;
 }
