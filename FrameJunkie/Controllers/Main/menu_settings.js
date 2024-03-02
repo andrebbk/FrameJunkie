@@ -328,8 +328,8 @@ function initSettingsDataConfigurationArea(areaData){
         document.getElementById('settings_data_header').innerHTML = "Tv Shows Views";
     }              
 
-    var DataTable = require( 'datatables.net' );
- 
+    var DataTable = require('datatables.net');
+
     let table = new DataTable('#settingsGrid', {
         bLengthChange: false,
         bFilter: false, 
@@ -349,6 +349,15 @@ function initSettingsDataConfigurationArea(areaData){
     document.getElementById('settings_data_config_container').style.visibility = "visible";
 
     $("#settings_data_config_container").animate({"opacity": 1}, 600);
+
+    //add tooltip to cover name
+    $('#settingsGrid').on('mouseover','tbody tr', function (e) {
+        var t = table.row( this ).data();
+
+        if(t.CoverName != null && t.CoverName != undefined){
+            this.title = t.CoverName;
+        }        
+    } );  
 }
 
 //DATATABLES
