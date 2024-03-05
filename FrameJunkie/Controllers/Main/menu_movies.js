@@ -130,8 +130,25 @@ function loadMovies(){
 	//Get movies
 	currentPage = 0;
 	ipc.send("getMovies", null, null, null, null, currentPage);
-	ipc.on("resultSent_movies", function (event, result) {
+	ipc.on("resultSent_movies", async function (event, result) {
+
+		//to top
+		$("#content-main-app").animate({ scrollTop: 0 }, "fast");
+
+		document.getElementById('pagination-controls-container').style.display = "none";
+		document.getElementById('gridMovies').style.visibility = "collapse";
+		document.getElementById('gridMovies').style.opacity = 0;
+
+		//show loading
+		var loadingHtml = '<div id="loading_container" class="loading-container">' +
+    	'<img class="loading-img" src="./Content/Images/loading_animation.gif" width="60" height="60"></div>';
+
+    	document.getElementById('movies_empty_container').innerHTML = loadingHtml;
 		$('#gridMovies').html('');
+		
+		document.getElementById("content-main-app").style.overflowY = "hidden";	
+
+		await new Promise(resolve => setTimeout(resolve, 1000)); // 1 sec	
 
 		for(var i = 0; i < result.length; i++){
 			let movieElm = '<div class="movie-card">' +
@@ -154,14 +171,25 @@ function loadMovies(){
 		}
 
 		if(result.length < 50) maxPage = currentPage;
+		else{
+			//reset pagination values
+			maxPage = 1000;
+		}
 
 		//show pagination controls	        
         var paginationControlsContainer = document.getElementById('pagination-controls-container');
-		if(result.length === itemsPerPage){	
+		if(result.length === itemsPerPage || currentPage !== 0){	
 			paginationControlsContainer.style.display = "block";
 		}else if(currentPage === 0){
             paginationControlsContainer.style.display = "none";
         }
+
+		await new Promise(resolve => setTimeout(resolve, 2000)); // 2 sec		
+
+		document.getElementById('loading_container').remove();
+		document.getElementById('gridMovies').style.visibility = "visible";
+        $("#gridMovies").animate({"opacity": 1}, 600);
+		document.getElementById("content-main-app").style.overflowY = "auto";
 	});
 
 	//Search menu
@@ -190,6 +218,9 @@ function loadMovies(){
 		$('#fltr-movie-isfav').prop("checked", false); //Is Favorite
 
 		$('#fltr-movie-rating').val('0'); //Rating
+	
+		//Reset pagination
+		currentPage = 0;
 	});
 
 	$('#btnSearchMovies').on('click', function (event){

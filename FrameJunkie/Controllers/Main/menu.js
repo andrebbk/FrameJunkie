@@ -13,11 +13,11 @@ const { loadSettings } = require('./menu_settings.js');
 //INIT WITH HOME
 fs.readFile('./Views/Home/home.html', (err, data) => {
 
-    setTimeout(() => {
+    setTimeout(async () => {
         document.getElementById('content-main-app').innerHTML += data;
 
-        loadDashBoardData();
-    
+        loadDashBoardData();       
+
         //Show data container
         document.getElementById('loading_container').remove();
         document.getElementById('home_container').style.visibility = "visible";
@@ -35,7 +35,7 @@ $('#btnHome').on('click', function (event){
 		if(err != null) 
             alert(err);
         else{
-            setTimeout(() => {
+            setTimeout(async () => {
                 document.getElementById('content-main-app').innerHTML += data;
         
                 loadDashBoardData();
@@ -51,23 +51,50 @@ $('#btnHome').on('click', function (event){
 });
 
 $('#btnMovies').on('click', function (event){
-	fs.readFile(path.join(__dirname, '../../Views/Movies/movies.html'), (err, data) => {
-		document.getElementById('content-main-app').innerHTML = data;
-		loadMovies();
-		if(err != null) alert(err);
-    });
-
     hideMenu();
+    resetMenu();
+
+	fs.readFile(path.join(__dirname, '../../Views/Movies/movies.html'), (err, data) => {
+		if(err != null) 
+            alert(err);
+        else{
+            setTimeout(async () => {
+                document.getElementById('content-main-app').innerHTML += data;                
+
+                loadMovies();                
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 1 sec
+
+                //Show data container
+                document.getElementById('loading_container').remove();
+                document.getElementById('movies_container').style.visibility = "visible";
+            
+                $("#movies_container").animate({"opacity": 1}, 600);
+            }, 1000);            
+        }      		
+    });
 });
 
 $('#btnNewMovie').on('click', function (event){
-    fs.readFile(path.join(__dirname, '../../Views/Movies/new-movie.html'), (err, data) => {
-		document.getElementById('content-main-app').innerHTML = data;
-        loadNewMovie();
-		if(err != null) alert(err);
-    });
-
     hideMenu();
+    resetMenu();
+
+    fs.readFile(path.join(__dirname, '../../Views/Movies/new-movie.html'), (err, data) => {
+        if(err != null) 
+            alert(err);
+        else{
+            setTimeout(async () => {
+                document.getElementById('content-main-app').innerHTML += data;
+
+                loadNewMovie();
+
+                //Show data container
+                document.getElementById('loading_container').remove();
+                document.getElementById('new_movie_container').style.visibility = "visible";
+            
+                $("#new_movie_container").animate({"opacity": 1}, 600);
+            }, 1000);      
+        }   
+    });
 });
 
 $('#btnTvShows').on('click', function (event){
@@ -81,13 +108,27 @@ $('#btnNewTvShow').on('click', function (event){
 });
 
 $('#btnSettings').on('click', function (event){
-    fs.readFile(path.join(__dirname, '../../Views/SettingsPages/settings.html'), (err, data) => {
-		document.getElementById('content-main-app').innerHTML = data;
-        loadSettings();
-		if(err != null) alert(err);
-    });
-
     hideMenu();
+    resetMenu();
+
+    fs.readFile(path.join(__dirname, '../../Views/SettingsPages/settings.html'), (err, data) => {
+		if(err != null) 
+            alert(err);
+        else{
+            setTimeout(async () => {
+                document.getElementById('content-main-app').innerHTML += data;
+
+                loadSettings();
+
+                //Show data container
+                document.getElementById('loading_container').remove();
+                document.getElementById('settings_container').style.visibility = "visible";
+            
+                $("#settings_container").animate({"opacity": 1}, 600);
+            }, 1000);                 
+        }       
+		
+    });
 });
 
 function hideMenu(){

@@ -2,60 +2,65 @@
     <link rel="stylesheet" href="./css/Movies/movies.css" />
 </head>
 
-<div class="search-menu-container">
-    <button type="button" class="collapsible">
-        <span>Filters</span>
-        <img style="margin-left: 5px; margin-right: 10px;">
-    </button>
-    <div class="content-search-menu">
-        <div class="search-content" style="zoom:0.8;">
-            <!--MOVIE TITLE-->
-            <div class="form__group field">
-                <input id='fltr-movie-title' type="input" class="form__field" placeholder="" name="fltr-movie-title" required />
-                <label for="fltr-movie-title" class="form__label">Title</label>
-            </div>
-
-            <!--MOVIE YEAR-->
-            <div style="display:block;">
-                <div class="custom-select">
-                    <select id="fltr-movie-year">                    
-                    </select>
+<div id="movies_container" style="visibility: collapse; opacity: 0;">
+    <div class="search-menu-container">
+        <button type="button" class="collapsible">
+            <span>Filters</span>
+            <img style="margin-left: 5px; margin-right: 10px;">
+        </button>
+        <div class="content-search-menu">
+            <div class="search-content" style="zoom:0.8;">
+                <!--MOVIE TITLE-->
+                <div class="form__group field">
+                    <input id='fltr-movie-title' type="input" class="form__field" placeholder="" name="fltr-movie-title" required />
+                    <label for="fltr-movie-title" class="form__label">Title</label>
                 </div>
-            </div>     
-
-            <!--IS FAVORITE-->
-            <div style="margin-left: 40px; padding-top: 5px;">
-                <div style="float: left; margin-top: 26px; margin-right: 10px;">
-                    <label style="font-size:18px; display:contents;">Favorites: </label>
-                </div>                
-                <div style="float:right;">
-                    <input type="checkbox" id="fltr-movie-isfav" class="toggleBtn" /><label class="toggleLabel" for="fltr-movie-isfav">Toggle</label>
+    
+                <!--MOVIE YEAR-->
+                <div style="display:block;">
+                    <div class="custom-select">
+                        <select id="fltr-movie-year">                    
+                        </select>
+                    </div>
+                </div>     
+    
+                <!--IS FAVORITE-->
+                <div style="margin-left: 40px; padding-top: 5px;">
+                    <div style="float: left; margin-top: 26px; margin-right: 10px;">
+                        <label style="font-size:18px; display:contents;">Favorites: </label>
+                    </div>                
+                    <div style="float:right;">
+                        <input type="checkbox" id="fltr-movie-isfav" class="toggleBtn" /><label class="toggleLabel" for="fltr-movie-isfav">Toggle</label>
+                    </div>
+                </div>   
+    
+                <!--RATING-->
+                <div style="margin-left: 40px; padding-top: 5px;">
+                    <div style="float: left; margin-top: 26px; margin-right: 1px;">
+                        <label style="font-size:18px; display:contents;">Rating: </label>
+                    </div>                
+                    <div style="float:right;">
+                        <input id="fltr-movie-rating" class="numberstyle" type="number" min="0" step="1" value="0" max="10">
+                    </div>
+                </div>     
+                
+                <!--BUTTON SEARCH-->
+                <div style="float:right; width: 40%; margin-top: 15px;">
+                    <button id="btnClearMovieFilters" class="button-movies"><span>Clear</span></a>
+                    <button id="btnSearchMovies" class="button-movies"><span>Search</span></a>
                 </div>
-            </div>   
+                            
+            </div>           
+        </div>
+    </div>
+    
+    <div id="movies_empty_container"></div>
 
-            <!--RATING-->
-            <div style="margin-left: 40px; padding-top: 5px;">
-                <div style="float: left; margin-top: 26px; margin-right: 1px;">
-                    <label style="font-size:18px; display:contents;">Rating: </label>
-                </div>                
-                <div style="float:right;">
-                    <input id="fltr-movie-rating" class="numberstyle" type="number" min="0" step="1" value="0" max="10">
-                </div>
-            </div>     
-            
-            <!--BUTTON SEARCH-->
-            <div style="float:right; width: 40%; margin-top: 15px;">
-                <button id="btnClearMovieFilters" class="button-movies"><span>Clear</span></a>
-                <button id="btnSearchMovies" class="button-movies"><span>Search</span></a>
-            </div>
-                        
-        </div>           
+    <div id="gridMovies" class="container" style="overflow-y: auto; zoom: 0.8;"></div>
+    
+    <div id="pagination-controls-container" style="width: 88%; text-align: right; margin-bottom: 40px; display: none;">
+        <a id="btn_previous" class="pagination-controls previous">&laquo; Previous</a>
+        <a id="btn_next" class="pagination-controls next">Next &raquo;</a>
     </div>
 </div>
 
-<div id="gridMovies" class="container" style="overflow-y: auto; zoom: 0.8;"></div>
-
-<div id="pagination-controls-container" style="width: 88%; text-align: right; margin-bottom: 40px; display: none;">
-    <a id="btn_previous" class="pagination-controls previous">&laquo; Previous</a>
-    <a id="btn_next" class="pagination-controls next">Next &raquo;</a>
-</div>
