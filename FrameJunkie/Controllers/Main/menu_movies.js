@@ -151,7 +151,7 @@ function loadMovies(){
 		await new Promise(resolve => setTimeout(resolve, 1000)); // 1 sec	
 
 		for(var i = 0; i < result.length; i++){
-			let movieElm = '<div class="movie-card">' +
+			let movieElm = '<div class="movie-card" data-movieid="' + result[i].MovieId + '">' +
 			`<div class="movie-header" style="background: url('file://` + result[i].CoverPath.trim() + `');  background-size: cover;">` +
 			'<div class="header-icon-container">' +
 			'</div>' +
@@ -190,6 +190,16 @@ function loadMovies(){
 		document.getElementById('gridMovies').style.visibility = "visible";
         $("#gridMovies").animate({"opacity": 1}, 600);
 		document.getElementById("content-main-app").style.overflowY = "auto";
+
+		//init events
+		var movieElements = document.querySelectorAll('#gridMovies .movie-card');
+		if(movieElements != null && movieElements.length > 0){
+			movieElements.forEach(movieElm => {
+				movieElm.addEventListener("click", function(e) {
+					openMovieDetails(movieElm.dataset.movieid);
+				}, false);
+			});
+		}
 	});
 
 	//Search menu
@@ -286,6 +296,10 @@ function loadMovies(){
 		currentPage += 1;
 		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);		
 	});
+}
+
+async function openMovieDetails(movieID){
+	alert(movieID);
 }
 
 module.exports = { loadMovies }
