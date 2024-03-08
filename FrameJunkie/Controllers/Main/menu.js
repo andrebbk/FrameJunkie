@@ -11,7 +11,7 @@ const { loadNewMovie } = require('./menu_newMovie.js');
 const { loadSettings } = require('./menu_settings.js'); 
 
 //INIT WITH HOME
-fs.readFile('./Views/Home/home.html', (err, data) => {
+/*fs.readFile('./Views/Home/home.html', (err, data) => {
 
     setTimeout(async () => {
         document.getElementById('content-main-app').innerHTML += data;
@@ -24,6 +24,26 @@ fs.readFile('./Views/Home/home.html', (err, data) => {
     
         $("#home_container").animate({"opacity": 1}, 600);
     }, 1000);            
+});*/
+
+//TEST INIT
+fs.readFile(path.join(__dirname, '../../Views/Movies/movies.html'), (err, data) => {
+    if(err != null) 
+        alert(err);
+    else{
+        setTimeout(async () => {
+            document.getElementById('content-main-app').innerHTML += data;                
+
+            loadMovies();                
+            await new Promise(resolve => setTimeout(resolve, 1000)); // 1 sec
+
+            //Show data container
+            document.getElementById('loading_container').remove();
+            document.getElementById('movies_container').style.visibility = "visible";
+        
+            $("#movies_container").animate({"opacity": 1}, 600);
+        }, 1000);            
+    }      		
 });
 
  //BUTTONS

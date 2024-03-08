@@ -1,5 +1,6 @@
 const electron = require("electron");
 const ipc = electron.ipcRenderer;
+const BrowserWindow = require('@electron/remote').BrowserWindow;
 
 //pagination
 let currentPage = 0;
@@ -195,7 +196,7 @@ function loadMovies(){
 		var movieElements = document.querySelectorAll('#gridMovies .movie-card');
 		if(movieElements != null && movieElements.length > 0){
 			movieElements.forEach(movieElm => {
-				movieElm.addEventListener("click", function(e) {
+				movieElm.addEventListener("dblclick", function(e) {
 					openMovieDetails(movieElm.dataset.movieid);
 				}, false);
 			});
@@ -299,7 +300,34 @@ function loadMovies(){
 }
 
 async function openMovieDetails(movieID){
-	alert(movieID);
+	let currentWindow = require('@electron/remote').getCurrentWindow();
+	const currentWindowPos = currentWindow.getPosition();
+
+	// renderer process open new window
+	const popupWindow = new BrowserWindow(
+		{ 
+			fullscreen: false,
+			frame: false,
+			width: 1844,
+			height: 898,
+			x: currentWindowPos[0] + 40,
+			y: currentWindowPos[1] + 125,
+			autoHideMenuBar: true,
+			transparent:true,
+			webPreferences: {
+				enableRemoteModule: true,  
+				contextIsolation: false,
+				nodeIntegrationInWorker: true,
+				webSecurity: false,
+				nodeIntegration: true
+			},
+			resizable: false,
+			minimizable: false,
+			maximizable: false,
+			icon: './Content/Icons/action-movie.ico'
+		}
+	);
+	popupWindow.webContents.loadFile("./Views/Movies/movie-detail.html");
 }
 
 module.exports = { loadMovies }
