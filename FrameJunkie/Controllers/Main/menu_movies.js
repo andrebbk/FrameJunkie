@@ -7,6 +7,8 @@ let currentPage = 0;
 let maxPage = 1000;
 let itemsPerPage = 50;
 
+let popupWindow = null;
+
 function loadMovies(){
 
 	//Load Filters
@@ -304,7 +306,7 @@ async function openMovieDetails(movieID){
 	const currentWindowPos = currentWindow.getPosition();
 
 	// renderer process open new window
-	const popupWindow = new BrowserWindow(
+	popupWindow = new BrowserWindow(
 		{ 
 			fullscreen: false,
 			frame: false,
@@ -316,6 +318,7 @@ async function openMovieDetails(movieID){
 			transparent:true,
 			webPreferences: {
 				enableRemoteModule: true,  
+				nativeWindowOpen: true,
 				contextIsolation: false,
 				nodeIntegrationInWorker: true,
 				webSecurity: false,
@@ -326,8 +329,23 @@ async function openMovieDetails(movieID){
 			maximizable: false,
 			icon: './Content/Icons/action-movie.ico'
 		}
-	);
-	popupWindow.webContents.loadFile("./Views/Movies/movie-detail.html");
+	);	
+
+	//@electron/remote for multiple windows
+	//@electron/remote is disabled for this WebContents
+	const remote = require('@electron/remote');
+	remote.require("@electron/remote/main").enable(popupWindow.webContents);
+
+	popupWindow.loadFile("./Views/Movies/movie-detail.html");
+
+	popupWindow.on('blur', () => {
+		// Do your required stuff, when the window loose the focus
+		popupWindow.close();
+	});
+
+	popupWindow.on('closed', () => {
+        popupWindow = null; //to garbage collector
+    });	
 }
 
 module.exports = { loadMovies }
