@@ -338,10 +338,14 @@ async function openMovieDetails(movieID){
 
 	popupWindow.loadFile("./Views/Movies/movie-detail.html");
 
-	popupWindow.on('blur', () => {
+	popupWindow.webContents.once('dom-ready', () => {
+		popupWindow.webContents.send('message-movie-id', movieID);
+	});	
+
+	/*popupWindow.on('blur', () => {
 		// Do your required stuff, when the window loose the focus
 		popupWindow.close();
-	});
+	});*/
 
 	popupWindow.on('closed', () => {
         popupWindow = null; //to garbage collector
