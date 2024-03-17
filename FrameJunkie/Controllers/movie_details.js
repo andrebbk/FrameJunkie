@@ -3,8 +3,30 @@ const ipc = electron.ipcRenderer;
 const { pathToFileURL } = require('node:url');
 const { nanoid } = require("nanoid");
 const fs = require('fs').promises;
-
+const path = require('path'); 
 const logger = require('@electron/remote').require('./logger');
+
+//Toast Notifications
+const toast = document.querySelector("#movie_detail_container .toastt"), 
+    closeIcon = document.querySelector("#movie_detail_container .close-toastt"), 
+    progress = document.querySelector("#movie_detail_container .progress-toastt");
+
+let timer1, timer2;
+
+ //close notification event
+ closeIcon.addEventListener("click", () => { 
+    toast.classList.remove("active");
+    toast.style.opacity = "0";
+
+    setTimeout(() => {
+      progress.classList.remove("active");
+    }, 300);
+  
+    clearTimeout(timer1);
+    clearTimeout(timer2);
+  });
+
+//Toast Notifications END
 
 let knex = require("knex")({
     client: "sqlite3",
@@ -60,7 +82,6 @@ async function loadMovieDetails(){
                 });
             }
 
-            console.log(movieData.Observations);
             if(movieData.Observations != null && movieData.Observations != "" && movieData.Observations != " " && movieData.Observations.length > 1){
                 $('#movie-details-observations', '#movie_detail_container').text(movieData.Observations);
             }else{
@@ -85,7 +106,51 @@ async function loadMovieDetails(){
     });
 }
 
+function showToastMessage(title, msg) {   
+    if(toast.classList.contains("active") || progress.classList.contains("active")){
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        
+        toast.classList.remove("active");
+        progress.classList.remove("active");
+        progress.style.right = getComputedStyle(progress).right;
+    }
+
+    //set message info
+    document.getElementById("toastt-title").textContent = title;
+    document.getElementById("toastt-msg").textContent = msg;
+
+    //show toast warning
+    toast.style.opacity = "1";
+    toast.classList.add("active");
+    progress.classList.add("active");
+  
+    timer1 = setTimeout(() => {
+      toast.classList.remove("active");
+      toast.style.opacity = "0";
+    }, 5000); //1s = 1000 milliseconds
+  
+    timer2 = setTimeout(() => {
+      progress.classList.remove("active");
+    }, 5300);
+}
+
+function closeToastMessage(){
+    toast.classList.remove("active");
+    toast.style.opacity = "0";
+    setTimeout(() => {
+        progress.classList.remove("active");
+    }, 300);
+    
+    clearTimeout(timer1);
+    clearTimeout(timer2);
+}
+
 $('#btn_exit_movie_details').on('click', function(event){   
     let popupWindow = require('@electron/remote').getCurrentWindow();
     popupWindow.close();
+});
+
+$('#btnAddMovieView', '#movie_detail_container').on('click', function(event){       
+    showToastMessage("Frame Junkie", "Added view!");
 });
