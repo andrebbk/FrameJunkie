@@ -38,6 +38,7 @@ let knex = require("knex")({
 
 let loadedMovieId = 0;
 let loadedMovieNrViews = 0;
+let hasNewMovieCover = false, newMovieCover = "";
 
 ipc.on('message-movie-id', (event, movieId) => {
     loadedMovieId = movieId;
@@ -48,8 +49,8 @@ ipc.on('message-movie-id', (event, movieId) => {
         //Show data container
         document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
 
-        document.querySelector('#movie-details-container #moviedetails_partial .flex-container').style.visibility = "visible";    
-        $("#movie-details-container #moviedetails_partial .flex-container").animate({"opacity": 1}, 600);
+        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "visible";    
+        $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 1}, 600);
 
         $("#movie-details-container .details-buttons-container").animate({"opacity": 1}, 600);
     }, 1000);       
@@ -64,8 +65,8 @@ ipc.on('result-update-movie-nrviews', (event, updateThisMovieId) => {
         //Show data container
         document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
 
-        document.querySelector('#movie-details-container #moviedetails_partial .flex-container').style.visibility = "visible";    
-        $("#movie-details-container #moviedetails_partial .flex-container").animate({"opacity": 1}, 600);
+        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "visible";    
+        $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 1}, 600);
 
         $("#movie-details-container .details-buttons-container").animate({"opacity": 1}, 600);
 
@@ -172,11 +173,12 @@ $('#btn_exit_movie_details').on('click', function(event){
     popupWindow.close();
 });
 
+//ADD MOVIE VIEW
 $('#btnAddMovieView', '#movie_detail_container').on('click', function(event){       
-    AddNewMovieView();
+    addNewMovieView();
 });
 
-function AddNewMovieView(){
+function addNewMovieView(){
     let output = true;
 
     try
@@ -191,3 +193,107 @@ function AddNewMovieView(){
 
     return output;
 }
+
+function addAndShowLoading(){
+    let loadingHTML = '<div id="loading_container" class="loading-container">'
+        + '<img class="loading-img" src="../../Content/Images/loading_animation.gif" width="90" height="60"></div>';
+        
+    $("#moviedetails_partial", "#movie-details-container").prepend($(loadingHTML).fadeIn('slow'));
+}
+
+function loadNewMovie() {   
+
+    //Load Filters
+	$('#movie-year', '#me-container').html('');
+
+	var crrYear = new Date().getFullYear();	
+	for (let y = Number(crrYear); y > 1979; y--) {
+		var optionHtml = '<option value="' + y + '">' + y + '</option>';
+		$('#movie-year', '#me-container').append(optionHtml);
+	}
+
+	$('#movie-year').val(Number(crrYear)); //init Movie Year
+
+    //BUTTONS SECTION
+    $('#btnSelectCover', '#me-container').on('click', function(){
+        $('#movie-cover-upload', '#me-container').trigger("click"); //.click() call is deprecated
+    });    
+
+    $('#movie-cover-upload', '#me-container').on('change', function(event){
+        var reader = new FileReader();
+        reader.onload = function(){
+            if(event.target.files[0] != null && event.target.files[0] != undefined){
+                var output = document.getElementById('movie-cover-output');
+                //output.style.backgroundImage = "Url('" + pathToFileURL(event.target.files[0].path) + "')";
+
+                output.src = pathToFileURL(event.target.files[0].path);
+
+                //show refresh button
+                var btnRefresh = document.getElementById('btnRefreshMovieCover');
+                if(!document.getElementById('btnRefreshMovieCover').classList.contains("change"))
+                { document.querySelector('.refresh-movie-cover').classList.toggle('change'); }      
+                
+                hasNewMovieCover = true;
+                newMovieCover = event.target.files[0].path;
+            }          
+        };
+
+        if(event.target.files[0] != null && event.target.files[0] != undefined)
+            reader.readAsDataURL(event.target.files[0]);
+    });    
+
+    $('#btnRefreshMovieCover', '#me-container').on('click', function(){
+        var output = document.getElementById('movie-cover-output');
+        output.src = pathToFileURL("./Content/Images/No-Image-Placeholder.png");
+
+        document.querySelector('.refresh-movie-cover').classList.toggle('change');
+
+        hasNewMovieCover = false;
+        newMovieCover = "";
+    });    
+
+    //add star events
+    const stars = document.querySelectorAll('#me-container .star');
+    stars.forEach(el => el.addEventListener('click', event => {
+        var btnRefresh = document.getElementById('btnRefreshMovieRating');
+                
+        if(!document.getElementById('btnRefreshMovieRating').classList.contains("change"))
+        { document.querySelector('me-container .refresh-movie-rating').classList.toggle('change'); }      
+    }));
+
+    $('#btnRefreshMovieRating', '#me-container').on('click', function(){
+        var starElements = document.getElementsByClassName("star");
+        if(starElements != null && starElements.length > 0){
+
+            $.each(starElements, function(idx, value){
+                value.checked = false;
+            });
+        }
+
+        document.querySelector('#me-container .refresh-movie-rating').classList.toggle('change');
+    });     
+}
+
+
+//EDIT MOVIE
+$('#btnEditMovie', '#movie_detail_container').on('click', function(event){
+
+    $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 200);
+    document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "collapse";    
+    document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.height = 0;    
+    $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 0 }, 200);
+
+    //Show loading
+    addAndShowLoading();
+    loadNewMovie();
+    
+    setTimeout(() => {
+         //Show data container
+         document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
+
+        document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "visible";   
+        document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 530;   
+        $("#movie-details-container #moviedetails_partial #me-container").animate({"opacity": 1 }, 600);
+    }, 500);
+    
+});

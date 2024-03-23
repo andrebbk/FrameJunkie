@@ -1,3 +1,5 @@
+@charset "UTF-8"; /*IMPORTANT, WHITOUT THIS THE CONTENT STAR DOESNT WORK PROPERLY*/
+
 :root {
 	--enlarge: scale(1.25);
 	--page-color: steelblue;

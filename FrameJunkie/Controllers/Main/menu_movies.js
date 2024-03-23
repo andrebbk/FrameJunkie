@@ -189,7 +189,7 @@ function loadMovies(){
 
 		await new Promise(resolve => setTimeout(resolve, 2000)); // 2 sec		
 
-		document.getElementById('loading_container').remove();
+		if(document.getElementById('loading_container') != undefined) { document.getElementById('loading_container').remove(); }			
 		document.getElementById('gridMovies').style.visibility = "visible";
         $("#gridMovies").animate({"opacity": 1}, 600);
 		document.getElementById("content-main-app").style.overflowY = "auto";
