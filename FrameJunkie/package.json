@@ -31,8 +31,7 @@
         "@electron/rebuild": "^3.6.0",
         "electron": "^26.2.4",
         "electron-packager": "^17.1.2",
-        "electron-reload": "^2.0.0-alpha.1",
-        "electron-reloader": "^1.2.3"
+        "electron-reload": "^2.0.0-alpha.1"
     },
     "directories": {
         "buildResources": "build",

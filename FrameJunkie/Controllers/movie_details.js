@@ -37,6 +37,7 @@ let knex = require("knex")({
 });
 
 let loadedMovieId = 0;
+let loadedMovieNrViews = 0;
 
 ipc.on('message-movie-id', (event, movieId) => {
     loadedMovieId = movieId;
@@ -54,6 +55,25 @@ ipc.on('message-movie-id', (event, movieId) => {
     }, 1000);       
 });
 
+ipc.on('result-update-movie-nrviews', (event, updateThisMovieId) => {    
+    loadedMovieId = updateThisMovieId;
+
+    setTimeout(async () => {         
+        await loadMovieDetails();
+
+        //Show data container
+        document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
+
+        document.querySelector('#movie-details-container #moviedetails_partial .flex-container').style.visibility = "visible";    
+        $("#movie-details-container #moviedetails_partial .flex-container").animate({"opacity": 1}, 600);
+
+        $("#movie-details-container .details-buttons-container").animate({"opacity": 1}, 600);
+
+        await setTimeout(500);
+        showToastMessage("Frame Junkie", "Movie view added!");      
+    }, 1000);       
+});
+
 async function loadMovieDetails(){
     let movieDB = knex('Movies')
     .where('MovieId', loadedMovieId)
@@ -65,6 +85,7 @@ async function loadMovieDetails(){
             $('#movie-details-title', '#movie_detail_container').text(movieData.MovieTitle);
             $('#movie-details-year', '#movie_detail_container').text(movieData.MovieYear);
 
+            loadedMovieNrViews = movieData.NrViews;
             let movieViewsText = movieData.NrViews + (movieData.NrViews === 1 ? " VIEW" : " VIEWS");
             $('#movie-details-views', '#movie_detail_container').text(movieViewsText);
 
@@ -152,5 +173,21 @@ $('#btn_exit_movie_details').on('click', function(event){
 });
 
 $('#btnAddMovieView', '#movie_detail_container').on('click', function(event){       
-    showToastMessage("Frame Junkie", "Added view!");
+    AddNewMovieView();
 });
+
+function AddNewMovieView(){
+    let output = true;
+
+    try
+    {
+        ipc.send('update-movie-nrviews', loadedMovieId, loadedMovieNrViews);
+    }
+    catch(error){
+        logger.error(error);
+        console.error(error);
+        return false;
+    }       
+
+    return output;
+}

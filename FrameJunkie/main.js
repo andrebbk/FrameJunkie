@@ -155,6 +155,40 @@ function createWindow() {
             result.then(function (rows){          
                 win.webContents.send('resultSent_movies', rows);
             });  
+        }); 
+        
+        ipcMain.on('update-movie-nrviews', async (event, updateThisMovieId, movieNrViews) => {
+            movieNrViews++;
+
+            //update movie NrViews
+            let updatedTvShowsPathConfig = await knex('Movies')
+            .where({ MovieId: updateThisMovieId})
+            .update({ 
+                NrViews: movieNrViews
+            }, ['MovieId', 'NrViews'])
+            .then(function(resp) {                    
+                output = true;
+                return resp;
+            }).catch(err => {
+                logger.error(err);
+                console.log(err);
+            });
+
+            if(updatedTvShowsPathConfig.length > 0) {
+                //Add new movie view
+                await knex('MovieView').insert({ 
+                    MovieId: updateThisMovieId, 
+                    CreateDate: new Date().toISOString()
+                })
+                .catch(function(error) {
+                    logger.error(error);
+                    console.error(error);
+                });
+                
+                setTimeout(async () => {         
+                    BrowserWindow.getAllWindows().find((win) => win.webContents.id === event.sender.id).webContents.send('result-update-movie-nrviews', updateThisMovieId);			
+                }, 1000);                   
+            }
         });
     });
 }
