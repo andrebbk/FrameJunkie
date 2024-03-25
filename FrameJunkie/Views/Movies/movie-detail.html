@@ -65,7 +65,7 @@
                             </div>
                             
                             <!--MOVIE OBSERVATIONS-->
-                            <div id="movie-details-observations-container" class="movie-observations-container">
+                            <div id="movie-details-observations-container" class="movie-observations-container" style="margin-top: 80px !important;">
                                 <label class="label-form-field">Observations</label>
                                 <p id="movie-details-observations" class="movie-details-description-style"></p>
                             </div>
@@ -80,9 +80,10 @@
                 
                     <div id="me-container" class="flex-container" style="visibility: collapse; opacity: 0; height: 0;">
                         <div style="width: 40%;">
-                            <div class="new-movies-fields-pt1">            
+                            <div class="new-movies-fields-pt1">    
+
                                 <!--MOVIE TITLE-->
-                                <div class="form__group field">
+                                <div class="form__group field" style="margin-top: 0px !important;">
                                     <input id='movie-title' type="input" class="form__field" placeholder="" name="movie-title" required />
                                     <label for="movie-title" class="form__label">Title</label>
                                 </div>
@@ -102,8 +103,7 @@
                                         <text class="label-form-field">Is Favorite</text>
                                     </div>                
                                     <div>
-                                        <input type="checkbox" id="movie-isfav" class="toggleBtn"/>
-                                        <label class="toggleLabel" for="movie-isfav">Toggle</label>
+                                        <input type="checkbox" id="switch_IsFav" /><label for="switch_IsFav" id="switch_IsFav_Label">Toggle</label>
                                     </div>
                                 </div>   
             
@@ -126,6 +126,16 @@
                                     </div>
                                 </div>
                                 
+                                <!--Views-->
+                                <div class="is-favorite-container">
+                                    <div style="margin-top: 26px; margin-right: 10px;">
+                                        <text class="label-form-field">Views</text>
+                                    </div>                
+                                    <div style="color: grey; zoom: 0.9; margin-left: 5px;">
+                                        <input id="fltr-movie-rating" class="numberstyle" type="number" min="0" step="1" value="0" max="1000">
+                                    </div>
+                                </div>   
+
                                 <!--MOVIE OBSERVATIONS-->
                                 <div class="movie-observations-container">
                                     <text class="label-form-field">Observations</text>
@@ -139,15 +149,17 @@
                                 <img id="btnRefreshMovieCover" class="refresh-movie-cover" src="../../Content/Icons/refresh-icon.jpg"/>
                                 <input id="movie-cover-upload" type="file" accept="image/*" style="display: none;"/>
                                 <img id="movie-cover-output" width="420px" height="530px" src="../../Content/Images/No-Image-Placeholder.png"/>
-                            </div>                            
+                            </div>                          
                         </div>
                     </div>
                 </div>      
                 
                 <div class="details-buttons-container" style="opacity: 0;">
-                    <button id="btnAddMovieView" class="button-form"><span>Add View</span></a>                    
-                    <button id="btnEditMovie" class="button-form"><span>Edit</span></a>
-                    <button id="btnDeleteMovie" class="button-form"><span>Delete</span></a>
+                    <button id="btnAddMovieView" class="button-form"><span>Add View</span></a>  
+                    <button id="btnBack" class="button-form" style="display: none;"><span>Back</span></a>               
+                    <button id="btnEditMovie" class="button-form"><span>Edit</span></a>        
+                    <button id="btnDeleteMovie" class="button-form"><span>Delete</span></a>              
+                    <button id="btnSelectCover" class="button-form" style="display: none;"><span>Select Cover</span></a>  
                 </div>
             </div>        
         </div>

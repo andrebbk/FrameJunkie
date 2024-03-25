@@ -1,5 +1,8 @@
 @charset "UTF-8"; /*IMPORTANT, WHITOUT THIS THE CONTENT STAR DOESNT WORK PROPERLY*/
 
+/* Including one css file into other */
+@import "./input-number.css";
+
 :root {
 	--enlarge: scale(1.25);
 	--page-color: steelblue;
@@ -539,46 +542,46 @@ top: 55%;
 }
 
 /* IS FAVORITE */
-.toggleBtn {
-  height: 0;
-  width: 0;
-  visibility: hidden;
+#switch_IsFav {
+	height: 0;
+	width: 0;
+	visibility: hidden;
 }
 
-.toggleLabel {
-  position: relative;
-  cursor: pointer;
-  text-indent: -9999px;
-  width: 80px;
-  height: 40px;
-  background: grey;
-  border-radius: 100px;
-  margin-top: 10px;
+#switch_IsFav_Label {
+	cursor: pointer;
+	text-indent: -9999px;
+	width: 90px;
+	height: 45px;
+	background: grey;
+	display: block;
+	border-radius: 100px;
+	position: relative;
 }
 
-.toggleLabel:after {
-  content: '';
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 30px;
-  height: 30px;
-  background: #fff;
-  border-radius: 90px;
-  transition: 0.3s;
+#switch_IsFav_Label:after {
+	content: '';
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 35px;
+	height: 35px;
+	background: #fff;
+	border-radius: 90px;
+	transition: 0.3s;
 }
 
-.toggleBtn:checked + .toggleLabel {
-  background: #800000;
+#switch_IsFav:checked + label {
+	background: #800000;
 }
 
-.toggleBtn:checked + .toggleLabel:after {
-  left: calc(100% - 5px);
-  transform: translateX(-100%);
+#switch_IsFav:checked + label:after {
+	left: calc(100% - 5px);
+	transform: translateX(-100%);
 }
 
-.toggleLabel:active:after {
-  width: 80px;
+#switch_IsFav:active:after {
+	width: 130px;
 }
 /* END FAVORITE */
 
@@ -619,7 +622,7 @@ top: 55%;
 }
 
 .movie-observations-container {
-  margin-top: 80px;
+  margin-top: 10px;
 }
 
 .movie-observations {
@@ -633,6 +636,7 @@ top: 55%;
   background-color: #f8f8f8;
   font-size: 16px;
   resize: none;
+  font-family: initial;
 }
 
 .movie-cover-container {
@@ -711,4 +715,14 @@ top: 55%;
   left: 150px;
   width: 80%;
   text-align: center;
+}
+
+.numberstyle-qty {
+    padding-top: 10px !important;
+    padding-bottom: 10px;
+}
+
+.numberstyle-qty .qty-btn {
+  background-color: grey;
+  color: white;
 }
