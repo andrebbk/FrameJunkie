@@ -39,6 +39,7 @@ let knex = require("knex")({
 let loadedMovieId = 0;
 let loadedMovieNrViews = 0;
 let hasNewMovieCover = false, newMovieCover = "";
+let isToEdit = false;
 
 ipc.on('message-movie-id', (event, movieId) => {
     loadedMovieId = movieId;
@@ -95,7 +96,7 @@ async function loadMovieDetails(){
             else
                 document.querySelector('#movie_detail_container #movie-details-fav').style.visibility = "hidden";
 
-            let starElements = document.querySelectorAll('#moviedetails_partial input[type=radio].star');
+            let starElements = document.querySelectorAll('#md-container input[type=radio].star');
             if(starElements != null && starElements.length > 0){
                 $.each(starElements, function(idx, value){
                     value.checked = false;
@@ -204,15 +205,15 @@ function addAndShowLoading(){
 function loadEditMovie() {   
 
     //Load Filters
-	$('#movie-year', '#me-container').html('');
+	$('#movie-edit-year', '#me-container').html('');
 
 	var crrYear = new Date().getFullYear();	
 	for (let y = Number(crrYear); y > 1979; y--) {
 		var optionHtml = '<option value="' + y + '">' + y + '</option>';
-		$('#movie-year', '#me-container').append(optionHtml);
+		$('#movie-edit-year', '#me-container').append(optionHtml);
 	}
 
-	$('#movie-year').val(Number(crrYear)); //init Movie Year     
+	$('#movie-edit-year').val(Number(crrYear)); //init Movie Year     
 
     //BUTTONS SECTION
     $('#btnSelectCover', '.details-buttons-container').off('click').on('click', function(){
@@ -368,6 +369,13 @@ function loadEditMovie() {
         { document.querySelector('#me-container .refresh-movie-rating').classList.toggle('change'); }      
     }));
 
+    //Edit a movie means rating and cover fields have always a content value
+    if(!document.getElementById('btnRefreshMovieCover').classList.contains("change"))
+    { document.querySelector('.refresh-movie-cover').classList.toggle('change'); }      
+                
+    if(!document.getElementById('btnRefreshMovieRating').classList.contains("change"))
+    { document.querySelector('#me-container .refresh-movie-rating').classList.toggle('change'); } 
+
     $('#btnRefreshMovieRating', '#me-container').on('click', function(){
         var starElements = document.getElementsByClassName("star");
         if(starElements != null && starElements.length > 0){
@@ -384,29 +392,86 @@ function loadEditMovie() {
 
 //EDIT MOVIE
 $('#btnEditMovie', '#movie_detail_container').on('click', function(event){
-    $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
-    document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "collapse";    
-    document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.height = 0;    
-    $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 0 }, 0);
 
-    //Show loading
-    addAndShowLoading();
+    if(isToEdit){
+        isToEdit = false;
+        showToastMessage("Frame Junkie", "Successfully edited Movie!");  
+    }else{
 
-    loadEditMovie();
+        //LOAD MOVIE TO EDIT        
+        $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
+        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "collapse";    
+        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.height = 0;    
+        $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 0 }, 0);
     
-    setTimeout(() => {
-        //Show data container
-        document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
-
-        document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "visible";   
-        document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 530;   
-        $("#movie-details-container #moviedetails_partial #me-container").animate({"opacity": 1 }, 600);
-
-        showEditButtons(true);
+        //Show loading
+        addAndShowLoading();
+    
+        loadEditMovie();
         
-    }, 500);
+        setTimeout(async () => {
+            await loadMovieToEdit();
+            //Show data container
+            document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
     
+            document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "visible";   
+            document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 530;   
+            $("#movie-details-container #moviedetails_partial #me-container").animate({"opacity": 1 }, 600);
+    
+            $('#movie-edit-title', '#me-container').trigger('focus');
+    
+            showEditButtons(true);
+            isToEdit = true;
+            
+        }, 500);
+    }    
 });
+
+async function loadMovieToEdit(){
+    let movieToEditDB = knex('Movies')
+    .where('MovieId', loadedMovieId)
+    .select('*')
+    .first();
+
+    movieToEditDB.then(function (movieData){          
+        if(movieData != null && movieData.MovieId > 0){
+
+            //Movie Data
+            $('#movie-edit-title', '#me-container').val(movieData.MovieTitle);
+            $('#movie-edit-year', '#me-container').val(Number(movieData.MovieYear));
+            $('#movie-edit-views', '#me-container').val(movieData.NrViews);
+            $('#movie-edit-observations', '#me-container').text(movieData.Observations);
+
+            //Is Favorite
+            $('#switch_IsFav').prop("checked", movieData.IsFavorite);
+
+            //Movie Rating
+            let starElements = document.querySelectorAll('#me-container input[type=radio].star');
+            if(starElements != null && starElements.length > 0){
+                $.each(starElements, function(idx, value){
+                    value.checked = false;
+                    if(value.dataset.starvalue == movieData.MovieRating) value.checked = true;
+                });
+            }
+
+            //Movie Cover
+            let movieCoverDB = knex('MovieCovers')
+            .where('MovieId', loadedMovieId)
+            .where('Deleted', 0)
+            .select('*')
+            .first();
+            
+            movieCoverDB.then(function (movieCoverData){      
+                if(movieCoverData != null && movieCoverData.MovieId > 0){
+                    var movieCoverElm = document.querySelector('#me-container #movie-cover-output');
+                    if(movieCoverElm != null){
+                        movieCoverElm.src = pathToFileURL(movieCoverData.CoverPath);
+                    }
+                }
+            });
+        }
+    });
+}
 
 //BACK
 $('#btnBack', '#movie_detail_container').on('click', function(event){
@@ -429,6 +494,7 @@ $('#btnBack', '#movie_detail_container').on('click', function(event){
         $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 1}, 600);
 
         showEditButtons(false);   
+        isToEdit = false;
     }, 1000); 
 });
 

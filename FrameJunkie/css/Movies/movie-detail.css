@@ -644,10 +644,13 @@ top: 55%;
   text-align: center;
 }
 
-#movie-cover-output{
+#movie-cover-output {
   object-fit: contain;
 }
 
+#movie-cover-details {
+  object-fit: contain;
+}
 
 .form-buttons-container {
   text-align: center;
