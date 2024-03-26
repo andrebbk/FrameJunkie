@@ -48,7 +48,8 @@ ipc.on('message-movie-id', (event, movieId) => {
         await loadMovieDetails();
 
         //Show data container
-        document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
+        if(document.querySelector('#movie-details-container #moviedetails_partial #loading_container') != undefined)
+            document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
 
         document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "visible";    
         $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 1}, 600);
@@ -76,8 +77,16 @@ ipc.on('result-update-movie-nrviews', (event, updateThisMovieId) => {
     }, 1000);       
 });
 
-ipc.on('delete-movie', (event) => {    
-    console.log('delete-movie');   
+ipc.on('delete-movie', async (event) => {    
+    //delete db movie
+    await deleteMovie();
+
+    //reload movie list
+    await ipc.send('reload-movies-menu', loadedMovieId);
+
+    //close current movie detail window
+    let popupWindow = require('@electron/remote').getCurrentWindow();
+    popupWindow.close();
 });
 
 async function loadMovieDetails(){
@@ -173,13 +182,13 @@ function closeToastMessage(){
     clearTimeout(timer2);
 }
 
-$('#btn_exit_movie_details').on('click', function(event){   
+$('#btn_exit_movie_details').off('click').on('click', function(event){   
     let popupWindow = require('@electron/remote').getCurrentWindow();
     popupWindow.close();
 });
 
 //ADD MOVIE VIEW
-$('#btnAddMovieView', '#movie_detail_container').on('click', function(event){       
+$('#btnAddMovieView', '#movie_detail_container').off('click').on('click', function(event){       
     addNewMovieView();
 });
 
@@ -395,7 +404,7 @@ function loadEditMovie() {
 
 
 //EDIT MOVIE
-$('#btnEditMovie', '#movie_detail_container').on('click', function(event){
+$('#btnEditMovie', '#movie_detail_container').off('click').on('click', function(event){
 
     if(isToEdit){
         isToEdit = false;
@@ -478,7 +487,7 @@ async function loadMovieToEdit(){
 }
 
 //BACK
-$('#btnBack', '#movie_detail_container').on('click', function(event){
+$('#btnBack', '#movie_detail_container').off('click').on('click', function(event){
     $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
     document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "collapse";    
     document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 0;    
@@ -522,7 +531,7 @@ function showEditButtons(showEditButtons){
 }
 
 //DELETE
-$('#btnDeleteMovie', '#movie_detail_container').on('click', function(event){
+$('#btnDeleteMovie', '#movie_detail_container').off('click').on('click', function(event){
     ipc.send('openConfirmDialog', 'Are you sure you would like to delete this movie?', 'delete-movie');
 });
 

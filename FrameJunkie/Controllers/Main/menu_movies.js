@@ -1,6 +1,7 @@
 const electron = require("electron");
 const ipc = electron.ipcRenderer;
 const BrowserWindow = require('@electron/remote').BrowserWindow;
+const { showToastMessage, closeToastMessage } = require('../../index.js'); 
 
 //pagination
 let currentPage = 0;
@@ -298,6 +299,28 @@ function loadMovies(){
 
 		currentPage += 1;
 		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);		
+	});
+
+	//Reload movies list after delete one
+	ipc.on("reload-movies-list", function (event, deletedMovie) {	
+		let mTitle = null, mYear = null, mIsFav = null, mRating = null;
+
+		if($('#fltr-movie-title').val() != null && $('#fltr-movie-title').val() != '' && $('#fltr-movie-title').val() != ' ')
+			mTitle = $('#fltr-movie-title').val();
+
+		if($('#fltr-movie-year').val() != null && $('#fltr-movie-year').val() != '' && $('#fltr-movie-year').val() != ' ' && $('#fltr-movie-year').val() != '0')
+			mYear = $('#fltr-movie-year').val();
+
+		if($('#fltr-movie-isfav').prop("checked") != null && $('#fltr-movie-isfav').prop("checked"))
+			mIsFav = $('#fltr-movie-isfav').prop("checked");
+
+		if($('#fltr-movie-rating').val() != null && $('#fltr-movie-rating').val() != '' && $('#fltr-movie-rating').val() != '0')
+			mRating = $('#fltr-movie-rating').val();
+
+		//RELOAD
+		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);			
+
+		setTimeout(() => { showToastMessage('Frame Junkie', deletedMovie + ' deleted successfully!'); }, 400);
 	});
 }
 

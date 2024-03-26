@@ -192,6 +192,7 @@ function createWindow() {
             }
         });
 
+        //Confirm dialog
         ipcMain.on('openConfirmDialog', (event, confirmMsg, ipcCallBack) => {
             let window = BrowserWindow.getAllWindows().find((win) => win.webContents.id === event.sender.id);
 
@@ -219,7 +220,21 @@ function createWindow() {
                         window.webContents.send(ipcCallBack, result.response);
                     }   
                 });
-        })
+        });
+
+        //Event to reload movies list
+        ipcMain.on('reload-movies-menu', async (event, deletedMovieId) => {
+            let movieDB = knex('Movies')
+            .where('MovieId', deletedMovieId)
+            .select('MovieId', 'MovieTitle')
+            .first();
+
+            await movieDB.then(function (movieData){          
+                if(movieData != null && movieData.MovieId > 0){
+                    win.webContents.send('reload-movies-list', movieData.MovieTitle);
+                }
+            });            
+        });
     });
 }
 
