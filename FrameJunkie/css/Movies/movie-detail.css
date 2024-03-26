@@ -587,8 +587,8 @@ top: 55%;
 
 .refresh-movie-cover {
   position: absolute;
-  top:-15px;
-  left: 635px;
+  top: -17px;
+  left: 650px;
   object-fit: contain;
   width: 30px;
   height: 30px;

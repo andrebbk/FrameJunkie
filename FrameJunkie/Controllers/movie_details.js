@@ -25,7 +25,6 @@ let timer1, timer2;
     clearTimeout(timer1);
     clearTimeout(timer2);
   });
-
 //Toast Notifications END
 
 let knex = require("knex")({
@@ -187,6 +186,7 @@ $('#btn_exit_movie_details').off('click').on('click', function(event){
     popupWindow.close();
 });
 
+
 //ADD MOVIE VIEW
 $('#btnAddMovieView', '#movie_detail_container').off('click').on('click', function(event){       
     addNewMovieView();
@@ -214,6 +214,81 @@ function addAndShowLoading(){
         
     $("#moviedetails_partial", "#movie-details-container").prepend($(loadingHTML).fadeIn('slow'));
 }
+
+
+//EDIT MOVIE
+$('#btnEditMovie', '#movie_detail_container').off('click').on('click', function(event){
+
+    if(isToEdit){
+        var validationResult = validateMovieToEdit();
+        if(validationResult.IsValid){
+
+            //Movie data to edit
+            let movieDataToEdit = {
+                movieId: loadedMovieId,
+                movieTitle: $('#movie-edit-title', '#me-container').val(),
+                movieYear: $('#movie-edit-year', '#me-container').val(),
+                isFavMovie: $('#switch_IsFav').prop("checked"),
+                movieRating: 0,
+                movieNrViews: $('#movie-edit-views', '#me-container').val(),
+                movieObservations: $('#movie-edit-observations', '#me-container').val(),
+                updateCover: false,
+                movieCover: ""
+            };
+
+            //Movie rating data
+            document.querySelectorAll("#me-container input[type=radio].star").forEach((elemStar) => {
+                if(elemStar.checked){
+                    movieDataToEdit.movieRating = elemStar.getAttribute('data-starvalue');
+                    return;
+                }
+            });
+
+            //Movie cover changed?
+            if(hasNewMovieCover && newMovieCover != undefined && newMovieCover != ""){
+                movieDataToEdit.updateCover = true;
+                movieDataToEdit.movieCover = newMovieCover;
+            }
+
+            validateDBAndSaveMovie(movieDataToEdit);
+
+            isToEdit = false;        
+            showToastMessage("Frame Junkie", "Successfully edited Movie!");  
+        }
+        else{
+            showToastMessage("Frame Junkie", validationResult.ErrorMessage);
+        } 
+    } 
+    else{
+
+        //LOAD MOVIE TO EDIT        
+        $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
+        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "collapse";    
+        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.height = 0;    
+        $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 0 }, 0);
+    
+        //Show loading
+        addAndShowLoading();
+    
+        loadEditMovie();
+        
+        setTimeout(async () => {
+            await loadMovieToEdit();
+            //Show data container
+            document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
+    
+            document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "visible";   
+            document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 530;   
+            $("#movie-details-container #moviedetails_partial #me-container").animate({"opacity": 1 }, 600);
+    
+            $('#movie-edit-title', '#me-container').trigger('focus');
+    
+            showEditButtons(true);
+            isToEdit = true;
+            hasNewMovieCover = true;
+        }, 500);
+    }    
+});
 
 function loadEditMovie() {   
 
@@ -402,44 +477,6 @@ function loadEditMovie() {
     });     
 }
 
-
-//EDIT MOVIE
-$('#btnEditMovie', '#movie_detail_container').off('click').on('click', function(event){
-
-    if(isToEdit){
-        isToEdit = false;
-        showToastMessage("Frame Junkie", "Successfully edited Movie!");  
-    }else{
-
-        //LOAD MOVIE TO EDIT        
-        $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
-        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "collapse";    
-        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.height = 0;    
-        $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 0 }, 0);
-    
-        //Show loading
-        addAndShowLoading();
-    
-        loadEditMovie();
-        
-        setTimeout(async () => {
-            await loadMovieToEdit();
-            //Show data container
-            document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
-    
-            document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "visible";   
-            document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 530;   
-            $("#movie-details-container #moviedetails_partial #me-container").animate({"opacity": 1 }, 600);
-    
-            $('#movie-edit-title', '#me-container').trigger('focus');
-    
-            showEditButtons(true);
-            isToEdit = true;
-            
-        }, 500);
-    }    
-});
-
 async function loadMovieToEdit(){
     let movieToEditDB = knex('Movies')
     .where('MovieId', loadedMovieId)
@@ -486,6 +523,187 @@ async function loadMovieToEdit(){
     });
 }
 
+function validateMovieToEdit(){
+    let resultOuput = { IsValid: true, ErrorMessage: "" };
+    var crrYear = new Date().getFullYear();
+
+    //Movie Title
+    if($('#movie-edit-title', '#me-container').val() == null || $('#movie-edit-title', '#me-container').val() == '' || $('#movie-edit-title', '#me-container').val() == ' '){
+        resultOuput.IsValid = false;
+        resultOuput.ErrorMessage = "Movie title is empty!";
+    }
+
+    //Movie Year
+    else if($('#movie-edit-year', '#me-container').val() == null || ($('#movie-edit-year', '#me-container').val() != null && ($('#movie-edit-year', '#me-container').val() > Number(crrYear) || $('#movie-edit-year', '#me-container').val() < 1980))){
+        resultOuput.IsValid = false;
+        resultOuput.ErrorMessage = "Movie year is not valid!";
+    }
+
+    //Movie Cover
+    else if(!hasNewMovieCover)
+    {
+        resultOuput.IsValid = false;
+        resultOuput.ErrorMessage = "Movie cover wasn't defined!";
+    }
+
+    //Movie Views
+    else if($('#movie-edit-views', '#me-container').val() == null || $('#movie-edit-views', '#me-container').val() == '' || $('#movie-edit-views', '#me-container').val() == ' ' || $('#movie-edit-views', '#me-container').val() == '0'){
+        resultOuput.IsValid = false;
+        resultOuput.ErrorMessage = "Movie views are not valid!";
+    }
+
+    //Movie Rating
+    else {
+        let hasRating = false;
+        debugger;
+        var starElements = document.querySelectorAll('#me-container input[type=radio].star');
+        if(starElements != null && starElements.length > 0){
+            $.each(starElements, function(idx, value){
+                if(value.checked){
+                    hasRating = true;
+                    return;
+                }
+            });
+        }
+
+        if(!hasRating){
+            resultOuput.IsValid = false;
+            resultOuput.ErrorMessage = "Movie rating wasn't defined!";
+        }
+    }    
+
+    return resultOuput;
+}
+
+async function validateDBAndSaveMovie(movieDataToEdit) {
+    let queryStrTile = '%' + movieDataToEdit.movieTitle + '%';
+
+    let result = knex('Movies')
+    .whereLike('MovieTitle', queryStrTile)
+    .where('MovieYear', movieDataToEdit.movieYear)
+    .select('MovieId')
+    .first();
+
+    //Getting covers path
+    let moviesCoversPath = await knex.select("Value").from("Configurations").where("Key", "MOVIES_COVERS_PATH").where("Deleted", 0).first()
+    .then(function(config){
+        if(config != null && config != undefined)
+            return config.Value;
+        else {
+            return "";
+        }           
+    });
+
+    if(moviesCoversPath != null && moviesCoversPath != ""){
+
+        result.then(function (rows){          
+            if(rows != null && rows.MovieId > 0)
+                showToastMessage("Frame Junkie", "This movie already exists!");
+            else{
+                //Save new movie
+                editMovie(moviesCoversPath, movieDataToEdit);
+                
+            }            
+        });
+    }
+    else{
+        showToastMessage("Frame Junkie", "Movies covers path config doens't exist!");
+    }
+}
+
+async function editMovie(moviesCoversPath, movieDataToEdit) {
+    
+    let movieData = { 
+        MovieTitle: movieTitle, 
+        MovieYear: movieYear,
+        NrViews: 1, 
+        IsFavorite: isFavMovie, 
+        MovieRating: movieRating, 
+        Observations: movieObservations,
+        CreateDate: new Date().toISOString(),
+        Deleted: 0
+    };
+
+    //insert new movie and keep db id
+    const [idNewMovie] = await knex('Movies').insert(movieData)
+    .catch(function(error) {
+        logger.error(error);
+        console.error(error);
+    });
+
+    if(idNewMovie != null && idNewMovie > 0){       
+
+       
+        //save new movie cover
+        let newCover = saveMovieCover(moviesCoversPath, movieTitle, movieCover);
+        if(newCover != null){
+            var movieCoverData = {
+                MovieId: idNewMovie,
+                CoverName: newCover.newCoverName,
+                CoverPath: newCover.newPath,
+                CreateDate: new Date().toISOString(),
+                Deleted: 0
+            };
+
+            //insert new movie cover
+            await knex('MovieCovers').insert(movieCoverData)
+            .catch(function(error) {
+                logger.error(error);
+                console.error(error);
+            });
+        }
+
+        //clear form
+        clearNewMovieForm();       
+    }  
+
+    showToastMessage("Frame Junkie", "New movie saved!");
+}
+
+let saveMovieCover = (moviesCoversPath, movieTitle, newMovieCover) => {
+
+    if(movieTitle == null || movieTitle == '' || movieTitle == ' ' || newMovieCover == null)
+        return null;
+
+    //get new movie cover file extension
+    let coverExtension = "";
+    let fileName = newMovieCover.split('/');
+    if(fileName != null && fileName.length > 0){    
+        let fileExtension = fileName[fileName.length - 1].split('.');
+        if(fileExtension != null && fileExtension.length > 0){
+            coverExtension = fileExtension[fileExtension.length - 1];
+        }
+    }
+
+    //remove spaces and special chars from movie title
+    //generate small guid with nanoid package
+    //create new movie cover name with file extension
+    let newCoverName = movieTitle.replace(/[^A-Z0-9]+/ig, "") + '_' + nanoid(7) + '.' + coverExtension;
+   
+    //TODO: Get config path for covers folder
+    //let path = "C:\\Users\\AndrePC\\Downloads\\TesteFrameJunkie";
+    let newPath = moviesCoversPath.concat(newCoverName);
+
+    //oldPath = newMovieCover
+    renameFile(newMovieCover, newPath);
+
+    return { newCoverName, newPath };
+}
+
+async function renameFile(oldPath, newPath) {
+    try 
+    {
+        await fs.rename(oldPath, newPath);
+        console.log('Rename complete!');
+        
+    } catch (err) 
+    {
+        logger.error(error);
+        console.error(error);
+    }
+}
+
+
 //BACK
 $('#btnBack', '#movie_detail_container').off('click').on('click', function(event){
     $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
@@ -529,6 +747,7 @@ function showEditButtons(showEditButtons){
 
     $("#movie-details-container .details-buttons-container").animate({"opacity": 1 }, 200);
 }
+
 
 //DELETE
 $('#btnDeleteMovie', '#movie_detail_container').off('click').on('click', function(event){
