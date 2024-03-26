@@ -1,9 +1,9 @@
 //creating a window and it's main events
 const { app, BrowserWindow, ipcMain } = require('electron');
 const debug = require('electron-debug');
-
 const path = require("path");
 const url = require("url");
+const electronDialog = require('electron').dialog;
 
 require('@electron/remote/main').initialize();
 
@@ -126,7 +126,7 @@ function createWindow() {
             });
         });
 
-        //get movies
+        //Get movies
         ipcMain.on("getMovies", function(e, mTitle, mYear, mIsFav, mRating, crrPage) {
             let result = knex
             .select('*')
@@ -157,6 +157,7 @@ function createWindow() {
             });  
         }); 
         
+        //Update movie views number
         ipcMain.on('update-movie-nrviews', async (event, updateThisMovieId, movieNrViews) => {
             movieNrViews++;
 
@@ -190,6 +191,35 @@ function createWindow() {
                 }, 1000);                   
             }
         });
+
+        ipcMain.on('openConfirmDialog', (event, confirmMsg, ipcCallBack) => {
+            let window = BrowserWindow.getAllWindows().find((win) => win.webContents.id === event.sender.id);
+
+            const options = {
+                type: "question",
+                buttons: ["Confirm", "Cancel"],
+                defaultId: 1,
+                cancelId: 1,
+                title: "Frame Junkie",
+                message: confirmMsg,
+                detail: "This action cannot be undone",
+                icon: path.join(__dirname, '/Content/Icons/action-movie.ico')
+            };
+
+            // Dialog returns a promise
+            electronDialog
+                .showMessageBox(window, options)            
+                .then((result) => {
+                    // Bail if the user pressed "Cancel" or escaped (ESC) from the dialog box
+                    if (result.response !== 0) { return; }
+        
+                    // Testing.
+                    if (result.response === 0) {
+                        // Reply to the render process
+                        window.webContents.send(ipcCallBack, result.response);
+                    }   
+                });
+        })
     });
 }
 

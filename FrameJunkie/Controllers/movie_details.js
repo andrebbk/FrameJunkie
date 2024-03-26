@@ -76,6 +76,10 @@ ipc.on('result-update-movie-nrviews', (event, updateThisMovieId) => {
     }, 1000);       
 });
 
+ipc.on('delete-movie', (event) => {    
+    console.log('delete-movie');   
+});
+
 async function loadMovieDetails(){
     let movieDB = knex('Movies')
     .where('MovieId', loadedMovieId)
@@ -516,6 +520,11 @@ function showEditButtons(showEditButtons){
 
     $("#movie-details-container .details-buttons-container").animate({"opacity": 1 }, 200);
 }
+
+//DELETE
+$('#btnDeleteMovie', '#movie_detail_container').on('click', function(event){
+    ipc.send('openConfirmDialog', 'Are you sure you would like to delete this movie?', 'delete-movie');
+});
 
 async function deleteMovie(){
     let output = true;
