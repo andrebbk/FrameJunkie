@@ -320,7 +320,9 @@ function loadMovies(){
 		//RELOAD
 		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);			
 
-		setTimeout(() => { showToastMessage('Frame Junkie', deletedMovie + ' deleted successfully!'); }, 400);
+		if(deletedMovie != undefined && deletedMovie != null && deletedMovie != ""){
+			setTimeout(() => { showToastMessage('Frame Junkie', deletedMovie + ' deleted successfully!'); }, 400);
+		}		
 	});
 }
 

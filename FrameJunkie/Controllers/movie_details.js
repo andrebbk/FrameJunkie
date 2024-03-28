@@ -58,6 +58,26 @@ ipc.on('message-movie-id', (event, movieId) => {
     }, 1000);       
 });
 
+ipc.on('result-edited-movie', (event, movieId) => {
+    loadedMovieId = movieId;
+
+    setTimeout(async () => {         
+        await loadMovieDetails();
+
+        //Show data container
+        if(document.querySelector('#movie-details-container #moviedetails_partial #loading_container') != undefined)
+            document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
+
+        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "visible";    
+        $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 1}, 600);
+
+        $("#movie-details-container .details-buttons-container").animate({"opacity": 1}, 600);
+
+        await setTimeout(500);
+        showToastMessage("Frame Junkie", "Movie successfully edited!");         
+    }, 1000);       
+});
+
 ipc.on('result-update-movie-nrviews', (event, updateThisMovieId) => {    
     loadedMovieId = updateThisMovieId;
 
@@ -251,10 +271,7 @@ $('#btnEditMovie', '#movie_detail_container').off('click').on('click', async fun
                 movieDataToEdit.movieCover = newMovieCover;
             }
 
-            if(await validateDBAndSaveMovie(movieDataToEdit)){
-                isToEdit = false;        
-                showToastMessage("Frame Junkie", "Successfully edited Movie!");  
-            }            
+            await validateDBAndSaveMovie(movieDataToEdit); 
         }
         else{
             showToastMessage("Frame Junkie", validationResult.ErrorMessage);
@@ -603,8 +620,7 @@ async function validateDBAndSaveMovie(movieDataToEdit) {
                 return false;
             }                
             else{
-                console.log(movieDataToEdit);
-                return editMovie(moviesCoversPath, movieDataToEdit);     
+                ipc.send('edit-movie', moviesCoversPath, movieDataToEdit);
             }            
         });
     }
