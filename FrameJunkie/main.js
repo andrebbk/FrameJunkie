@@ -303,9 +303,9 @@ function createWindow() {
                 });
 
                 if(updatedMovie.length > 0 && updatedMovie[0].MovieId > 0) {
-                    setTimeout(async () => {         
-                        BrowserWindow.getAllWindows().find((win) => win.webContents.id === event.sender.id).webContents.send('result-edited-movie', updatedMovie[0].MovieId);
-                        win.webContents.send('reload-movies-list', null);			
+                    setTimeout(async () => {  
+                        win.webContents.send('reload-movies-list', null);       
+                        BrowserWindow.getAllWindows().find((win) => win.webContents.id === event.sender.id).webContents.send('result-edited-movie', updatedMovie[0].MovieId);                        			
                     }, 100);   
                 }                 
             }

@@ -60,6 +60,7 @@ ipc.on('message-movie-id', (event, movieId) => {
 
 ipc.on('result-edited-movie', (event, movieId) => {
     loadedMovieId = movieId;
+    isToEdit = false;
 
     setTimeout(async () => {         
         await loadMovieDetails();
@@ -68,9 +69,14 @@ ipc.on('result-edited-movie', (event, movieId) => {
         if(document.querySelector('#movie-details-container #moviedetails_partial #loading_container') != undefined)
             document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
 
+        document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "collapse";   
+        document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 0;   
+        document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.opacity = 0; 
+
         document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "visible";    
         $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 1}, 600);
 
+        showEditButtons(isToEdit);
         $("#movie-details-container .details-buttons-container").animate({"opacity": 1}, 600);
 
         await setTimeout(500);
@@ -620,7 +626,16 @@ async function validateDBAndSaveMovie(movieDataToEdit) {
                 return false;
             }                
             else{
-                ipc.send('edit-movie', moviesCoversPath, movieDataToEdit);
+                    //LOAD MOVIE TO EDIT        
+                    $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
+                    document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "collapse";    
+                    document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 0;    
+                    document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.opacity = 0;  
+                
+                    //Show loading
+                    addAndShowLoading();
+
+                    ipc.send('edit-movie', moviesCoversPath, movieDataToEdit);
             }            
         });
     }
