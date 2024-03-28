@@ -217,7 +217,7 @@ function addAndShowLoading(){
 
 
 //EDIT MOVIE
-$('#btnEditMovie', '#movie_detail_container').off('click').on('click', function(event){
+$('#btnEditMovie', '#movie_detail_container').off('click').on('click', async function(event){
 
     if(isToEdit){
         var validationResult = validateMovieToEdit();
@@ -250,10 +250,10 @@ $('#btnEditMovie', '#movie_detail_container').off('click').on('click', function(
                 movieDataToEdit.movieCover = newMovieCover;
             }
 
-            validateDBAndSaveMovie(movieDataToEdit);
-
-            isToEdit = false;        
-            showToastMessage("Frame Junkie", "Successfully edited Movie!");  
+            if(await validateDBAndSaveMovie(movieDataToEdit)){
+                isToEdit = false;        
+                showToastMessage("Frame Junkie", "Successfully edited Movie!");  
+            }            
         }
         else{
             showToastMessage("Frame Junkie", validationResult.ErrorMessage);
@@ -555,7 +555,6 @@ function validateMovieToEdit(){
     //Movie Rating
     else {
         let hasRating = false;
-        debugger;
         var starElements = document.querySelectorAll('#me-container input[type=radio].star');
         if(starElements != null && starElements.length > 0){
             $.each(starElements, function(idx, value){
@@ -579,6 +578,7 @@ async function validateDBAndSaveMovie(movieDataToEdit) {
     let queryStrTile = '%' + movieDataToEdit.movieTitle + '%';
 
     let result = knex('Movies')
+    .whereNot('MovieId', movieDataToEdit.movieId)
     .whereLike('MovieTitle', queryStrTile)
     .where('MovieYear', movieDataToEdit.movieYear)
     .select('MovieId')
@@ -594,20 +594,23 @@ async function validateDBAndSaveMovie(movieDataToEdit) {
         }           
     });
 
+    //Validation for the cover path config and for movie in db
     if(moviesCoversPath != null && moviesCoversPath != ""){
-
-        result.then(function (rows){          
-            if(rows != null && rows.MovieId > 0)
+        return await result.then(function (rows){          
+            if(rows != null && rows.MovieId > 0){            
                 showToastMessage("Frame Junkie", "This movie already exists!");
+                return false;
+            }                
             else{
                 //Save new movie
-                editMovie(moviesCoversPath, movieDataToEdit);
-                
+                //editMovie(moviesCoversPath, movieDataToEdit);     
+                return true;        
             }            
         });
     }
     else{
         showToastMessage("Frame Junkie", "Movies covers path config doens't exist!");
+        return false;        
     }
 }
 
