@@ -5,6 +5,7 @@ const { nanoid } = require("nanoid");
 const fs = require('fs').promises;
 const path = require('path'); 
 const logger = require('@electron/remote').require('./logger');
+const { pathEqual } = require('path-equal');
 
 //Toast Notifications
 const toast = document.querySelector("#movie_detail_container .toastt"), 
@@ -602,9 +603,8 @@ async function validateDBAndSaveMovie(movieDataToEdit) {
                 return false;
             }                
             else{
-                //Save new movie
-                //editMovie(moviesCoversPath, movieDataToEdit);     
-                return true;        
+                console.log(movieDataToEdit);
+                return editMovie(moviesCoversPath, movieDataToEdit);     
             }            
         });
     }
@@ -616,51 +616,77 @@ async function validateDBAndSaveMovie(movieDataToEdit) {
 
 async function editMovie(moviesCoversPath, movieDataToEdit) {
     
-    let movieData = { 
-        MovieTitle: movieTitle, 
-        MovieYear: movieYear,
-        NrViews: 1, 
-        IsFavorite: isFavMovie, 
-        MovieRating: movieRating, 
-        Observations: movieObservations,
-        CreateDate: new Date().toISOString(),
-        Deleted: 0
-    };
+    try
+    {
+        if(movieDataToEdit.updateCover && movieDataToEdit.movieCover != undefined && movieDataToEdit.movieCover != ""){
+            //get movie cover
+            let moviCoverDB = await knex('MovieCovers')
+                .where('MovieId', loadedMovieId)
+                .where('Deleted', 0)
+                .select('*')
+                .first()
+                .then(function (movieCoverData){
+                    return movieCoverData.CoverPath;
+                });    
 
-    //insert new movie and keep db id
-    const [idNewMovie] = await knex('Movies').insert(movieData)
-    .catch(function(error) {
+            if(!pathEqual(moviCoverDB, movieDataToEdit.movieCover)){
+                //save new movie cover & update db MovieCovers
+                let newCover = saveMovieCover(moviesCoversPath, movieDataToEdit.movieTitle, movieDataToEdit.movieCover);
+                if(newCover != null){
+                    let updatedMovieCover = await knex('MovieCovers')
+                        .where({ MovieId: loadedMovieId})
+                        .update({ 
+                            CoverName: newCover.newCoverName,
+                            CoverPath: newCover.newPath
+                        }, ['MovieId'])
+                        .then(function(resp) {                    
+                            output = true;
+                            return resp;
+                        }).catch(err => {
+                            logger.error(err);
+                            console.log(err);
+                        });
+
+                    if(updatedMovieCover.length > 0 && updatedMovieCover[0].MovieId > 0) {
+                        //remove previous movie cover
+                        await fs.rm(moviCoverDB, {
+                            force: true,
+                        });  
+                    }
+                }                
+            }
+        }       
+
+        //update movie
+        /*let updatedMovie = await knex('Movies')
+        .where({ MovieId: loadedMovieId})
+        .update({ 
+            MovieTitle: movieDataToEdit.movieTitle, 
+            MovieYear: movieDataToEdit.movieYear,
+            NrViews: movieDataToEdit.movieNrViews,
+            IsFavorite: movieDataToEdit.isFavMovie, 
+            MovieRating: movieDataToEdit.movieRating, 
+            Observations: movieDataToEdit.movieObservations
+        }, ['MovieId'])
+        .then(function(resp) {                    
+            output = true;
+            return resp;
+        }).catch(err => {
+            logger.error(err);
+            console.log(err);
+        });
+
+        if(updatedMovie.length > 0 && updatedMovie.MovieId > 0) {
+                  
+        }*/
+    }
+    catch(error){
         logger.error(error);
         console.error(error);
-    });
+        return false;
+    }     
 
-    if(idNewMovie != null && idNewMovie > 0){       
-
-       
-        //save new movie cover
-        let newCover = saveMovieCover(moviesCoversPath, movieTitle, movieCover);
-        if(newCover != null){
-            var movieCoverData = {
-                MovieId: idNewMovie,
-                CoverName: newCover.newCoverName,
-                CoverPath: newCover.newPath,
-                CreateDate: new Date().toISOString(),
-                Deleted: 0
-            };
-
-            //insert new movie cover
-            await knex('MovieCovers').insert(movieCoverData)
-            .catch(function(error) {
-                logger.error(error);
-                console.error(error);
-            });
-        }
-
-        //clear form
-        clearNewMovieForm();       
-    }  
-
-    showToastMessage("Frame Junkie", "New movie saved!");
+    return true;
 }
 
 let saveMovieCover = (moviesCoversPath, movieTitle, newMovieCover) => {
@@ -779,18 +805,26 @@ async function deleteMovie(){
         if(deletedMovie.length > 0) {
 
             //delete movie cover            
-            let deletedMovie = await knex('MovieCovers')
+            let deletedMovieCover = await knex('MovieCovers')
             .where({ MovieId: loadedMovieId})
             .update({ 
                 Deleted: 1
-            }, ['MovieId', 'Deleted'])
+            }, ['MovieId', 'Deleted', 'CoverPath'])
             .then(function(resp) {                    
                 output = true;
                 return resp;
             }).catch(err => {
                 logger.error(err);
                 console.log(err);
-            });                
+            });       
+
+            if(deletedMovieCover.length > 0 && deletedMovieCover[0].MovieId > 0
+                && deletedMovieCover[0].CoverPath != undefined && deletedMovieCover[0].CoverPath != "") {
+                //remove movie cover
+                await fs.rm(deletedMovieCover[0].CoverPath, {
+                    force: true,
+                });  
+            }
         }
     }
     catch(error){
