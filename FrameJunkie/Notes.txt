@@ -1,3 +1,8 @@
 1#Do this after every build package
 
     - Copy db file to final app folder (npx electron-packager . does not copy BD structure/schema)
+
+    USE THIS COMMAND INSTEAD
+    - npm run package 
+    - Then copy all content from node_modules project folder into the final app folder
+    - And db file into the final app folder

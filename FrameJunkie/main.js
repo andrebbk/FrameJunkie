@@ -24,11 +24,9 @@ var knex = require("knex")({
     useNullAsDefault: true
 });
 
-const env = process.env.NODE_ENV || 'development';
-process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+require('v8-compile-cache');
 
 //#region start window
-
 function createWindow() {
     win = new BrowserWindow({
         show: false,
@@ -52,22 +50,14 @@ function createWindow() {
 
     require('@electron/remote/main').enable(win.webContents);
 
-      // and load the index.html of the app.
+    //Load the index.html of the app.
     win.loadURL(`file://${__dirname}/index.html`)
 
-    /*win.loadURL(url.format({
-        pathname: path.join(__dirname, 'index.html'),
-        protocol: "file",
-        slashes: true
-    }));*/
-
-    // If development environment 
-    if (env === 'development') { 
-        require('electron-reload')(__dirname, { 
-            electron: path.join(__dirname, 'node_modules', '.bin', 'electron'), 
-            hardResetMethod: 'exit'
-        }); 
-    }
+    require('electron-reload')(__dirname, {
+        // Note that the path to electron may vary according to the main file
+        electron: require(`${__dirname}/node_modules/electron`), // electron: path.join(__dirname, 'node_modules', '.bin', 'electron'), 
+        hardResetMethod: 'exit'
+    });
 
     //clear cache
     win.webContents.session.clearCache(function(){});

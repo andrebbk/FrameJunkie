@@ -367,6 +367,7 @@ async function openMovieDetails(movieID){
 		popupWindow.webContents.send('message-movie-id', movieID);			
 	});	
 	
+	//when window looses focus, close
 	/*popupWindow.on('blur', () => {
 		// Do your required stuff, when the window loose the focus
 		popupWindow.close();
