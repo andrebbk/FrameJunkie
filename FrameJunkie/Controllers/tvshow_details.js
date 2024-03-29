@@ -91,7 +91,8 @@ ipc.on('result-update-tvshow-nrviews', (event, updateThisTvShowId) => {
         await loadTvShowDetails();
 
         //Show data container
-        document.querySelector('#tvshow-details-container #tvshowdetails_partial #loading_container').remove();
+        if(document.querySelector('#tvshow-details-container #tvshowdetails_partial #loading_container') != undefined)
+        { document.querySelector('#tvshow-details-container #tvshowdetails_partial #loading_container').remove(); }
 
         document.querySelector('#tvshow-details-container #tvshowdetails_partial #md-container').style.visibility = "visible";    
         $("#tvshow-details-container #tvshowdetails_partial #md-container").animate({"opacity": 1}, 600);

@@ -14,6 +14,7 @@ let knex = require("knex")({
 });
 
 let hasNewMovieCover = false, newMovieCover = "";
+
 //INIT
 function loadNewMovie() {   
     //Load Filters
@@ -94,14 +95,13 @@ function loadNewMovie() {
     $('#btnSaveNewMovie').on('click', function(){
         //validate form data
         var validationResult = validateNewMovie();
-
         if(validationResult.IsValid){
             
             //new movie data
             let movieTitle = $('#movie-title').val(),
             movieYear = $('#movie-year').val(),
             isFavMovie = $('#movie-isfav').prop("checked"),
-            movieRating = 0;
+            movieRating = 0,
             movieObservations = $('#movie-observations-id').val(),
             movieCover = newMovieCover;
 
@@ -112,14 +112,6 @@ function loadNewMovie() {
                     return;
                 }
             });
-
-            /*console.log("Movie Data:");
-            console.log("Movie Title: " + movieTitle);
-            console.log("Movie Year: " + movieYear);
-            console.log("Movie Fav: " + isFavMovie);
-            console.log("Movie Rating: " + movieRating);
-            console.log("Movie Observations: " + movieObservations);
-            console.log("Movie Cover: " + movieCover);*/
 
             validateAndSaveMovie(movieTitle, movieYear, isFavMovie, movieRating, movieObservations, movieCover);            
         }else{
@@ -216,6 +208,7 @@ async function validateAndSaveMovie(movieTitle, movieYear, isFavMovie, movieRati
     let result = knex('Movies')
     .whereLike('MovieTitle', queryStrTile)
     .where('MovieYear', movieYear)
+    .where('Deleted', 0)
     .select('MovieId')
     .first();
 

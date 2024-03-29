@@ -11,8 +11,6 @@ const { pathEqual } = require('path-equal');
 
 require('@electron/remote/main').initialize();
 
-//debug();
-
 //window
 let win;
 
@@ -124,7 +122,7 @@ function createWindow() {
         });
 
 
-        
+
         //Get movies
         ipcMain.on("getMovies", function(e, mTitle, mYear, mIsFav, mRating, crrPage) {
             let result = knex
@@ -388,7 +386,7 @@ function createWindow() {
 
             await tvShowDB.then(function (tvShowData){          
                 if(tvShowData != null && tvShowData.TvShowId > 0){
-                    win.webContents.send('reload-tvshows-list', tvShowData.TvShowId);
+                    win.webContents.send('reload-tvshows-list', tvShowData.TvShowTitle);
                 }
             });            
         });

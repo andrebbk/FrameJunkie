@@ -1,0 +1,576 @@
+@charset "UTF-8"; /*IMPORTANT, WHITOUT THIS THE CONTENT STAR DOESNT WORK PROPERLY*/
+
+:root {
+	--enlarge: scale(1.25);
+	--page-color: steelblue;
+	--star-primary-color: gold;
+	--star-secondary-color: darkgoldenrod;
+}
+
+.new-tvshow-container {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 60px 80px 80px 80px;
+}
+
+.form-new-tvshow {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+    padding: 80px 120px 80px 120px;
+}
+
+.form-new-tvshow::before {
+  content: ""; /* Create a pseudo-element */
+  position: absolute; /* Position the pseudo-element absolutely */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #4b3a27;
+  opacity: 0.7;
+  z-index: -1;
+}
+
+.form-header1 {
+    color: white;
+}
+
+
+/*TvShow Title INPUT STYLE*/
+.form__group {
+    position: relative;
+    padding: 15px 0 0;
+    margin-top: 20px;
+    margin-right: 40px;
+    width: 450px;
+    margin-bottom: 20px;
+  }
+  
+  .form__field {
+    font-family: inherit;
+    width: 100%;
+    border: 0;
+    border-bottom: 2px solid #9b9b9b;
+    outline: 0;
+    font-size: 1.3rem;
+    color: #fff;
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+  
+    &::placeholder {
+      color: transparent;
+    }
+  
+    &:placeholder-shown ~ .form__label {
+      font-size: 1.3rem;
+      cursor: text;
+      top: 20px;
+    }
+  }
+  
+  .form__label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    color: #9b9b9b;
+  }
+  
+  .form__field:focus {
+    ~ .form__label {
+      position: absolute;
+      top: 0;
+      display: block;
+      transition: 0.2s;
+      font-size: 1rem;
+      color: #9b9b9b;
+      font-weight:700;    
+    }
+    padding-bottom: 6px;  
+    font-weight: 700;
+    border-width: 3px;
+    border-image: linear-gradient(to right, #9b9b9b, #555);
+    border-image-slice: 1;
+  }
+  
+  /* reset input */
+  .form__field{
+    &:required,&:invalid { box-shadow:none; }
+  }
+  /*END TVSHOW Title INPUT STYLE*/
+
+
+.flex-container {
+  display: flex;
+}
+
+  /* TVSHOW YEAR */
+.custom-select-container {
+    margin-top: 20px;
+}
+
+.custom-select {
+    width: 270px;
+    position: relative;
+    margin-top: 10px;
+}
+  
+select {
+appearance: none;
+/*  safari  */
+-webkit-appearance: none;
+/*  other styles for aesthetics */
+width: 100%;
+font-size: 1.15rem;
+padding: 0.675em 6em 0.675em 1em;
+background-color: #fff;
+border: 1px solid #caced1;
+border-radius: 0.25rem;
+color: #000;
+cursor: pointer;
+}
+
+.custom-select::before,
+.custom-select::after {
+--size: 0.3rem;
+content: "";
+position: absolute;
+right: 1rem;
+pointer-events: none;
+}
+
+.custom-select::before {
+border-left: var(--size) solid transparent;
+border-right: var(--size) solid transparent;
+border-bottom: var(--size) solid black;
+top: 40%;
+}
+
+.custom-select::after {
+border-left: var(--size) solid transparent;
+border-right: var(--size) solid transparent;
+border-top: var(--size) solid black;
+top: 55%;
+}
+
+.label-form-field {
+  font-size: 1rem;
+  color: #9b9b9b;
+  font-weight: 600;
+}
+/* END TVSHOW YEAR */
+
+
+
+
+/*TVSHOW RATING STYLE*/
+.tvshow-rating-container {
+  position: relative;
+	padding: 30px 0px 0px 0px;
+}
+
+.star-group {
+  width: 30%;
+  margin-top: 70px;
+	display: grid;
+	font-size: clamp(1.5em, 10vw, 8em);
+	grid-auto-flow: column;
+  zoom: 0.3;
+}
+
+/* reset native input styles */
+.star {
+	-webkit-appearance: none;
+	align-items: center;
+	appearance: none;
+	cursor: pointer;
+	display: grid;
+	font: inherit;
+	height: 1.15em;
+	justify-items: center;
+	margin: 0;
+	place-content: center;
+	position: relative;
+	width: 1.15em;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.star {
+		transition: all 0.25s;
+	}
+
+	.star:before,
+	.star:after {
+		transition: all 0.25s;
+	}
+}
+
+.star:before,
+.star:after {
+	color: var(--star-primary-color);
+	position: absolute;
+}
+
+.star:before {
+	content: "☆";
+}
+
+.star:after {
+	content: "✦";
+	font-size: 25%;
+	opacity: 0;
+	right: 20%;
+	top: 20%;
+}
+
+/* The checked radio button and each radio button preceding */
+.star:checked:before,
+.star:has(~ .star:checked):before {
+	content: "★";
+}
+
+#two:checked:after,
+.star:has(~ #two:checked):after {
+	opacity: 1;
+	right: 14%;
+	top: 10%;
+}
+
+#three:checked:before,
+.star:has(~ #three:checked):before {
+	transform: var(--enlarge);
+}
+
+#three:checked:after,
+.star:has(~ #three:checked):after {
+	opacity: 1;
+	right: 8%;
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#four:checked:before,
+.star:has(~ #four:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#four:checked:after,
+.star:has(~ #four:checked):after {
+	opacity: 1;
+	right: 8%;
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#five:checked:before,
+.star:has(~ #five:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#five:checked:after,
+.star:has(~ #five:checked):after {
+	opacity: 1;
+	right: 8%;
+	text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#six:checked:before,
+.star:has(~ #six:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#six:checked:after,
+.star:has(~ #six:checked):after {
+	opacity: 1;
+	right: 8%;
+	text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#seven:checked:before,
+.star:has(~ #seven:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#seven:checked:after,
+.star:has(~ #seven:checked):after {
+	opacity: 1;
+	right: 8%;
+	text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#eight:checked:before,
+.star:has(~ #eight:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#eight:checked:after,
+.star:has(~ #eight:checked):after {
+	opacity: 1;
+	right: 8%;
+	text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#nine:checked:before,
+.star:has(~ #nine:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#nine:checked:after,
+.star:has(~ #nine:checked):after {
+	opacity: 1;
+	right: 8%;
+	text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+#ten:checked:before,
+.star:has(~ #ten:checked):before {
+	text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+	transform: var(--enlarge);
+}
+
+#ten:checked:after,
+.star:has(~ #ten:checked):after {
+	opacity: 1;
+	right: 8%;
+	text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+	top: 2%;
+	transform: var(--enlarge);
+}
+
+.star-group:has(> #ten:checked) {
+	#one {
+		transform: rotate(-4deg);
+	}
+
+	#two {
+    transform: translateY(-20%) rotate(-7.5deg);		
+	}
+
+	#three {
+    transform: translateY(-35%) rotate(-7.5deg);		
+	}
+
+	#four {
+    transform: translateY(-45%) rotate(-7.5deg);
+	}
+
+	#five {
+		transform: translateY(-60%);
+	}
+
+  #six {
+		transform: translateY(-60%);
+	}
+
+	#seven {
+		transform: translateY(-45%) rotate(7.5deg);
+	}
+
+	#eight {
+		transform: translateY(-35%) rotate(7.5deg);
+	}
+
+	#nine {
+		transform: translateY(-20%) rotate(7.5deg);
+	}
+
+	#ten {
+		transform: rotate(4deg);
+	}
+}
+
+.star:focus {
+	outline: none;
+}
+
+.star:focus-visible {
+	border-radius: 8px;
+	outline: 2px dashed var(--star-primary-color);
+	outline-offset: 8px;
+	transition: all 0s;
+}
+/*TVSHOW RATING STYLE END*/
+
+
+.is-favorite-container {
+  display: block;
+  position: relative;
+}
+
+/* IS FAVORITE */
+.toggleBtn {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.toggleLabel {
+  cursor: pointer;
+  text-indent: -9999px;
+  width: 80px;
+  height: 40px;
+  background: grey;
+  border-radius: 100px;
+  position: relative;
+  margin-top: 10px;
+}
+
+.toggleLabel:after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 30px;
+  height: 30px;
+  background: #fff;
+  border-radius: 90px;
+  transition: 0.3s;
+}
+
+.toggleBtn:checked + .toggleLabel {
+  background: #800000;
+}
+
+.toggleBtn:checked + .toggleLabel:after {
+  left: calc(100% - 5px);
+  transform: translateX(-100%);
+}
+
+.toggleLabel:active:after {
+  width: 80px;
+}
+/* END FAVORITE */
+
+.tvshow-observations-container {
+  margin-top: 20px;
+}
+
+.tvshow-observations {
+  margin-top: 10px;
+  width: 90%;
+  height: 100px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: none;
+}
+
+.tvshow-cover-container {
+  width: 100%;
+  text-align: center;
+}
+
+#tvshow-cover-output{
+  object-fit: contain;
+}
+
+
+.form-buttons-container {
+  text-align: center;
+  margin-top: 10px;
+}
+
+/*BUTTON FORM*/
+.button-form {
+  display: inline-block;
+  background-color: #4b3a27;
+  border-radius: 10px;
+  border: 4px double #cccccc;
+  color: #ffffff;
+  text-align: center;
+  font-size: 20px;
+  height: 60px;
+  width: 160px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+.button-form span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+.button-form span:after {
+  content: '\00bb';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+.button-form:hover {
+  background-color: #5c4a36;
+}
+.button-form:hover span {
+  padding-right: 25px;
+}
+.button-form:hover span:after {
+  opacity: 1;
+  right: 0;
+}
+/*END BUTTON FORM */
+
+
+
+.refresh-tvshow-cover {
+  position: absolute;
+  top:-15px;
+  left: 635px;
+  object-fit: contain;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  visibility: hidden;	
+  opacity: 0;
+}
+
+.refresh-tvshow-cover.change {
+  visibility: visible;
+  opacity: 1;
+  transition: all 3s ease-in-out;
+}
+
+.refresh-tvshow-rating {
+  position: absolute;
+  top: 50px;
+  left: 440px;
+  object-fit: contain;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  visibility: hidden;	
+  opacity: 0;
+}
+
+.refresh-tvshow-rating.change {
+  visibility: visible;
+  opacity: 1;
+  transition: all 3s ease-in-out;
+}

@@ -1,0 +1,83 @@
+<head>
+    <link rel="stylesheet" href="./css/TvShows/new-tvshow.css" />
+</head>
+
+
+<div id="new_tvshow_container" class="new-tvshow-container" style="visibility: collapse; opacity: 0;">
+    <div class="form-new-tvshow">
+
+        <div class="flex-container">
+
+            <div style="width: 40%;">
+
+                <h1 class="form-header1">New Tv Show</h1>
+                <div class="new-tvshows-fields-pt1">
+
+                    <!--TVSHOW TITLE-->
+                    <div class="form__group field">
+                        <input id='tvshow-title' type="input" class="form__field" placeholder="" name="tvshow-title" required />
+                        <label for="tvshow-title" class="form__label">Title</label>
+                    </div>
+
+                    <!--TVSHOW YEAR-->
+                    <div class="custom-select-container" style="display:block; width: 30%;">
+                        <text class="label-form-field">Tv Show Year</text>
+                        <div class="custom-select">
+                            <select id="tvshow-year">                    
+                            </select>
+                        </div>
+                    </div>            
+
+                    <!--IS FAVORITE-->
+                    <div class="is-favorite-container">
+                        <div style="margin-top: 26px; margin-right: 10px;">
+                            <text class="label-form-field">Is Favorite</text>
+                        </div>                
+                        <div>
+                            <input type="checkbox" id="tvshow-isfav" class="toggleBtn" /><label class="toggleLabel" for="tvshow-isfav">Toggle</label>
+                        </div>
+                    </div>   
+
+
+                    <!--TVSHOW RATING-->
+                    <div class="tvshow-rating-container">
+                        <img id="btnRefreshTvShowRating" class="refresh-tvshow-rating" src="./Content/Icons/refresh-icon.jpg"/>
+                        <text class="label-form-field">Tv Show Rating</text>
+                        <div class="star-group">
+                            <input type="radio" class="star" id="one" data-starvalue="1" name="star_rating">
+                            <input type="radio" class="star" id="two" data-starvalue="2" name="star_rating">
+                            <input type="radio" class="star" id="three" data-starvalue="3" name="star_rating">
+                            <input type="radio" class="star" id="four" data-starvalue="4" name="star_rating">
+                            <input type="radio" class="star" id="five" data-starvalue="5" name="star_rating">
+                            <input type="radio" class="star" id="six" data-starvalue="6" name="star_rating">
+                            <input type="radio" class="star" id="seven" data-starvalue="7" name="star_rating">
+                            <input type="radio" class="star" id="eight" data-starvalue="8" name="star_rating">
+                            <input type="radio" class="star" id="nine" data-starvalue="9" name="star_rating">
+                            <input type="radio" class="star" id="ten" data-starvalue="10" name="star_rating">
+                        </div>
+                    </div>
+                    
+                    <!--TVSHOW OBSERVATIONS-->
+                    <div class="tvshow-observations-container">
+                        <text class="label-form-field">Observations</text>
+                        <textarea id="tvshow-observations-id" class="tvshow-observations"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div style="width: 60%;">                
+                <div class="tvshow-cover-container" style=" position:relative; z-index:1;">
+                    <img id="btnRefreshTvShowCover" class="refresh-tvshow-cover" src="./Content/Icons/refresh-icon.jpg"/>
+                    <input id="tvshow-cover-upload" type="file" accept="image/*" style="display: none;"/>
+                    <img id="tvshow-cover-output" width="420px" height="530px" src="./Content/Images/No-Image-Placeholder.png"/>
+                </div>
+                <div class="form-buttons-container">
+                    <button id="btnSelectCover" class="button-form"><span>Select Cover</span></a>                    
+                    <button id="btnSaveNewTvShow" class="button-form"><span>Save</span></a>
+                    <button id="btnClearNewTvShow" class="button-form"><span>Clear</span></a>
+                </div>
+            </div>
+
+        </div>  
+    </div>
+</div>

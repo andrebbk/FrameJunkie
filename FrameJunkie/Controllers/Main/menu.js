@@ -9,6 +9,7 @@ const { loadDashBoardData } = require('./menu_dashboard.js');
 const { loadMovies } = require('./menu_movies.js'); 
 const { loadNewMovie } = require('./menu_newMovie.js'); 
 const { loadTvShows } = require('./menu_tvshows.js'); 
+const { loadNewTvShow } = require('./menu_newTvShow.js'); 
 const { loadSettings } = require('./menu_settings.js'); 
 
 //INIT WITH HOME
@@ -143,8 +144,26 @@ $('#btnTvShows').on('click', function (event){
 });
 
 $('#btnNewTvShow').on('click', function (event){
-    $('#content-main-app').load(' ');
     hideMenu();
+    resetMenu();
+
+    fs.readFile(path.join(__dirname, '../../Views/TvShows/new-tvshow.html'), (err, data) => {
+        if(err != null) 
+            alert(err);
+        else{
+            setTimeout(async () => {
+                document.getElementById('content-main-app').innerHTML += data;
+
+                loadNewTvShow();
+
+                //Show data container
+                document.getElementById('loading_container').remove();
+                document.getElementById('new_tvshow_container').style.visibility = "visible";
+            
+                $("#new_tvshow_container").animate({"opacity": 1}, 600);
+            }, 1000);      
+        }   
+    });
 });
 
 $('#btnSettings').on('click', function (event){
