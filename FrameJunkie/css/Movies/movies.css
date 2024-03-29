@@ -65,7 +65,7 @@ body {
   .movie-header {
     padding: 0;
     margin: 0;
-    height: 367px;
+    height: 400px;
     width: 100%;
     display: block;
     border-top-left-radius: 10px;
@@ -119,7 +119,8 @@ body {
     font-weight: bold;
     margin: 0;
     display: table-row;
-    color: #6ABCEA;
+    /*color: #6ABCEA;*/
+    color: #c50000;
   }
 
   .movie-year {
@@ -127,7 +128,8 @@ body {
     font-weight: normal;
     margin: 0;
     display: table-row;
-    color: #6ABCEA;
+    /*color: #6ABCEA;*/
+    color: #c50000;
   }
 
 

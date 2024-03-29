@@ -156,7 +156,7 @@ function loadMovies(){
 
 		for(var i = 0; i < result.length; i++){
 			let movieElm = '<div class="movie-card" data-movieid="' + result[i].MovieId + '">' +
-			`<div class="movie-header" style="background: url('file://` + result[i].CoverPath.trim() + `');  background-size: cover;">` +
+			`<div class="movie-header" style="background: url('file://` + result[i].CoverPath.trim() + `'); background-size: cover;">` +
 			'<div class="header-icon-container">' +
 			'</div>' +
 			'</div>' +
