@@ -57,7 +57,7 @@ function loadNewMovie() {
 
     $('#btnRefreshMovieCover').on('click', function(){
         var output = document.getElementById('movie-cover-output');
-        output.src = pathToFileURL("./Content/Images/No-Image-Placeholder.png");
+        output.src = pathToFileURL(`${__dirname}../../../Content/Images/No-Image-Placeholder.png`);
 
         document.querySelector('.refresh-movie-cover').classList.toggle('change');
 
@@ -159,7 +159,7 @@ function clearNewMovieForm(){
     //Movie Cover
     $('#movie-cover-upload').val('');
     var output = document.getElementById('movie-cover-output');
-    output.src = pathToFileURL("./Content/Images/No-Image-Placeholder.png");
+    output.src = pathToFileURL(`${__dirname}../../../Content/Images/No-Image-Placeholder.png`);
 
     if(document.getElementById('btnRefreshMovieCover').classList.contains("change"))
     { document.querySelector('.refresh-movie-cover').classList.toggle('change'); }    
