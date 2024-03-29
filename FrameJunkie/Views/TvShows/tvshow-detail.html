@@ -1,0 +1,195 @@
+
+<head>
+    <link rel="stylesheet" href="../../css/toast.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/TvShows/tvshow-detail.css" />
+</head>
+
+<body  style="overflow: hidden;">
+    <div id="tvshow_detail_container" class="tvshow-detail-container">
+        <div id="topbar_md" style="position: relative; padding: 20px 50px; height: 100px;">
+            <div class="two alt-two" style="position:absolute; top:20%; left: 40%;">
+                <h1 style="color: white;">Tv Show Detail</h1>
+            </div>
+            
+            <div id="top-bar" style="display: flex; flex-wrap: nowrap;  float:right;">   
+                <div  style="flex:left; width: 50%;">
+                </div>
+            
+                <div style="flex:right; margin-left: 5px;">
+                    <button class="Btn" id="btn_exit_tvshow_details">  
+                        <div class="sign">
+                            <svg viewBox="0 0 512 512">
+                                <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"></path>
+                            </svg>
+                        </div>                    
+                        <div class="text" style="font-size: small;">Exit</div>
+                    </button>
+                </div>            
+            </div>        
+        
+            <div id="tvshow-details-container" style="position: relative;">
+                <div id="tvshowdetails_partial" style="margin: 150px;">
+    
+                    <div id="loading_container" class="loading-container">
+                        <img class="loading-img" src="../../Content/Images/loading_animation.gif" width="90" height="60">
+                    </div>   
+    
+                    <div id="md-container" class="flex-container" style="visibility: collapse; opacity: 0;">
+                        <div style="position: relative; width: 70%;">        
+                            <!--TVSHOW TITLE-->
+                            <h1 id='tvshow-details-title' style="color: white; font-size:40px; margin-bottom: 10px;"></label>        
+    
+                            <!--TVSHOW YEAR-->
+                            <h1 id='tvshow-details-year' style="color: white; font-size:25px; margin-bottom: 60px;"></h1>        
+            
+                            <!--TVSHOW VIEWS-->
+                            <h1 id='tvshow-details-views' style="color: white; font-size:30px; margin-bottom: 20px;"></h1>
+    
+                            <!--TVSHOW IS FAVORITE-->
+                            <img id="tvshow-details-fav" width="50px" height="50px" src="../../Content/Images/movie-heart.png" style="visibility: hidden;"/>
+    
+                            <!--TVSHOW RATING-->
+                            <div class="tvshow-rating-container" style="width: 50%;">
+                                <div class="star-group" style="width: 100% !important;">
+                                    <input type="radio" class="star" id="one" data-starvalue="1" name="star_rating" disabled>
+                                    <input type="radio" class="star" id="two" data-starvalue="2" name="star_rating" disabled>
+                                    <input type="radio" class="star" id="three" data-starvalue="3" name="star_rating" disabled>
+                                    <input type="radio" class="star" id="four" data-starvalue="4" name="star_rating" disabled>
+                                    <input type="radio" class="star" id="five" data-starvalue="5" name="star_rating" disabled>
+                                    <input type="radio" class="star" id="six" data-starvalue="6" name="star_rating" disabled>
+                                    <input type="radio" class="star" id="seven" data-starvalue="7" name="star_rating" disabled>
+                                    <input type="radio" class="star" id="eight" data-starvalue="8" name="star_rating" disabled>
+                                    <input type="radio" class="star" id="nine" data-starvalue="9" name="star_rating" disabled>
+                                    <input type="radio" class="star" id="ten" data-starvalue="10" name="star_rating" disabled>
+                                </div>
+                            </div>
+                            
+                            <!--TVSHOW OBSERVATIONS-->
+                            <div id="tvshow-details-observations-container" class="tvshow-observations-container" style="margin-top: 80px !important;">
+                                <label class="label-form-field">Observations</label>
+                                <p id="tvshow-details-observations" class="tvshow-details-description-style"></p>
+                            </div>
+                        </div>
+            
+                        <div style="width: 30%;">                
+                            <div class="tvshow-cover-container" style=" position:relative; z-index:1;">
+                                <img id="tvshow-cover-details" width="420px" height="530px" src="../../Content/Images/No-Image-Placeholder.png"/>
+                            </div>
+                        </div>        
+                    </div>  
+                
+                    <div id="me-container" class="flex-container" style="visibility: collapse; opacity: 0; height: 0;">
+                        <div style="width: 40%;">
+                            <div class="new-tvshows-fields-pt1">    
+
+                                <!--TVSHOW TITLE-->
+                                <div class="form__group field" style="margin-top: 0px !important;">
+                                    <input id='tvshow-edit-title' type="input" class="form__field" placeholder="" name="tvshow-edit-title" required />
+                                    <label for="tvshow-edit-title" class="form__label">Title</label>
+                                </div>
+            
+                                <!--TVSHOW YEAR-->
+                                <div class="custom-select-container" style="display:block; width: 30%;">
+                                    <text class="label-form-field">Tv Show Year</text>
+                                    <div class="custom-select">
+                                        <select id="tvshow-edit-year">                    
+                                        </select>
+                                    </div>
+                                </div>            
+            
+                                <!--IS FAVORITE-->
+                                <div class="is-favorite-container">
+                                    <div style="margin-top: 26px; margin-right: 10px;">
+                                        <text class="label-form-field">Is Favorite</text>
+                                    </div>                
+                                    <div>
+                                        <input type="checkbox" id="switch_IsFav" /><label for="switch_IsFav" id="switch_IsFav_Label">Toggle</label>
+                                    </div>
+                                </div>   
+            
+            
+                                <!--TVSHOW RATING-->
+                                <div class="tvshow-rating-container">
+                                    <img id="btnRefreshTvShowRating" class="refresh-tvshow-rating" src="../../Content/Icons/refresh-icon.jpg"/>
+                                    <text class="label-form-field">Tv Show Rating</text>
+                                    <div class="star-group">
+                                        <input type="radio" class="star" id="one" data-starvalue="1" name="star_rating">
+                                        <input type="radio" class="star" id="two" data-starvalue="2" name="star_rating">
+                                        <input type="radio" class="star" id="three" data-starvalue="3" name="star_rating">
+                                        <input type="radio" class="star" id="four" data-starvalue="4" name="star_rating">
+                                        <input type="radio" class="star" id="five" data-starvalue="5" name="star_rating">
+                                        <input type="radio" class="star" id="six" data-starvalue="6" name="star_rating">
+                                        <input type="radio" class="star" id="seven" data-starvalue="7" name="star_rating">
+                                        <input type="radio" class="star" id="eight" data-starvalue="8" name="star_rating">
+                                        <input type="radio" class="star" id="nine" data-starvalue="9" name="star_rating">
+                                        <input type="radio" class="star" id="ten" data-starvalue="10" name="star_rating">
+                                    </div>
+                                </div>
+                                
+                                <!--Views-->
+                                <div class="is-favorite-container">
+                                    <div style="margin-top: 26px; margin-right: 10px;">
+                                        <text class="label-form-field">Views</text>
+                                    </div>                
+                                    <div style="color: grey; zoom: 0.9; margin-left: 5px;">
+                                        <input id="tvshow-edit-views" class="numberstyle" type="number" min="0" step="1" value="0" max="1000">
+                                    </div>
+                                </div>   
+
+                                <!--TVSHOW OBSERVATIONS-->
+                                <div class="tvshow-observations-container">
+                                    <text class="label-form-field">Observations</text>
+                                    <textarea id="tvshow-edit-observations" class="tvshow-observations"></textarea>
+                                </div>
+                            </div>
+                        </div>
+            
+                        <div style="width: 60%;">                
+                            <div class="tvshow-cover-container" style=" position:relative; z-index:1;">
+                                <img id="btnRefreshTvShowCover" class="refresh-tvshow-cover" src="../../Content/Icons/refresh-icon.jpg"/>
+                                <input id="tvshow-cover-upload" type="file" accept="image/*" style="display: none;"/>
+                                <img id="tvshow-cover-output" width="420px" height="530px" src="../../Content/Images/No-Image-Placeholder.png"/>
+                            </div>                          
+                        </div>
+                    </div>
+                </div>      
+                
+                <div class="details-buttons-container" style="opacity: 0;">
+                    <button id="btnAddTvShowView" class="button-form"><span>Add View</span></a>  
+                    <button id="btnBack" class="button-form" style="display: none;"><span>Back</span></a>               
+                    <button id="btnEditTvShow" class="button-form"><span>Edit</span></a>        
+                    <button id="btnDeleteTvShow" class="button-form"><span>Delete</span></a>              
+                    <button id="btnSelectCover" class="button-form" style="display: none;"><span>Select Cover</span></a>  
+                </div>
+            </div>        
+        </div>
+    
+        <div class="toastt" style="opacity: 0;">  
+            <div class="toastt-content">
+              <img src="../../Content/Icons/alert-icon-red.png" class="toastt-alert"/>
+          
+              <div class="message-toastt">
+                <span id="toastt-title" class="toastt-text-title"></span>
+                <span id="toastt-msg" class="toastt-text-msg"></span>
+              </div>
+            </div>
+            <i class="close-toastt">x</i>
+          
+            <div class="progress-toastt"></div>
+        </div>  
+    </div>
+</body>
+
+ <!-- Bootstrap Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script type="text/javascript" src="../../node_modules/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" rc="../../contents/bootstrap/5.0.2/js/bootstrap.min.js"></script>        
+
+<script>window.$ = window.jQuery = require('jQuery');</script>        
+<script>        
+    try {
+        require('../../Controllers/tvshow_details.js');
+    } catch (error) {
+        console.log(error);
+    }    
+</script>     

@@ -1,5 +1,6 @@
 {
     "name": "frame-junkie",
+    "productName": "Frame Junkie",
     "version": "1.0.0",
     "description": "Desktop App Movies Manager",
     "main": "main.js",

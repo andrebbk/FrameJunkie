@@ -5,9 +5,10 @@ const path = require('path');
 const { pathToFileURL } = require('node:url');
 
 const { closeToastMessage } = require('../../index.js'); 
-const { loadDashBoardData } = require('./menu_dashboard');
-const { loadMovies } = require('./menu_movies'); 
+const { loadDashBoardData } = require('./menu_dashboard.js');
+const { loadMovies } = require('./menu_movies.js'); 
 const { loadNewMovie } = require('./menu_newMovie.js'); 
+const { loadTvShows } = require('./menu_tvshows.js'); 
 const { loadSettings } = require('./menu_settings.js'); 
 
 //INIT WITH HOME
@@ -118,8 +119,27 @@ $('#btnNewMovie').on('click', function (event){
 });
 
 $('#btnTvShows').on('click', function (event){
-    $('#content-main-app').load(' ');
     hideMenu();
+    resetMenu();
+
+	fs.readFile(path.join(__dirname, '../../Views/TvShows/tvshows.html'), (err, data) => {
+		if(err != null) 
+            alert(err);
+        else{
+            setTimeout(async () => {
+                document.getElementById('content-main-app').innerHTML += data;                
+
+                loadTvShows();                
+                await new Promise(resolve => setTimeout(resolve, 1000)); // 1 sec
+
+                //Show data container
+                document.getElementById('loading_container').remove();
+                document.getElementById('tvshows_container').style.visibility = "visible";
+            
+                $("#tvshows_container").animate({"opacity": 1}, 600);
+            }, 1000);            
+        }      		
+    });
 });
 
 $('#btnNewTvShow').on('click', function (event){

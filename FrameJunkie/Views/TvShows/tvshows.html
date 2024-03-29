@@ -1,0 +1,65 @@
+<head>
+    <link rel="stylesheet" href="./css/TvShows/tvshows.css" />
+</head>
+
+<div id="tvshows_container" style="visibility: collapse; opacity: 0;">
+    <div class="search-menu-container">
+        <button type="button" class="collapsible">
+            <span>Filters</span>
+            <img style="margin-left: 5px; margin-right: 10px;">
+        </button>
+        <div class="content-search-menu">
+            <div class="search-content" style="zoom:0.8;">
+                <!--TVSHOW TITLE-->
+                <div class="form__group field">
+                    <input id='fltr-tvshow-title' type="input" class="form__field" placeholder="" name="fltr-tvshow-title" required />
+                    <label for="fltr-tvshow-title" class="form__label">Title</label>
+                </div>
+    
+                <!--TVSHOW YEAR-->
+                <div style="display:block;">
+                    <div class="custom-select">
+                        <select id="fltr-tvshow-year">                    
+                        </select>
+                    </div>
+                </div>     
+    
+                <!--IS FAVORITE-->
+                <div style="margin-left: 40px; padding-top: 5px;">
+                    <div style="float: left; margin-top: 26px; margin-right: 10px;">
+                        <label style="font-size:18px; display:contents;">Favorites: </label>
+                    </div>                
+                    <div style="float:right;">
+                        <input type="checkbox" id="fltr-tvshow-isfav" class="toggleBtn" /><label class="toggleLabel" for="fltr-tvshow-isfav">Toggle</label>
+                    </div>
+                </div>   
+    
+                <!--RATING-->
+                <div style="margin-left: 40px; padding-top: 5px;">
+                    <div style="float: left; margin-top: 26px; margin-right: 1px;">
+                        <label style="font-size:18px; display:contents;">Rating: </label>
+                    </div>                
+                    <div style="float:right;">
+                        <input id="fltr-tvshow-rating" class="numberstyle" type="number" min="0" step="1" value="0" max="10">
+                    </div>
+                </div>     
+                
+                <!--BUTTON SEARCH-->
+                <div style="float:right; width: 40%; margin-top: 15px;">
+                    <button id="btnClearTvShowsFilters" class="button-tvshows"><span>Clear</span></a>
+                    <button id="btnSearchTvShows" class="button-tvshows"><span>Search</span></a>
+                </div>
+                            
+            </div>           
+        </div>
+    </div>
+    
+    <div id="tvshows_empty_container"></div>
+
+    <div id="gridTvShows" class="container" style="overflow-y: auto; zoom: 0.8;"></div>
+    
+    <div id="pagination-controls-container" style="width: 88%; text-align: right; margin-bottom: 40px; display: none;">
+        <a id="btn_previous" class="pagination-controls previous">&laquo; Previous</a>
+        <a id="btn_next" class="pagination-controls next">Next &raquo;</a>
+    </div>
+</div>

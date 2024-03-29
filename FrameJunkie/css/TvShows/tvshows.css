@@ -52,7 +52,7 @@ body {
             justify-content: center;
   }
   
-  .movie-card {
+  .tvshow-card {
     background: #ffffff;
     box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.1);
     width: 100%;
@@ -62,7 +62,7 @@ body {
     display: inline-block;
   }
   
-  .movie-header {
+  .tvshow-header {
     padding: 0;
     margin: 0;
     height: 400px;
@@ -98,23 +98,23 @@ body {
     opacity: 1;
   }
   
-  .movie-card:hover {
+  .tvshow-card:hover {
     -webkit-transform: scale(1.03);
             transform: scale(1.03);
     box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.08);
   }
   
-  .movie-content {
+  .tvshow-content {
     padding: 18px 18px 24px 18px;
     margin: 0;
   }
   
-  .movie-content-header, .movie-info {
+  .tvshow-content-header, .tvshow-info {
     display: table;
     width: 100%;
   }
   
-  .movie-title {
+  .tvshow-title {
     font-size: 18px;
     font-weight: bold;
     margin: 0;
@@ -123,7 +123,7 @@ body {
     color: #c50000;
   }
 
-  .movie-year {
+  .tvshow-year {
     font-size: 18px;
     font-weight: normal;
     margin: 0;
@@ -133,7 +133,7 @@ body {
   }
 
 
-  .movie-info {
+  .tvshow-info {
     margin-top: 1em;
   }
   
@@ -164,7 +164,7 @@ body {
   }
   
   @media screen and (max-width: 500px) {
-    .movie-card {
+    .tvshow-card {
       width: 95%;
       max-width: 95%;
       margin: 1em;
@@ -249,7 +249,7 @@ body {
 }
 
 
-/*Movie Title INPUT STYLE*/
+/*TvShow Title INPUT STYLE*/
 .form__group {
   position: relative;
   padding: 15px 0 0;
@@ -312,9 +312,9 @@ body {
 .form__field{
   &:required,&:invalid { box-shadow:none; }
 }
-/*END Movie Title INPUT STYLE*/
+/*END TvShow Title INPUT STYLE*/
 
-/* MOVIE YEAR */
+/* TVSHOW YEAR */
 .custom-select {
   width: 270px;
   position: relative;
@@ -358,7 +358,7 @@ select {
   border-top: var(--size) solid black;
   top: 55%;
 }
-/* END MOVIE YEAR */
+/* END TVSHOW YEAR */
 
 
 /* IS FAVORITE */
@@ -407,7 +407,7 @@ select {
 
 
 /*BUTTON SEARCH*/
-.button-movies {
+.button-tvshows {
   display: inline-block;
   background-color: #4b3a27;
   border-radius: 10px;
@@ -422,13 +422,13 @@ select {
   cursor: pointer;
   margin: 5px;
 }
-.button-movies span {
+.button-tvshows span {
   cursor: pointer;
   display: inline-block;
   position: relative;
   transition: 0.5s;
 }
-.button-movies span:after {
+.button-tvshows span:after {
   content: '\00bb';
   position: absolute;
   opacity: 0;
@@ -436,13 +436,13 @@ select {
   right: -20px;
   transition: 0.5s;
 }
-.button-movies:hover {
+.button-tvshows:hover {
   background-color: #5c4a36;
 }
-.button-movies:hover span {
+.button-tvshows:hover span {
   padding-right: 25px;
 }
-.button-movies:hover span:after {
+.button-tvshows:hover span:after {
   opacity: 1;
   right: 0;
 }

@@ -10,23 +10,23 @@ let itemsPerPage = 50;
 
 let popupWindow = null;
 
-function loadMovies(){
+function loadTvShows(){
 
 	//Load Filters
-	$('#fltr-movie-year').html('');
-	var optionHtml = '<option value="0">Select movie year</option>';
-	$('#fltr-movie-year').append(optionHtml);
+	$('#fltr-tvshow-year').html('');
+	var optionHtml = '<option value="0">Select tv show year</option>';
+	$('#fltr-tvshow-year').append(optionHtml);
 
 	var crrYear = new Date().getFullYear();	
 	for (let y = Number(crrYear); y > 1979; y--) {
 		var optionHtml = '<option value="' + y + '">' + y + '</option>';
-		$('#fltr-movie-year').append(optionHtml);
+		$('#fltr-tvshow-year').append(optionHtml);
 	}
 
-	$('#fltr-movie-year').val(0); //init Movie Year
+	$('#fltr-tvshow-year').val(0); //init Movie Year
 
 	//Filters
-	var isFavorites = $('#fltr-movie-isfav').is(':checked');
+	var isFavorites = $('#fltr-tvshow-isfav').is(':checked');
 
 	$.fn.numberstyle = function(options) {
 	  
@@ -131,47 +131,47 @@ function loadMovies(){
 	//Init	 
 	$('.numberstyle').numberstyle();
 	
-	//Get movies
+	//Get tvshows
 	currentPage = 0;
-	ipc.send("getMovies", null, null, null, null, currentPage);
-	ipc.on("resultSent_movies", async function (event, result) {
+	ipc.send("getTvShows", null, null, null, null, currentPage);
+	ipc.on("resultSent_tvshows", async function (event, result) {
 
 		//to top
 		$("#content-main-app").animate({ scrollTop: 0 }, "fast");
 
 		document.getElementById('pagination-controls-container').style.display = "none";
-		document.getElementById('gridMovies').style.visibility = "collapse";
-		document.getElementById('gridMovies').style.opacity = 0;
+		document.getElementById('gridTvShows').style.visibility = "collapse";
+		document.getElementById('gridTvShows').style.opacity = 0;
 
 		//show loading
 		var loadingHtml = '<div id="loading_container" class="loading-container">' +
     	'<img class="loading-img" src="./Content/Images/loading_animation.gif" width="60" height="60"></div>';
 
-    	document.getElementById('movies_empty_container').innerHTML = loadingHtml;
-		$('#gridMovies').html('');
+    	document.getElementById('tvshows_empty_container').innerHTML = loadingHtml;
+		$('#gridTvShows').html('');
 		
 		document.getElementById("content-main-app").style.overflowY = "hidden";	
 
 		await new Promise(resolve => setTimeout(resolve, 1000)); // 1 sec	
 
 		for(var i = 0; i < result.length; i++){
-			let movieElm = '<div class="movie-card" data-movieid="' + result[i].MovieId + '">' +
-			`<div class="movie-header" style="background: url('file://` + result[i].CoverPath.trim() + `'); background-size: cover;">` +
+			let tvshowElm = '<div class="tvshow-card" data-tvshowid="' + result[i].TvShowId + '">' +
+			`<div class="tvshow-header" style="background: url('file://` + result[i].CoverPath.trim() + `'); background-size: cover;">` +
 			'<div class="header-icon-container">' +
 			'</div>' +
 			'</div>' +
-			'<div class="movie-content">' +
-			'<div class="movie-content-header">';
+			'<div class="tvshow-content">' +
+			'<div class="tvshow-content-header">';
 
 			if(result[i].IsFavorite === 1)
-				movieElm += '<a href="#"><h3 class="movie-title">' + result[i].MovieTitle + '  &nbsp; &#9733;</h3></a>';
+                tvshowElm += '<a href="#"><h3 class="tvshow-title">' + result[i].TvShowTitle + '  &nbsp; &#9733;</h3></a>';
 			else
-				movieElm += '<a href="#"><h3 class="movie-title">' + result[i].MovieTitle + '</h3></a>';
+                tvshowElm += '<a href="#"><h3 class="tvshow-title">' + result[i].TvShowTitle + '</h3></a>';
 
-			movieElm += '<h3 class="movie-year">' + result[i].MovieYear + '<span style="margin-left:200px;">' + result[i].MovieRating + '/10</span></h3>' +
+            tvshowElm += '<h3 class="tvshow-year">' + result[i].TvShowYear + '<span style="margin-left:200px;">' + result[i].TvShowRating + '/10</span></h3>' +
 			'</div></div></div>';
 
-			$('#gridMovies').append($(movieElm));
+			$('#gridTvShows').append($(tvshowElm));
 		}
 
 		if(result.length < 50) maxPage = currentPage;
@@ -191,16 +191,16 @@ function loadMovies(){
 		await new Promise(resolve => setTimeout(resolve, 2000)); // 2 sec		
 
 		if(document.getElementById('loading_container') != undefined) { document.getElementById('loading_container').remove(); }			
-		document.getElementById('gridMovies').style.visibility = "visible";
-        $("#gridMovies").animate({"opacity": 1}, 600);
+		document.getElementById('gridTvShows').style.visibility = "visible";
+        $("#gridTvShows").animate({"opacity": 1}, 600);
 		document.getElementById("content-main-app").style.overflowY = "auto";
 
 		//init events
-		var movieElements = document.querySelectorAll('#gridMovies .movie-card');
-		if(movieElements != null && movieElements.length > 0){
-			movieElements.forEach(movieElm => {
-				movieElm.addEventListener("dblclick", function(e) {
-					openMovieDetails(movieElm.dataset.movieid);
+		var tvShowElements = document.querySelectorAll('#gridTvShows .tvshow-card');
+		if(tvShowElements != null && tvShowElements.length > 0){
+			tvShowElements.forEach(tvShowElm => {
+				tvShowElm.addEventListener("dblclick", function(e) {
+					openTvShowDetails(tvShowElm.dataset.tvshowid);
 				}, false);
 			});
 		}
@@ -223,110 +223,110 @@ function loadMovies(){
 	}
 
 	//BUTTONS
-	$('#btnClearMovieFilters').on('click', function (event){
+	$('#btnClearTvShowsFilters').on('click', function (event){
 		
-		$('#fltr-movie-title').val(''); //Title
+		$('#fltr-tvshow-title').val(''); //Title
 
-		$('#fltr-movie-year').val(0); //Year
+		$('#fltr-tvshow-year').val(0); //Year
 
-		$('#fltr-movie-isfav').prop("checked", false); //Is Favorite
+		$('#fltr-tvshow-isfav').prop("checked", false); //Is Favorite
 
-		$('#fltr-movie-rating').val('0'); //Rating
+		$('#fltr-tvshow-rating').val('0'); //Rating
 	
 		//Reset pagination
 		currentPage = 0;
 	});
 
-	$('#btnSearchMovies').on('click', function (event){
+	$('#btnSearchTvShows').on('click', function (event){
 		
-		var mTitle = null, mYear = null, mIsFav = null, mRating = null;
+		var tTitle = null, tYear = null, tIsFav = null, tRating = null;
 
-		if($('#fltr-movie-title').val() != null && $('#fltr-movie-title').val() != '' && $('#fltr-movie-title').val() != ' ')
-			mTitle = $('#fltr-movie-title').val();
+		if($('#fltr-tvshow-title').val() != null && $('#fltr-tvshow-title').val() != '' && $('#fltr-tvshow-title').val() != ' ')
+			tTitle = $('#fltr-tvshow-title').val();
 
-		if($('#fltr-movie-year').val() != null && $('#fltr-movie-year').val() != '' && $('#fltr-movie-year').val() != ' ' && $('#fltr-movie-year').val() != '0')
-			mYear = $('#fltr-movie-year').val();
+		if($('#fltr-tvshow-year').val() != null && $('#fltr-tvshow-year').val() != '' && $('#fltr-tvshow-year').val() != ' ' && $('#fltr-tvshow-year').val() != '0')
+			tYear = $('#fltr-tvshow-year').val();
 
-		if($('#fltr-movie-isfav').prop("checked") != null && $('#fltr-movie-isfav').prop("checked"))
-			mIsFav = $('#fltr-movie-isfav').prop("checked");
+		if($('#fltr-tvshow-isfav').prop("checked") != null && $('#fltr-tvshow-isfav').prop("checked"))
+			tIsFav = $('#fltr-tvshow-isfav').prop("checked");
 
-		if($('#fltr-movie-rating').val() != null && $('#fltr-movie-rating').val() != '' && $('#fltr-movie-rating').val() != '0')
-			mRating = $('#fltr-movie-rating').val();
+		if($('#fltr-tvshow-rating').val() != null && $('#fltr-tvshow-rating').val() != '' && $('#fltr-tvshow-rating').val() != '0')
+			tRating = $('#fltr-tvshow-rating').val();
 
 		currentPage = 0;
-		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);		
+		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, currentPage);		
 	});
 
 	$('#btn_previous').on('click', function (event){
 		
 		if(currentPage === 0) return;
 
-		var mTitle = null, mYear = null, mIsFav = null, mRating = null;
+		var tTitle = null, tYear = null, tIsFav = null, tRating = null;
 
-		if($('#fltr-movie-title').val() != null && $('#fltr-movie-title').val() != '' && $('#fltr-movie-title').val() != ' ')
-			mTitle = $('#fltr-movie-title').val();
+		if($('#fltr-tvshow-title').val() != null && $('#fltr-tvshow-title').val() != '' && $('#fltr-tvshow-title').val() != ' ')
+			tTitle = $('#fltr-tvshow-title').val();
 
-		if($('#fltr-movie-year').val() != null && $('#fltr-movie-year').val() != '' && $('#fltr-movie-year').val() != ' ' && $('#fltr-movie-year').val() != '0')
-			mYear = $('#fltr-movie-year').val();
+		if($('#fltr-tvshow-year').val() != null && $('#fltr-tvshow-year').val() != '' && $('#fltr-tvshow-year').val() != ' ' && $('#fltr-tvshow-year').val() != '0')
+			tYear = $('#fltr-tvshow-year').val();
 
-		if($('#fltr-movie-isfav').prop("checked") != null && $('#fltr-movie-isfav').prop("checked"))
-			mIsFav = $('#fltr-movie-isfav').prop("checked");
+		if($('#fltr-tvshow-isfav').prop("checked") != null && $('#fltr-tvshow-isfav').prop("checked"))
+			tIsFav = $('#fltr-tvshow-isfav').prop("checked");
 
-		if($('#fltr-movie-rating').val() != null && $('#fltr-movie-rating').val() != '' && $('#fltr-movie-rating').val() != '0')
-			mRating = $('#fltr-movie-rating').val();
+		if($('#fltr-tvshow-rating').val() != null && $('#fltr-tvshow-rating').val() != '' && $('#fltr-tvshow-rating').val() != '0')
+			tRating = $('#fltr-tvshow-rating').val();
 
 		currentPage -= 1;
-		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);		
+		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, currentPage);		
 	});
 
 	$('#btn_next').on('click', function (event){
 		
 		if(currentPage >= maxPage) return;
 
-		var mTitle = null, mYear = null, mIsFav = null, mRating = null;
+		var tTitle = null, tYear = null, tIsFav = null, tRating = null;
 
-		if($('#fltr-movie-title').val() != null && $('#fltr-movie-title').val() != '' && $('#fltr-movie-title').val() != ' ')
-			mTitle = $('#fltr-movie-title').val();
+		if($('#fltr-tvshow-title').val() != null && $('#fltr-tvshow-title').val() != '' && $('#fltr-tvshow-title').val() != ' ')
+			tTitle = $('#fltr-tvshow-title').val();
 
-		if($('#fltr-movie-year').val() != null && $('#fltr-movie-year').val() != '' && $('#fltr-movie-year').val() != ' ' && $('#fltr-movie-year').val() != '0')
-			mYear = $('#fltr-movie-year').val();
+		if($('#fltr-tvshow-year').val() != null && $('#fltr-tvshow-year').val() != '' && $('#fltr-tvshow-year').val() != ' ' && $('#fltr-tvshow-year').val() != '0')
+			tYear = $('#fltr-tvshow-year').val();
 
-		if($('#fltr-movie-isfav').prop("checked") != null && $('#fltr-movie-isfav').prop("checked"))
-			mIsFav = $('#fltr-movie-isfav').prop("checked");
+		if($('#fltr-tvshow-isfav').prop("checked") != null && $('#fltr-tvshow-isfav').prop("checked"))
+			tIsFav = $('#fltr-tvshow-isfav').prop("checked");
 
-		if($('#fltr-movie-rating').val() != null && $('#fltr-movie-rating').val() != '' && $('#fltr-movie-rating').val() != '0')
-			mRating = $('#fltr-movie-rating').val();
+		if($('#fltr-tvshow-rating').val() != null && $('#fltr-tvshow-rating').val() != '' && $('#fltr-tvshow-rating').val() != '0')
+			tRating = $('#fltr-tvshow-rating').val();
 
 		currentPage += 1;
-		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);		
+		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, currentPage);		
 	});
 
-	//Reload movies list after delete one
-	ipc.on("reload-movies-list", function (event, deletedMovie) {	
-		let mTitle = null, mYear = null, mIsFav = null, mRating = null;
+	//Reload tvshows list after delete one
+	ipc.on("reload-tvshows-list", function (event, deletedTvShow) {	
+		let tTitle = null, tYear = null, tIsFav = null, tRating = null;
 
-		if($('#fltr-movie-title').val() != null && $('#fltr-movie-title').val() != '' && $('#fltr-movie-title').val() != ' ')
-			mTitle = $('#fltr-movie-title').val();
+		if($('#fltr-tvshow-title').val() != null && $('#fltr-tvshow-title').val() != '' && $('#fltr-tvshow-title').val() != ' ')
+			tTitle = $('#fltr-tvshow-title').val();
 
-		if($('#fltr-movie-year').val() != null && $('#fltr-movie-year').val() != '' && $('#fltr-movie-year').val() != ' ' && $('#fltr-movie-year').val() != '0')
-			mYear = $('#fltr-movie-year').val();
+		if($('#fltr-tvshow-year').val() != null && $('#fltr-tvshow-year').val() != '' && $('#fltr-tvshow-year').val() != ' ' && $('#fltr-tvshow-year').val() != '0')
+			tYear = $('#fltr-tvshow-year').val();
 
-		if($('#fltr-movie-isfav').prop("checked") != null && $('#fltr-movie-isfav').prop("checked"))
-			mIsFav = $('#fltr-movie-isfav').prop("checked");
+		if($('#fltr-tvshow-isfav').prop("checked") != null && $('#fltr-tvshow-isfav').prop("checked"))
+			tIsFav = $('#fltr-tvshow-isfav').prop("checked");
 
-		if($('#fltr-movie-rating').val() != null && $('#fltr-movie-rating').val() != '' && $('#fltr-movie-rating').val() != '0')
-			mRating = $('#fltr-movie-rating').val();
+		if($('#fltr-tvshow-rating').val() != null && $('#fltr-tvshow-rating').val() != '' && $('#fltr-tvshow-rating').val() != '0')
+			tRating = $('#fltr-tvshow-rating').val();
 
 		//RELOAD
-		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);			
+		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, currentPage);			
 
-		if(deletedMovie != undefined && deletedMovie != null && deletedMovie != ""){
-			setTimeout(() => { showToastMessage('Frame Junkie', deletedMovie + ' deleted successfully!'); }, 400);
+		if(deletedTvShow != undefined && deletedTvShow != null && deletedTvShow != ""){
+			setTimeout(() => { showToastMessage('Frame Junkie', deletedTvShow + ' deleted successfully!'); }, 400);
 		}		
 	});
 }
 
-async function openMovieDetails(movieID){
+async function openTvShowDetails(tvshowID){
 	let currentWindow = require('@electron/remote').getCurrentWindow();
 	const currentWindowPos = currentWindow.getPosition();
 
@@ -361,10 +361,10 @@ async function openMovieDetails(movieID){
 	const remote = require('@electron/remote');
 	remote.require("@electron/remote/main").enable(popupWindow.webContents);
 
-	popupWindow.loadFile(`${__dirname}../../../Views/Movies/movie-detail.html`);
+    popupWindow.loadFile(`${__dirname}../../../Views/TvShows/tvshow-detail.html`);
 
 	popupWindow.webContents.once('dom-ready', () => {
-		popupWindow.webContents.send('message-movie-id', movieID);			
+		popupWindow.webContents.send('message-tvshow-id', tvshowID);			
 	});	
 	
 	//when window looses focus, close
@@ -378,4 +378,4 @@ async function openMovieDetails(movieID){
     });		
 }
 
-module.exports = { loadMovies }
+module.exports = { loadTvShows }

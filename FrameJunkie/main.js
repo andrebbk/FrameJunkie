@@ -123,6 +123,7 @@ function createWindow() {
             });
         });
 
+
         //Get movies
         ipcMain.on("getMovies", function(e, mTitle, mYear, mIsFav, mRating, crrPage) {
             let result = knex
@@ -308,6 +309,38 @@ function createWindow() {
                 return false;
             }               
         });
+
+
+        //Get tvshows
+        ipcMain.on("getTvShows", function(e, tTitle, tYear, tIsFav, tRating, crrPage) {
+            let result = knex
+            .select('*')
+            .from('v_TvShows')
+            .orderBy([
+                { column: 'TvShowYear', order: 'desc' }, 
+                { column: 'TvShowTitle', order: 'asc' }
+            ])
+            .limit(50)
+            .offset(crrPage * 50);
+
+            if(tTitle && tTitle != '' && tTitle != ' '){
+                let queryStrTile = '%' + tTitle + '%';
+                result = result.whereLike('TvShowTitle', queryStrTile);
+            }                
+
+            if(tYear && tYear != '' && tYear.length > 3)
+            result = result.whereLike('TvShowYear', tYear);
+
+            if(tIsFav)
+                result = result.where('IsFavorite', 1);
+
+            if(tRating && tRating > 0 && tRating <= 10)
+                result = result.where('TvShowRating', tRating);
+
+            result.then(function (rows){          
+                win.webContents.send('resultSent_tvshows', rows);
+            });  
+        }); 
     });
 }
 

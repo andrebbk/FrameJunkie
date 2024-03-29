@@ -23,7 +23,7 @@
   object-fit: cover;
 }
 
-.movie-detail-container {
+.tvshow-detail-container {
     width: 100%;
     height: 100%;
     background-color: #4b3a27;
@@ -166,7 +166,7 @@ h1 em {
   display: flex;
 }
 
-/*Movie Title INPUT STYLE*/
+/*TvShow Title INPUT STYLE*/
 .form__group {
   position: relative;
   padding: 15px 0 0;
@@ -229,10 +229,10 @@ h1 em {
 .form__field{
   &:required,&:invalid { box-shadow:none; }
 }
-/*END Movie Title INPUT STYLE*/
+/*END TvShow Title INPUT STYLE*/
 
 
-/* MOVIE YEAR */
+/* TVSHOW YEAR */
 .custom-select-container {
     margin-top: 20px;
 }
@@ -286,13 +286,13 @@ top: 55%;
   color: #9b9b9b;
   font-weight: 600;
 }
-/* END MOVIE YEAR */
+/* END TVSHOW YEAR */
 
 
 
 
-/*MOVIE RATING STYLE*/
-.movie-rating-container {
+/*TVSHOW RATING STYLE*/
+.tvshow-rating-container {
   position: relative;
 	padding: 30px 0px 0px 0px;
 }
@@ -533,7 +533,7 @@ top: 55%;
 	outline-offset: 8px;
 	transition: all 0s;
 }
-/*MOVIE RATING STYLE END*/
+/*TVSHOW RATING STYLE END*/
 
 
 .is-favorite-container {
@@ -585,7 +585,7 @@ top: 55%;
 }
 /* END FAVORITE */
 
-.refresh-movie-cover {
+.refresh-tvshow-cover {
   position: absolute;
   top: -17px;
   left: 650px;
@@ -597,13 +597,13 @@ top: 55%;
   opacity: 0;
 }
 
-.refresh-movie-cover.change {
+.refresh-tvshow-cover.change {
   visibility: visible;
   opacity: 1;
   transition: all 3s ease-in-out;
 }
 
-.refresh-movie-rating {
+.refresh-tvshow-rating {
   position: absolute;
   top: 50px;
   left: 440px;
@@ -615,17 +615,17 @@ top: 55%;
   opacity: 0;
 }
 
-.refresh-movie-rating.change {
+.refresh-tvshow-rating.change {
   visibility: visible;
   opacity: 1;
   transition: all 3s ease-in-out;
 }
 
-.movie-observations-container {
+.tvshow-observations-container {
   margin-top: 10px;
 }
 
-.movie-observations {
+.tvshow-observations {
   margin-top: 10px;
   width: 90%;
   height: 100px;
@@ -639,16 +639,16 @@ top: 55%;
   font-family: initial;
 }
 
-.movie-cover-container {
+.tvshow-cover-container {
   width: 100%;
   text-align: center;
 }
 
-#movie-cover-output {
+#tvshow-cover-output {
   object-fit: contain;
 }
 
-#movie-cover-details {
+#tvshow-cover-details {
   object-fit: contain;
 }
 
@@ -657,13 +657,13 @@ top: 55%;
   margin-top: 10px;
 }
 
-.movie-details-description-style {
+.tvshow-details-description-style {
   font-size: 20px;
   color: white;
   font-family: system-ui;
 }
 
-#movie-details-fav{
+#tvshow-details-fav{
   position: absolute;
   top: 140;
   left: 150;
