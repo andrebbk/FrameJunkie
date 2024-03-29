@@ -24,6 +24,9 @@ var knex = require("knex")({
     useNullAsDefault: true
 });
 
+const env = process.env.NODE_ENV || 'development';
+process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
+
 require('v8-compile-cache');
 
 //#region start window
@@ -38,7 +41,7 @@ function createWindow() {
             enableRemoteModule: true,  
             contextIsolation: false,
             nodeIntegrationInWorker: true,
-            webSecurity: false,
+            webSecurity: true,
             nodeIntegration: true,
             preload: __dirname + '/preload.js'
         }, 
