@@ -36,131 +36,131 @@ let knex = require("knex")({
     useNullAsDefault: true
 });
 
-let loadedMovieId = 0;
-let loadedMovieNrViews = 0;
-let hasNewMovieCover = false, newMovieCover = "";
+let loadedTvShowId = 0;
+let loadedTvShowNrViews = 0;
+let hasNewTvShowCover = false, newTvShowCover = "";
 let isToEdit = false;
 
-ipc.on('message-movie-id', (event, movieId) => {
-    loadedMovieId = movieId;
+ipc.on('message-tvshow-id', (event, tvshowId) => {
+    loadedTvShowId = tvshowId;
 
     setTimeout(async () => {         
-        await loadMovieDetails();
+        await loadTvShowDetails();
 
         //Show data container
-        if(document.querySelector('#movie-details-container #moviedetails_partial #loading_container') != undefined)
-            document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
+        if(document.querySelector('#tvshow-details-container #tvshowdetails_partial #loading_container') != undefined)
+            document.querySelector('#tvshow-details-container #tvshowdetails_partial #loading_container').remove();
 
-        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "visible";    
-        $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 1}, 600);
+        document.querySelector('#tvshow-details-container #tvshowdetails_partial #md-container').style.visibility = "visible";    
+        $("#tvshow-details-container #tvshowdetails_partial #md-container").animate({"opacity": 1}, 600);
 
-        $("#movie-details-container .details-buttons-container").animate({"opacity": 1}, 600);
+        $("#tvshow-details-container .details-buttons-container").animate({"opacity": 1}, 600);
     }, 1000);       
 });
 
-ipc.on('result-edited-movie', (event, movieId) => {
-    loadedMovieId = movieId;
+ipc.on('result-edited-tvshow', (event, tvshowId) => {
+    loadedTvShowId = tvshowId;
     isToEdit = false;
 
     setTimeout(async () => {         
-        await loadMovieDetails();
+        await loadTvShowDetails();
 
         //Show data container
-        if(document.querySelector('#movie-details-container #moviedetails_partial #loading_container') != undefined)
-            document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
+        if(document.querySelector('#tvshow-details-container #tvshowdetails_partial #loading_container') != undefined)
+            document.querySelector('#tvshow-details-container #tvshowdetails_partial #loading_container').remove();
 
-        document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "collapse";   
-        document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 0;   
-        document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.opacity = 0; 
+        document.querySelector('#tvshow-details-container #tvshowdetails_partial #me-container').style.visibility = "collapse";   
+        document.querySelector('#tvshow-details-container #tvshowdetails_partial #me-container').style.height = 0;   
+        document.querySelector('#tvshow-details-container #tvshowdetails_partial #me-container').style.opacity = 0; 
 
-        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "visible";    
-        $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 1}, 600);
+        document.querySelector('#tvshow-details-container #tvshowdetails_partial #md-container').style.visibility = "visible";    
+        $("#tvshow-details-container #tvshowdetails_partial #md-container").animate({"opacity": 1}, 600);
 
         showEditButtons(isToEdit);
-        $("#movie-details-container .details-buttons-container").animate({"opacity": 1}, 600);
+        $("#tvshow-details-container .details-buttons-container").animate({"opacity": 1}, 600);
 
         await setTimeout(500);
-        showToastMessage("Frame Junkie", "Movie successfully edited!");         
+        showToastMessage("Frame Junkie", "Tv Show successfully edited!");         
     }, 1000);       
 });
 
-ipc.on('result-update-movie-nrviews', (event, updateThisMovieId) => {    
-    loadedMovieId = updateThisMovieId;
+ipc.on('result-update-tvshow-nrviews', (event, updateThisTvShowId) => {    
+    loadedTvShowId = updateThisTvShowId;
 
     setTimeout(async () => {         
-        await loadMovieDetails();
+        await loadTvShowDetails();
 
         //Show data container
-        document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
+        document.querySelector('#tvshow-details-container #tvshowdetails_partial #loading_container').remove();
 
-        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "visible";    
-        $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 1}, 600);
+        document.querySelector('#tvshow-details-container #tvshowdetails_partial #md-container').style.visibility = "visible";    
+        $("#tvshow-details-container #tvshowdetails_partial #md-container").animate({"opacity": 1}, 600);
 
-        $("#movie-details-container .details-buttons-container").animate({"opacity": 1}, 600);
+        $("#tvshow-details-container .details-buttons-container").animate({"opacity": 1}, 600);
 
         await setTimeout(500);
-        showToastMessage("Frame Junkie", "Movie view added!");      
+        showToastMessage("Frame Junkie", "Tv Show view added!");      
     }, 1000);       
 });
 
-ipc.on('delete-movie', async (event) => {    
-    //delete db movie
-    await deleteMovie();
+ipc.on('delete-tvshow', async (event) => {    
+    //delete db tv show
+    await deleteTvShow();
 
-    //reload movie list
-    await ipc.send('reload-movies-menu', loadedMovieId);
+    //reload tv show list
+    await ipc.send('reload-tvshows-menu', loadedTvShowId);
 
-    //close current movie detail window
+    //close current tv show detail window
     let popupWindow = require('@electron/remote').getCurrentWindow();
     popupWindow.close();
 });
 
-async function loadMovieDetails(){
-    let movieDB = knex('Movies')
-    .where('MovieId', loadedMovieId)
+async function loadTvShowDetails(){
+    let tvShowDB = knex('TvShows')
+    .where('TvShowId', loadedTvShowId)
     .select('*')
     .first();
 
-    movieDB.then(function (movieData){          
-        if(movieData != null && movieData.MovieId > 0){
-            $('#movie-details-title', '#movie_detail_container').text(movieData.MovieTitle);
-            $('#movie-details-year', '#movie_detail_container').text(movieData.MovieYear);
+    tvShowDB.then(function (tvShowData){          
+        if(tvShowData != null && tvShowData.TvShowId > 0){
+            $('#tvshow-details-title', '#tvshow_detail_container').text(tvShowData.TvShowTitle);
+            $('#tvshow-details-year', '#tvshow_detail_container').text(tvShowData.TvShowYear);
 
-            loadedMovieNrViews = movieData.NrViews;
-            let movieViewsText = movieData.NrViews + (movieData.NrViews === 1 ? " VIEW" : " VIEWS");
-            $('#movie-details-views', '#movie_detail_container').text(movieViewsText);
+            loadedTvShowNrViews = tvShowData.NrViews;
+            let tvShowViewsText = tvShowData.NrViews + (tvShowData.NrViews === 1 ? " VIEW" : " VIEWS");
+            $('#tvshow-details-views', '#tvshow_detail_container').text(tvShowViewsText);
 
-            if(movieData.IsFavorite)
-                document.querySelector('#movie_detail_container #movie-details-fav').style.visibility = "visible";
+            if(tvShowData.IsFavorite)
+                document.querySelector('#tvshow_detail_container #tvshow-details-fav').style.visibility = "visible";
             else
-                document.querySelector('#movie_detail_container #movie-details-fav').style.visibility = "hidden";
+                document.querySelector('#tvshow_detail_container #tvshow-details-fav').style.visibility = "hidden";
 
             let starElements = document.querySelectorAll('#md-container input[type=radio].star');
             if(starElements != null && starElements.length > 0){
                 $.each(starElements, function(idx, value){
                     value.checked = false;
 
-                    if(value.dataset.starvalue == movieData.MovieRating) value.checked = true;
+                    if(value.dataset.starvalue == tvShowData.TvShowRating) value.checked = true;
                 });
             }
 
-            if(movieData.Observations != null && movieData.Observations != "" && movieData.Observations != " " && movieData.Observations.length > 1){
-                $('#movie-details-observations', '#movie_detail_container').text(movieData.Observations);
+            if(tvShowData.Observations != null && tvShowData.Observations != "" && tvShowData.Observations != " " && tvShowData.Observations.length > 1){
+                $('#tvshow-details-observations', '#tvshow_detail_container').text(tvShowData.Observations);
             }else{
-                $('#movie-details-observations', '#movie_detail_container').text("No observations added for this movie");                
+                $('#tvshow-details-observations', '#tvshow_detail_container').text("No observations added for this tv show");                
             }
 
-            let movieCoverDB = knex('MovieCovers')
-            .where('MovieId', loadedMovieId)
+            let tvShowCoverDB = knex('TvShowCovers')
+            .where('TvShowId', loadedTvShowId)
             .where('Deleted', 0)
             .select('*')
             .first();
             
-            movieCoverDB.then(function (movieCoverData){      
-                if(movieCoverData != null && movieCoverData.MovieId > 0){
-                    var movieCoverElm = document.querySelector('#movie_detail_container #movie-cover-details');
-                    if(movieCoverElm != null){
-                        movieCoverElm.src = pathToFileURL(movieCoverData.CoverPath);
+            tvShowCoverDB.then(function (tvShowCoverData){      
+                if(tvShowCoverData != null && tvShowCoverData.TvShowId > 0){
+                    var tvShowCoverElm = document.querySelector('#tvshow_detail_container #tvshow-cover-details');
+                    if(tvShowCoverElm != null){
+                        tvShowCoverElm.src = pathToFileURL(tvShowCoverData.CoverPath);
                     }
                 }
             });
@@ -208,23 +208,23 @@ function closeToastMessage(){
     clearTimeout(timer2);
 }
 
-$('#btn_exit_movie_details').off('click').on('click', function(event){   
+$('#btn_exit_tvshow_details').off('click').on('click', function(event){   
     let popupWindow = require('@electron/remote').getCurrentWindow();
     popupWindow.close();
 });
 
 
-//ADD MOVIE VIEW
-$('#btnAddMovieView', '#movie_detail_container').off('click').on('click', function(event){       
-    addNewMovieView();
+//ADD TV SHOW VIEW
+$('#btnAddTvShowView', '#tvshow_detail_container').off('click').on('click', function(event){       
+    addNewTvShowView();
 });
 
-function addNewMovieView(){
+function addNewTvShowView(){
     let output = true;
 
     try
     {
-        ipc.send('update-movie-nrviews', loadedMovieId, loadedMovieNrViews);
+        ipc.send('update-tvshow-nrviews', loadedTvShowId, loadedTvShowNrViews);
     }
     catch(error){
         logger.error(error);
@@ -239,45 +239,45 @@ function addAndShowLoading(){
     let loadingHTML = '<div id="loading_container" class="loading-container">'
         + '<img class="loading-img" src="../../Content/Images/loading_animation.gif" width="90" height="60"></div>';
         
-    $("#moviedetails_partial", "#movie-details-container").prepend($(loadingHTML).fadeIn('slow'));
+    $("#tvshowdetails_partial", "#tvshow-details-container").prepend($(loadingHTML).fadeIn('slow'));
 }
 
 
-//EDIT MOVIE
-$('#btnEditMovie', '#movie_detail_container').off('click').on('click', async function(event){
+//EDIT TVSHOW
+$('#btnEditTvShow', '#tvshow_detail_container').off('click').on('click', async function(event){
 
     if(isToEdit){
-        var validationResult = validateMovieToEdit();
+        var validationResult = validateTvShowToEdit();
         if(validationResult.IsValid){
 
-            //Movie data to edit
-            let movieDataToEdit = {
-                movieId: loadedMovieId,
-                movieTitle: $('#movie-edit-title', '#me-container').val(),
-                movieYear: $('#movie-edit-year', '#me-container').val(),
-                isFavMovie: $('#switch_IsFav').prop("checked"),
-                movieRating: 0,
-                movieNrViews: $('#movie-edit-views', '#me-container').val(),
-                movieObservations: $('#movie-edit-observations', '#me-container').val(),
+            //TvShow data to edit
+            let tvShowDataToEdit = {
+                tvShowId: loadedTvShowId,
+                tvShowTitle: $('#tvshow-edit-title', '#me-container').val(),
+                tvShowYear: $('#tvshow-edit-year', '#me-container').val(),
+                isFavTvShow: $('#switch_IsFav').prop("checked"),
+                tvShowRating: 0,
+                tvShowNrViews: $('#tvshow-edit-views', '#me-container').val(),
+                tvShowObservations: $('#tvshow-edit-observations', '#me-container').val(),
                 updateCover: false,
-                movieCover: ""
+                tvShowCover: ""
             };
 
-            //Movie rating data
+            //TvShow rating data
             document.querySelectorAll("#me-container input[type=radio].star").forEach((elemStar) => {
                 if(elemStar.checked){
-                    movieDataToEdit.movieRating = elemStar.getAttribute('data-starvalue');
+                    tvShowDataToEdit.tvShowRating = elemStar.getAttribute('data-starvalue');
                     return;
                 }
             });
 
-            //Movie cover changed?
-            if(hasNewMovieCover && newMovieCover != undefined && newMovieCover != ""){
-                movieDataToEdit.updateCover = true;
-                movieDataToEdit.movieCover = newMovieCover;
+            //TvShow cover changed?
+            if(hasNewTvShowCover && newTvShowCover != undefined && newTvShowCover != ""){
+                tvShowDataToEdit.updateCover = true;
+                tvShowDataToEdit.tvShowCover = newTvShowCover;
             }
 
-            await validateDBAndSaveMovie(movieDataToEdit); 
+            await validateDBAndSaveTvShow(tvShowDataToEdit); 
         }
         else{
             showToastMessage("Frame Junkie", validationResult.ErrorMessage);
@@ -285,69 +285,69 @@ $('#btnEditMovie', '#movie_detail_container').off('click').on('click', async fun
     } 
     else{
 
-        //LOAD MOVIE TO EDIT        
-        $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
-        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "collapse";    
-        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.height = 0;    
-        $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 0 }, 0);
+        //LOAD TVSHOW TO EDIT        
+        $("#tvshow-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
+        document.querySelector('#tvshow-details-container #tvshowdetails_partial #md-container').style.visibility = "collapse";    
+        document.querySelector('#tvshow-details-container #tvshowdetails_partial #md-container').style.height = 0;    
+        $("#tvshow-details-container #tvshowdetails_partial #md-container").animate({"opacity": 0 }, 0);
     
         //Show loading
         addAndShowLoading();
     
-        loadEditMovie();
+        loadEditTvShow();
         
         setTimeout(async () => {
-            await loadMovieToEdit();
+            await loadTvShowToEdit();
             //Show data container
-            document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
+            document.querySelector('#tvshow-details-container #tvshowdetails_partial #loading_container').remove();
     
-            document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "visible";   
-            document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 530;   
-            $("#movie-details-container #moviedetails_partial #me-container").animate({"opacity": 1 }, 600);
+            document.querySelector('#tvshow-details-container #tvshowdetails_partial #me-container').style.visibility = "visible";   
+            document.querySelector('#tvshow-details-container #tvshowdetails_partial #me-container').style.height = 530;   
+            $("#tvshow-details-container #tvshowdetails_partial #me-container").animate({"opacity": 1 }, 600);
     
-            $('#movie-edit-title', '#me-container').trigger('focus');
+            $('#tvshow-edit-title', '#me-container').trigger('focus');
     
             showEditButtons(true);
             isToEdit = true;
-            hasNewMovieCover = true;
+            hasNewTvShowCover = true;
         }, 500);
     }    
 });
 
-function loadEditMovie() {   
+function loadEditTvShow() {   
 
     //Load Filters
-	$('#movie-edit-year', '#me-container').html('');
+	$('#tvshow-edit-year', '#me-container').html('');
 
 	var crrYear = new Date().getFullYear();	
 	for (let y = Number(crrYear); y > 1979; y--) {
 		var optionHtml = '<option value="' + y + '">' + y + '</option>';
-		$('#movie-edit-year', '#me-container').append(optionHtml);
+		$('#tvshow-edit-year', '#me-container').append(optionHtml);
 	}
 
-	$('#movie-edit-year').val(Number(crrYear)); //init Movie Year     
+	$('#tvshow-edit-year').val(Number(crrYear)); //init Tv Show Year     
 
     //BUTTONS SECTION
     $('#btnSelectCover', '.details-buttons-container').off('click').on('click', function(){
-        $('#movie-cover-upload', '#me-container').trigger("click"); //.click() call is deprecated
+        $('#tvshow-cover-upload', '#me-container').trigger("click"); //.click() call is deprecated
     });  
 
-    $('#movie-cover-upload', '#me-container').on('change', function(event){
+    $('#tvshow-cover-upload', '#me-container').on('change', function(event){
         var reader = new FileReader();
         reader.onload = function(){
             if(event.target.files[0] != null && event.target.files[0] != undefined){
-                var output = document.getElementById('movie-cover-output');
+                var output = document.getElementById('tvshow-cover-output');
                 //output.style.backgroundImage = "Url('" + pathToFileURL(event.target.files[0].path) + "')";
 
                 output.src = pathToFileURL(event.target.files[0].path);
 
                 //show refresh button
-                var btnRefresh = document.getElementById('btnRefreshMovieCover');
-                if(!document.getElementById('btnRefreshMovieCover').classList.contains("change"))
-                { document.querySelector('.refresh-movie-cover').classList.toggle('change'); }      
+                var btnRefresh = document.getElementById('btnRefreshTvShowCover');
+                if(!document.getElementById('btnRefreshTvShowCover').classList.contains("change"))
+                { document.querySelector('.refresh-tvshow-cover').classList.toggle('change'); }      
                 
-                hasNewMovieCover = true;
-                newMovieCover = event.target.files[0].path;
+                hasNewTvShowCover = true;
+                newTvShowCover = event.target.files[0].path;
             }          
         };
 
@@ -355,14 +355,14 @@ function loadEditMovie() {
             reader.readAsDataURL(event.target.files[0]);
     });    
 
-    $('#btnRefreshMovieCover', '#me-container').on('click', function(){
-        var output = document.getElementById('movie-cover-output');
+    $('#btnRefreshTvShowCover', '#me-container').on('click', function(){
+        var output = document.getElementById('tvshow-cover-output');
         output.src = pathToFileURL("./Content/Images/No-Image-Placeholder.png");
 
-        document.querySelector('.refresh-movie-cover').classList.toggle('change');
+        document.querySelector('.refresh-tvshow-cover').classList.toggle('change');
 
-        hasNewMovieCover = false;
-        newMovieCover = "";
+        hasNewTvShowCover = false;
+        newTvShowCover = "";
     });    
 
     //init numberstyle
@@ -475,20 +475,20 @@ function loadEditMovie() {
     //add star events
     const stars = document.querySelectorAll('#me-container .star');
     stars.forEach(el => el.addEventListener('click', event => {
-        var btnRefresh = document.getElementById('btnRefreshMovieRating');
+        var btnRefresh = document.getElementById('btnRefreshTvShowRating');
                 
-        if(!document.getElementById('btnRefreshMovieRating').classList.contains("change"))
-        { document.querySelector('#me-container .refresh-movie-rating').classList.toggle('change'); }      
+        if(!document.getElementById('btnRefreshTvShowRating').classList.contains("change"))
+        { document.querySelector('#me-container .refresh-tvshow-rating').classList.toggle('change'); }      
     }));
 
-    //Edit a movie means rating and cover fields have always a content value
-    if(!document.getElementById('btnRefreshMovieCover').classList.contains("change"))
-    { document.querySelector('.refresh-movie-cover').classList.toggle('change'); }      
+    //Edit a tvshow means rating and cover fields have always a content value
+    if(!document.getElementById('btnRefreshTvShowCover').classList.contains("change"))
+    { document.querySelector('.refresh-tvshow-cover').classList.toggle('change'); }      
                 
-    if(!document.getElementById('btnRefreshMovieRating').classList.contains("change"))
-    { document.querySelector('#me-container .refresh-movie-rating').classList.toggle('change'); } 
+    if(!document.getElementById('btnRefreshTvShowRating').classList.contains("change"))
+    { document.querySelector('#me-container .refresh-tvshow-rating').classList.toggle('change'); } 
 
-    $('#btnRefreshMovieRating', '#me-container').on('click', function(){
+    $('#btnRefreshTvShowRating', '#me-container').on('click', function(){
         var starElements = document.getElementsByClassName("star");
         if(starElements != null && starElements.length > 0){
 
@@ -497,49 +497,49 @@ function loadEditMovie() {
             });
         }
 
-        document.querySelector('#me-container .refresh-movie-rating').classList.toggle('change');
+        document.querySelector('#me-container .refresh-tvshow-rating').classList.toggle('change');
     });     
 }
 
-async function loadMovieToEdit(){
-    let movieToEditDB = knex('Movies')
-    .where('MovieId', loadedMovieId)
+async function loadTvShowToEdit(){
+    let tvShowToEditDB = knex('TvShows')
+    .where('TvShowId', loadedTvShowId)
     .select('*')
     .first();
 
-    movieToEditDB.then(function (movieData){          
-        if(movieData != null && movieData.MovieId > 0){
+    tvShowToEditDB.then(function (tvShowData){          
+        if(tvShowData != null && tvShowData.TvShowId > 0){
 
-            //Movie Data
-            $('#movie-edit-title', '#me-container').val(movieData.MovieTitle);
-            $('#movie-edit-year', '#me-container').val(Number(movieData.MovieYear));
-            $('#movie-edit-views', '#me-container').val(movieData.NrViews);
-            $('#movie-edit-observations', '#me-container').text(movieData.Observations);
+            //TvShow Data
+            $('#tvshow-edit-title', '#me-container').val(tvShowData.TvShowTitle);
+            $('#tvshow-edit-year', '#me-container').val(Number(tvShowData.TvShowYear));
+            $('#tvshow-edit-views', '#me-container').val(tvShowData.NrViews);
+            $('#tvshow-edit-observations', '#me-container').text(tvShowData.Observations);
 
             //Is Favorite
-            $('#switch_IsFav').prop("checked", movieData.IsFavorite);
+            $('#switch_IsFav').prop("checked", tvShowData.IsFavorite);
 
-            //Movie Rating
+            //TvShow Rating
             let starElements = document.querySelectorAll('#me-container input[type=radio].star');
             if(starElements != null && starElements.length > 0){
                 $.each(starElements, function(idx, value){
                     value.checked = false;
-                    if(value.dataset.starvalue == movieData.MovieRating) value.checked = true;
+                    if(value.dataset.starvalue == tvShowData.TvShowRating) value.checked = true;
                 });
             }
 
-            //Movie Cover
-            let movieCoverDB = knex('MovieCovers')
-            .where('MovieId', loadedMovieId)
+            //TvShow Cover
+            let tvShowCoverDB = knex('TvShowCovers')
+            .where('TvShowId', loadedTvShowId)
             .where('Deleted', 0)
             .select('*')
             .first();
             
-            movieCoverDB.then(function (movieCoverData){      
-                if(movieCoverData != null && movieCoverData.MovieId > 0){
-                    var movieCoverElm = document.querySelector('#me-container #movie-cover-output');
-                    if(movieCoverElm != null){
-                        movieCoverElm.src = pathToFileURL(movieCoverData.CoverPath);
+            tvShowCoverDB.then(function (tvShowCoverData){      
+                if(tvShowCoverData != null && tvShowCoverData.TvShowId > 0){
+                    var tvShowCoverElm = document.querySelector('#me-container #tvshow-cover-output');
+                    if(tvShowCoverElm != null){
+                        tvShowCoverElm.src = pathToFileURL(tvShowCoverData.CoverPath);
                     }
                 }
             });
@@ -547,36 +547,36 @@ async function loadMovieToEdit(){
     });
 }
 
-function validateMovieToEdit(){
+function validateTvShowToEdit(){
     let resultOuput = { IsValid: true, ErrorMessage: "" };
     var crrYear = new Date().getFullYear();
 
-    //Movie Title
-    if($('#movie-edit-title', '#me-container').val() == null || $('#movie-edit-title', '#me-container').val() == '' || $('#movie-edit-title', '#me-container').val() == ' '){
+    //TvShow Title
+    if($('#tvshow-edit-title', '#me-container').val() == null || $('#tvshow-edit-title', '#me-container').val() == '' || $('#tvshow-edit-title', '#me-container').val() == ' '){
         resultOuput.IsValid = false;
-        resultOuput.ErrorMessage = "Movie title is empty!";
+        resultOuput.ErrorMessage = "Tv Show title is empty!";
     }
 
-    //Movie Year
-    else if($('#movie-edit-year', '#me-container').val() == null || ($('#movie-edit-year', '#me-container').val() != null && ($('#movie-edit-year', '#me-container').val() > Number(crrYear) || $('#movie-edit-year', '#me-container').val() < 1980))){
+    //TvShow Year
+    else if($('#tvshow-edit-year', '#me-container').val() == null || ($('#tvshow-edit-year', '#me-container').val() != null && ($('#tvshow-edit-year', '#me-container').val() > Number(crrYear) || $('#tvshow-edit-year', '#me-container').val() < 1980))){
         resultOuput.IsValid = false;
-        resultOuput.ErrorMessage = "Movie year is not valid!";
+        resultOuput.ErrorMessage = "Tv Show year is not valid!";
     }
 
-    //Movie Cover
-    else if(!hasNewMovieCover)
+    //TvShow Cover
+    else if(!hasNewTvShowCover)
     {
         resultOuput.IsValid = false;
-        resultOuput.ErrorMessage = "Movie cover wasn't defined!";
+        resultOuput.ErrorMessage = "Tv Show cover wasn't defined!";
     }
 
-    //Movie Views
-    else if($('#movie-edit-views', '#me-container').val() == null || $('#movie-edit-views', '#me-container').val() == '' || $('#movie-edit-views', '#me-container').val() == ' ' || $('#movie-edit-views', '#me-container').val() == '0'){
+    //TvShow Views
+    else if($('#tvshow-edit-views', '#me-container').val() == null || $('#tvshow-edit-views', '#me-container').val() == '' || $('#tvshow-edit-views', '#me-container').val() == ' ' || $('#tvshow-edit-views', '#me-container').val() == '0'){
         resultOuput.IsValid = false;
-        resultOuput.ErrorMessage = "Movie views are not valid!";
+        resultOuput.ErrorMessage = "Tv Show views are not valid!";
     }
 
-    //Movie Rating
+    //TvShow Rating
     else {
         let hasRating = false;
         var starElements = document.querySelectorAll('#me-container input[type=radio].star');
@@ -591,25 +591,25 @@ function validateMovieToEdit(){
 
         if(!hasRating){
             resultOuput.IsValid = false;
-            resultOuput.ErrorMessage = "Movie rating wasn't defined!";
+            resultOuput.ErrorMessage = "Tv Show rating wasn't defined!";
         }
     }    
 
     return resultOuput;
 }
 
-async function validateDBAndSaveMovie(movieDataToEdit) {
-    let queryStrTile = '%' + movieDataToEdit.movieTitle + '%';
+async function validateDBAndSaveTvShow(tvShowDataToEdit) {
+    let queryStrTile = '%' + tvShowDataToEdit.tvShowTitle + '%';
 
-    let result = knex('Movies')
-    .whereNot('MovieId', movieDataToEdit.movieId)
-    .whereLike('MovieTitle', queryStrTile)
-    .where('MovieYear', movieDataToEdit.movieYear)
-    .select('MovieId')
+    let result = knex('TvShows')
+    .whereNot('TvShowId', tvShowDataToEdit.tvShowId)
+    .whereLike('TvShowTitle', queryStrTile)
+    .where('TvShowYear', tvShowDataToEdit.tvShowYear)
+    .select('TvShowId')
     .first();
 
     //Getting covers path
-    let moviesCoversPath = await knex.select("Value").from("Configurations").where("Key", "MOVIES_COVERS_PATH").where("Deleted", 0).first()
+    let tvShowsCoversPath = await knex.select("Value").from("Configurations").where("Key", "TV_SHOWS_COVERS_PATH").where("Deleted", 0).first()
     .then(function(config){
         if(config != null && config != undefined)
             return config.Value;
@@ -618,171 +618,53 @@ async function validateDBAndSaveMovie(movieDataToEdit) {
         }           
     });
 
-    //Validation for the cover path config and for movie in db
-    if(moviesCoversPath != null && moviesCoversPath != ""){
+    //Validation for the cover path config and for tv show in db
+    if(tvShowsCoversPath != null && tvShowsCoversPath != ""){
         return await result.then(function (rows){          
-            if(rows != null && rows.MovieId > 0){            
-                showToastMessage("Frame Junkie", "This movie already exists!");
+            if(rows != null && rows.TvShowId > 0){            
+                showToastMessage("Frame Junkie", "This tv show already exists!");
                 return false;
             }                
             else{
-                    //LOAD MOVIE TO EDIT        
-                    $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
-                    document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "collapse";    
-                    document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 0;    
-                    document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.opacity = 0;  
-                
-                    //Show loading
-                    addAndShowLoading();
+                //LOAD TV SHOW TO EDIT        
+                $("#tvshow-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
+                document.querySelector('#tvshow-details-container #tvshowdetails_partial #me-container').style.visibility = "collapse";    
+                document.querySelector('#tvshow-details-container #tvshowdetails_partial #me-container').style.height = 0;    
+                document.querySelector('#tvshow-details-container #tvshowdetails_partial #me-container').style.opacity = 0;  
+            
+                //Show loading
+                addAndShowLoading();
 
-                    ipc.send('edit-movie', moviesCoversPath, movieDataToEdit);
+                ipc.send('edit-tvshow', tvShowsCoversPath, tvShowDataToEdit);
             }            
         });
     }
     else{
-        showToastMessage("Frame Junkie", "Movies covers path config doens't exist!");
+        showToastMessage("Frame Junkie", "Tv Shows covers path config doens't exist!");
         return false;        
-    }
-}
-
-async function editMovie(moviesCoversPath, movieDataToEdit) {
-    
-    try
-    {
-        if(movieDataToEdit.updateCover && movieDataToEdit.movieCover != undefined && movieDataToEdit.movieCover != ""){
-            //get movie cover
-            let moviCoverDB = await knex('MovieCovers')
-                .where('MovieId', loadedMovieId)
-                .where('Deleted', 0)
-                .select('*')
-                .first()
-                .then(function (movieCoverData){
-                    return movieCoverData.CoverPath;
-                });    
-
-            if(!pathEqual(moviCoverDB, movieDataToEdit.movieCover)){
-                //save new movie cover & update db MovieCovers
-                let newCover = saveMovieCover(moviesCoversPath, movieDataToEdit.movieTitle, movieDataToEdit.movieCover);
-                if(newCover != null){
-                    let updatedMovieCover = await knex('MovieCovers')
-                        .where({ MovieId: loadedMovieId})
-                        .update({ 
-                            CoverName: newCover.newCoverName,
-                            CoverPath: newCover.newPath
-                        }, ['MovieId'])
-                        .then(function(resp) {                    
-                            output = true;
-                            return resp;
-                        }).catch(err => {
-                            logger.error(err);
-                            console.log(err);
-                        });
-
-                    if(updatedMovieCover.length > 0 && updatedMovieCover[0].MovieId > 0) {
-                        //remove previous movie cover
-                        await fs.rm(moviCoverDB, {
-                            force: true,
-                        });  
-                    }
-                }                
-            }
-        }       
-
-        //update movie
-        /*let updatedMovie = await knex('Movies')
-        .where({ MovieId: loadedMovieId})
-        .update({ 
-            MovieTitle: movieDataToEdit.movieTitle, 
-            MovieYear: movieDataToEdit.movieYear,
-            NrViews: movieDataToEdit.movieNrViews,
-            IsFavorite: movieDataToEdit.isFavMovie, 
-            MovieRating: movieDataToEdit.movieRating, 
-            Observations: movieDataToEdit.movieObservations
-        }, ['MovieId'])
-        .then(function(resp) {                    
-            output = true;
-            return resp;
-        }).catch(err => {
-            logger.error(err);
-            console.log(err);
-        });
-
-        if(updatedMovie.length > 0 && updatedMovie.MovieId > 0) {
-                  
-        }*/
-    }
-    catch(error){
-        logger.error(error);
-        console.error(error);
-        return false;
-    }     
-
-    return true;
-}
-
-let saveMovieCover = (moviesCoversPath, movieTitle, newMovieCover) => {
-
-    if(movieTitle == null || movieTitle == '' || movieTitle == ' ' || newMovieCover == null)
-        return null;
-
-    //get new movie cover file extension
-    let coverExtension = "";
-    let fileName = newMovieCover.split('/');
-    if(fileName != null && fileName.length > 0){    
-        let fileExtension = fileName[fileName.length - 1].split('.');
-        if(fileExtension != null && fileExtension.length > 0){
-            coverExtension = fileExtension[fileExtension.length - 1];
-        }
-    }
-
-    //remove spaces and special chars from movie title
-    //generate small guid with nanoid package
-    //create new movie cover name with file extension
-    let newCoverName = movieTitle.replace(/[^A-Z0-9]+/ig, "") + '_' + nanoid(7) + '.' + coverExtension;
-   
-    //TODO: Get config path for covers folder
-    //let path = "C:\\Users\\AndrePC\\Downloads\\TesteFrameJunkie";
-    let newPath = moviesCoversPath.concat(newCoverName);
-
-    //oldPath = newMovieCover
-    renameFile(newMovieCover, newPath);
-
-    return { newCoverName, newPath };
-}
-
-async function renameFile(oldPath, newPath) {
-    try 
-    {
-        await fs.rename(oldPath, newPath);
-        console.log('Rename complete!');
-        
-    } catch (err) 
-    {
-        logger.error(error);
-        console.error(error);
     }
 }
 
 
 //BACK
-$('#btnBack', '#movie_detail_container').off('click').on('click', function(event){
-    $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
-    document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "collapse";    
-    document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 0;    
-    $("#movie-details-container #moviedetails_partial #me-container").animate({"opacity": 0 }, 0);
+$('#btnBack', '#tvshow_detail_container').off('click').on('click', function(event){
+    $("#tvshow-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
+    document.querySelector('#tvshow-details-container #tvshowdetails_partial #me-container').style.visibility = "collapse";    
+    document.querySelector('#tvshow-details-container #tvshowdetails_partial #me-container').style.height = 0;    
+    $("#tvshow-details-container #tvshowdetails_partial #me-container").animate({"opacity": 0 }, 0);
 
     //Show loading
     addAndShowLoading();
 
     setTimeout(async () => {         
-        await loadMovieDetails();
+        await loadTvShowDetails();
 
         //Show data container
-        document.querySelector('#movie-details-container #moviedetails_partial #loading_container').remove();
+        document.querySelector('#tvshow-details-container #tvshowdetails_partial #loading_container').remove();
 
-        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.height = 530;  
-        document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "visible";    
-        $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 1}, 600);
+        document.querySelector('#tvshow-details-container #tvshowdetails_partial #md-container').style.height = 530;  
+        document.querySelector('#tvshow-details-container #tvshowdetails_partial #md-container').style.visibility = "visible";    
+        $("#tvshow-details-container #tvshowdetails_partial #md-container").animate({"opacity": 1}, 600);
 
         showEditButtons(false);   
         isToEdit = false;
@@ -791,40 +673,40 @@ $('#btnBack', '#movie_detail_container').off('click').on('click', function(event
 
 function showEditButtons(showEditButtons){
     if(showEditButtons === true){
-        document.querySelector("#movie-details-container #btnAddMovieView").style.display = "none";  
-        document.querySelector("#movie-details-container #btnBack").style.display = "";  
-        document.querySelector("#movie-details-container #btnEditMovie").style.display = "";  
-        document.querySelector("#movie-details-container #btnDeleteMovie").style.display = "none";  
-        document.querySelector("#movie-details-container #btnSelectCover").style.display = "";  
+        document.querySelector("#tvshow-details-container #btnAddTvShowView").style.display = "none";  
+        document.querySelector("#tvshow-details-container #btnBack").style.display = "";  
+        document.querySelector("#tvshow-details-container #btnEditTvShow").style.display = "";  
+        document.querySelector("#tvshow-details-container #btnDeleteTvShow").style.display = "none";  
+        document.querySelector("#tvshow-details-container #btnSelectCover").style.display = "";  
     }
     else{
-        document.querySelector("#movie-details-container #btnAddMovieView").style.display = "";  
-        document.querySelector("#movie-details-container #btnBack").style.display = "none";  
-        document.querySelector("#movie-details-container #btnEditMovie").style.display = "";  
-        document.querySelector("#movie-details-container #btnDeleteMovie").style.display = "";  
-        document.querySelector("#movie-details-container #btnSelectCover").style.display = "none";  
+        document.querySelector("#tvshow-details-container #btnAddTvShowView").style.display = "";  
+        document.querySelector("#tvshow-details-container #btnBack").style.display = "none";  
+        document.querySelector("#tvshow-details-container #btnEditTvShow").style.display = "";  
+        document.querySelector("#tvshow-details-container #btnDeleteTvShow").style.display = "";  
+        document.querySelector("#tvshow-details-container #btnSelectCover").style.display = "none";  
     }
 
-    $("#movie-details-container .details-buttons-container").animate({"opacity": 1 }, 200);
+    $("#tvshow-details-container .details-buttons-container").animate({"opacity": 1 }, 200);
 }
 
 
 //DELETE
-$('#btnDeleteMovie', '#movie_detail_container').off('click').on('click', function(event){
-    ipc.send('openConfirmDialog', 'Are you sure you would like to delete this movie?', 'delete-movie');
+$('#btnDeleteTvShow', '#tvshow_detail_container').off('click').on('click', function(event){
+    ipc.send('openConfirmDialog', 'Are you sure you would like to delete this tv show?', 'delete-tvshow');
 });
 
-async function deleteMovie(){
+async function deleteTvShow(){
     let output = true;
 
     try
     {
-        //delete movie
-        let deletedMovie = await knex('Movies')
-        .where({ MovieId: loadedMovieId})
+        //delete tv show
+        let deletedTvShow = await knex('TvShows')
+        .where({ TvShowId: loadedTvShowId})
         .update({ 
             Deleted: 1
-        }, ['MovieId', 'Deleted'])
+        }, ['TvShowId', 'Deleted'])
         .then(function(resp) {                    
             output = true;
             return resp;
@@ -833,14 +715,14 @@ async function deleteMovie(){
             console.log(err);
         });
 
-        if(deletedMovie.length > 0) {
+        if(deletedTvShow.length > 0) {
 
-            //delete movie cover            
-            let deletedMovieCover = await knex('MovieCovers')
-            .where({ MovieId: loadedMovieId})
+            //delete tv show cover            
+            let deletedTvShowCover = await knex('TvShowCovers')
+            .where({ TvShowId: loadedTvShowId})
             .update({ 
                 Deleted: 1
-            }, ['MovieId', 'Deleted', 'CoverPath'])
+            }, ['TvShowId', 'Deleted', 'CoverPath'])
             .then(function(resp) {                    
                 output = true;
                 return resp;
@@ -849,10 +731,10 @@ async function deleteMovie(){
                 console.log(err);
             });       
 
-            if(deletedMovieCover.length > 0 && deletedMovieCover[0].MovieId > 0
-                && deletedMovieCover[0].CoverPath != undefined && deletedMovieCover[0].CoverPath != "") {
-                //remove movie cover
-                await fs.rm(deletedMovieCover[0].CoverPath, {
+            if(deletedTvShowCover.length > 0 && deletedTvShowCover[0].TvShowId > 0
+                && deletedTvShowCover[0].CoverPath != undefined && deletedTvShowCover[0].CoverPath != "") {
+                //remove tv show cover
+                await fs.rm(deletedTvShowCover[0].CoverPath, {
                     force: true,
                 });  
             }

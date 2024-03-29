@@ -14,7 +14,7 @@ function loadTvShows(){
 
 	//Load Filters
 	$('#fltr-tvshow-year').html('');
-	var optionHtml = '<option value="0">Select tv show year</option>';
+	var optionHtml = '<option value="0">Select year</option>';
 	$('#fltr-tvshow-year').append(optionHtml);
 
 	var crrYear = new Date().getFullYear();	

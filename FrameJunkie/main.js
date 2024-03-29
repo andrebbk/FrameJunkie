@@ -124,6 +124,7 @@ function createWindow() {
         });
 
 
+        
         //Get movies
         ipcMain.on("getMovies", function(e, mTitle, mYear, mIsFav, mRating, crrPage) {
             let result = knex
@@ -240,7 +241,7 @@ function createWindow() {
             {
                 if(movieDataToEdit.updateCover && movieDataToEdit.movieCover != undefined && movieDataToEdit.movieCover != ""){
                     //get movie cover
-                    let moviCoverDB = await knex('MovieCovers')
+                    let movieCoverDB = await knex('MovieCovers')
                         .where('MovieId', movieDataToEdit.movieId)
                         .where('Deleted', 0)
                         .select('*')
@@ -249,9 +250,9 @@ function createWindow() {
                             return movieCoverData.CoverPath;
                         });    
 
-                    if(!pathEqual(moviCoverDB, movieDataToEdit.movieCover)){
+                    if(!pathEqual(movieCoverDB, movieDataToEdit.movieCover)){
                         //save new movie cover & update db MovieCovers
-                        let newCover = saveMovieCover(moviesCoversPath, movieDataToEdit.movieTitle, movieDataToEdit.movieCover);
+                        let newCover = saveCover(moviesCoversPath, movieDataToEdit.movieTitle, movieDataToEdit.movieCover);
                         if(newCover != null){
                             let updatedMovieCover = await knex('MovieCovers')
                                 .where({ MovieId: movieDataToEdit.movieId})
@@ -269,7 +270,7 @@ function createWindow() {
 
                             if(updatedMovieCover.length > 0 && updatedMovieCover[0].MovieId > 0) {
                                 //remove previous movie cover
-                                await fs.rm(moviCoverDB, {
+                                await fs.rm(movieCoverDB, {
                                     force: true,
                                 });  
                             }
@@ -311,6 +312,7 @@ function createWindow() {
         });
 
 
+
         //Get tvshows
         ipcMain.on("getTvShows", function(e, tTitle, tYear, tIsFav, tRating, crrPage) {
             let result = knex
@@ -341,20 +343,145 @@ function createWindow() {
                 win.webContents.send('resultSent_tvshows', rows);
             });  
         }); 
+
+        //Update tv show views number
+        ipcMain.on('update-tvshow-nrviews', async (event, updateThisTvShowId, tvShowNrViews) => {
+            tvShowNrViews++;
+
+            //update tv show NrViews
+            let updatedTvShowsPathConfig = await knex('TvShows')
+            .where({ TvShowId: updateThisTvShowId})
+            .update({ 
+                NrViews: tvShowNrViews
+            }, ['TvShowId', 'NrViews'])
+            .then(function(resp) {                    
+                output = true;
+                return resp;
+            }).catch(err => {
+                logger.error(err);
+                console.log(err);
+            });
+
+            if(updatedTvShowsPathConfig.length > 0) {
+                //Add new tv show view
+                await knex('TvShowView').insert({ 
+                    TvShowId: updateThisTvShowId, 
+                    CreateDate: new Date().toISOString()
+                })
+                .catch(function(error) {
+                    logger.error(error);
+                    console.error(error);
+                });
+                
+                setTimeout(async () => {         
+                    BrowserWindow.getAllWindows().find((win) => win.webContents.id === event.sender.id).webContents.send('result-update-tvshow-nrviews', updateThisTvShowId);			
+                }, 1000);                   
+            }
+        });
+
+        //Event to reload tvshows list
+        ipcMain.on('reload-tvshows-menu', async (event, deletedTvShowId) => {
+            let tvShowDB = knex('TvShows')
+            .where('TvShowId', deletedTvShowId)
+            .select('TvShowId', 'TvShowTitle')
+            .first();
+
+            await tvShowDB.then(function (tvShowData){          
+                if(tvShowData != null && tvShowData.TvShowId > 0){
+                    win.webContents.send('reload-tvshows-list', tvShowData.TvShowId);
+                }
+            });            
+        });
+
+        //Edit tv show
+        ipcMain.on('edit-tvshow', async (event, tvShowsCoversPath, tvShowDataToEdit) => {      
+            try
+            {
+                if(tvShowDataToEdit.updateCover && tvShowDataToEdit.tvShowCover != undefined && tvShowDataToEdit.tvShowCover != ""){
+                    //get tvshow cover
+                    let tvShowCoverDB = await knex('TvShowCovers')
+                        .where('TvShowId', tvShowDataToEdit.tvShowId)
+                        .where('Deleted', 0)
+                        .select('*')
+                        .first()
+                        .then(function (tvShowCoverData){
+                            return tvShowCoverData.CoverPath;
+                        });    
+
+                    if(!pathEqual(tvShowCoverDB, tvShowDataToEdit.tvShowCover)){
+                        //save new tvshow cover & update db TvShowCovers
+                        let newCover = saveCover(tvShowsCoversPath, tvShowDataToEdit.tvShowTitle, tvShowDataToEdit.tvShowCover);
+                        if(newCover != null){
+                            let updatedTvShowCover = await knex('TvShowCovers')
+                                .where({ TvShowId: tvShowDataToEdit.tvShowId})
+                                .update({ 
+                                    CoverName: newCover.newCoverName,
+                                    CoverPath: newCover.newPath
+                                }, ['TvShowId'])
+                                .then(function(resp) {                    
+                                    output = true;
+                                    return resp;
+                                }).catch(err => {
+                                    logger.error(err);
+                                    console.log(err);
+                                });
+
+                            if(updatedTvShowCover.length > 0 && updatedTvShowCover[0].TvShowId > 0) {
+                                //remove previous movie cover
+                                await fs.rm(tvShowCoverDB, {
+                                    force: true,
+                                });  
+                            }
+                        }                
+                    }
+                }       
+
+                //update tvshow
+                let updatedTvShow = await knex('TvShows')
+                .where({ TvShowId: tvShowDataToEdit.tvShowId })
+                .update({ 
+                    TvShowTitle: tvShowDataToEdit.tvShowTitle, 
+                    TvShowYear: tvShowDataToEdit.tvShowYear,
+                    NrViews: tvShowDataToEdit.tvShowNrViews,
+                    IsFavorite: tvShowDataToEdit.isFavTvShow, 
+                    TvShowRating: tvShowDataToEdit.tvShowRating, 
+                    Observations: tvShowDataToEdit.tvShowObservations
+                }, ['TvShowId'])
+                .then(function(resp) {                    
+                    output = true;
+                    return resp;
+                }).catch(err => {
+                    logger.error(err);
+                    console.log(err);
+                });
+
+                if(updatedTvShow.length > 0 && updatedTvShow[0].TvShowId > 0) {
+                    setTimeout(async () => {  
+                        win.webContents.send('reload-tvshows-list', null);       
+                        BrowserWindow.getAllWindows().find((win) => win.webContents.id === event.sender.id).webContents.send('result-edited-tvshow', updatedTvShow[0].TvShowId);                        			
+                    }, 100);   
+                }                 
+            }
+            catch(error){
+                logger.error(error);
+                console.error(error);
+                return false;
+            }               
+        });
     });
 }
 
 app.on('ready', createWindow);
 
 //"Private methods"
-let saveMovieCover = (moviesCoversPath, movieTitle, newMovieCover) => {
+let saveCover = (coversPath, title, newCover) => {
 
-    if(movieTitle == null || movieTitle == '' || movieTitle == ' ' || newMovieCover == null)
+    if(coversPath == null || title == null || title == '' || title == ' ' || newCover == null)
         return null;
 
-    //get new movie cover file extension
+    //get new cover file extension
     let coverExtension = "";
-    let fileName = newMovieCover.split('/');
+    let fileName = newCover.split('/');
     if(fileName != null && fileName.length > 0){    
         let fileExtension = fileName[fileName.length - 1].split('.');
         if(fileExtension != null && fileExtension.length > 0){
@@ -362,17 +489,17 @@ let saveMovieCover = (moviesCoversPath, movieTitle, newMovieCover) => {
         }
     }
 
-    //remove spaces and special chars from movie title
+    //remove spaces and special chars from title
     //generate small guid with nanoid package
-    //create new movie cover name with file extension
-    let newCoverName = movieTitle.replace(/[^A-Z0-9]+/ig, "") + '_' + nanoid(7) + '.' + coverExtension;
+    //create new cover name with file extension
+    let newCoverName = title.replace(/[^A-Z0-9]+/ig, "") + '_' + nanoid(7) + '.' + coverExtension;
    
     //TODO: Get config path for covers folder
     //let path = "C:\\Users\\AndrePC\\Downloads\\TesteFrameJunkie";
-    let newPath = moviesCoversPath.concat(newCoverName);
+    let newPath = coversPath.concat(newCoverName);
 
     //oldPath = newMovieCover
-    renameFile(newMovieCover, newPath);
+    renameFile(newCover, newPath);
 
     return { newCoverName, newPath };
 }

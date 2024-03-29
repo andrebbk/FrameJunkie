@@ -14,7 +14,7 @@ function loadMovies(){
 
 	//Load Filters
 	$('#fltr-movie-year').html('');
-	var optionHtml = '<option value="0">Select movie year</option>';
+	var optionHtml = '<option value="0">Select year</option>';
 	$('#fltr-movie-year').append(optionHtml);
 
 	var crrYear = new Date().getFullYear();	

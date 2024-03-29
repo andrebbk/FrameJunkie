@@ -626,140 +626,22 @@ async function validateDBAndSaveMovie(movieDataToEdit) {
                 return false;
             }                
             else{
-                    //LOAD MOVIE TO EDIT        
-                    $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
-                    document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "collapse";    
-                    document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 0;    
-                    document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.opacity = 0;  
-                
-                    //Show loading
-                    addAndShowLoading();
+                //LOAD MOVIE TO EDIT        
+                $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
+                document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.visibility = "collapse";    
+                document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.height = 0;    
+                document.querySelector('#movie-details-container #moviedetails_partial #me-container').style.opacity = 0;  
+            
+                //Show loading
+                addAndShowLoading();
 
-                    ipc.send('edit-movie', moviesCoversPath, movieDataToEdit);
+                ipc.send('edit-movie', moviesCoversPath, movieDataToEdit);
             }            
         });
     }
     else{
         showToastMessage("Frame Junkie", "Movies covers path config doens't exist!");
         return false;        
-    }
-}
-
-async function editMovie(moviesCoversPath, movieDataToEdit) {
-    
-    try
-    {
-        if(movieDataToEdit.updateCover && movieDataToEdit.movieCover != undefined && movieDataToEdit.movieCover != ""){
-            //get movie cover
-            let moviCoverDB = await knex('MovieCovers')
-                .where('MovieId', loadedMovieId)
-                .where('Deleted', 0)
-                .select('*')
-                .first()
-                .then(function (movieCoverData){
-                    return movieCoverData.CoverPath;
-                });    
-
-            if(!pathEqual(moviCoverDB, movieDataToEdit.movieCover)){
-                //save new movie cover & update db MovieCovers
-                let newCover = saveMovieCover(moviesCoversPath, movieDataToEdit.movieTitle, movieDataToEdit.movieCover);
-                if(newCover != null){
-                    let updatedMovieCover = await knex('MovieCovers')
-                        .where({ MovieId: loadedMovieId})
-                        .update({ 
-                            CoverName: newCover.newCoverName,
-                            CoverPath: newCover.newPath
-                        }, ['MovieId'])
-                        .then(function(resp) {                    
-                            output = true;
-                            return resp;
-                        }).catch(err => {
-                            logger.error(err);
-                            console.log(err);
-                        });
-
-                    if(updatedMovieCover.length > 0 && updatedMovieCover[0].MovieId > 0) {
-                        //remove previous movie cover
-                        await fs.rm(moviCoverDB, {
-                            force: true,
-                        });  
-                    }
-                }                
-            }
-        }       
-
-        //update movie
-        /*let updatedMovie = await knex('Movies')
-        .where({ MovieId: loadedMovieId})
-        .update({ 
-            MovieTitle: movieDataToEdit.movieTitle, 
-            MovieYear: movieDataToEdit.movieYear,
-            NrViews: movieDataToEdit.movieNrViews,
-            IsFavorite: movieDataToEdit.isFavMovie, 
-            MovieRating: movieDataToEdit.movieRating, 
-            Observations: movieDataToEdit.movieObservations
-        }, ['MovieId'])
-        .then(function(resp) {                    
-            output = true;
-            return resp;
-        }).catch(err => {
-            logger.error(err);
-            console.log(err);
-        });
-
-        if(updatedMovie.length > 0 && updatedMovie.MovieId > 0) {
-                  
-        }*/
-    }
-    catch(error){
-        logger.error(error);
-        console.error(error);
-        return false;
-    }     
-
-    return true;
-}
-
-let saveMovieCover = (moviesCoversPath, movieTitle, newMovieCover) => {
-
-    if(movieTitle == null || movieTitle == '' || movieTitle == ' ' || newMovieCover == null)
-        return null;
-
-    //get new movie cover file extension
-    let coverExtension = "";
-    let fileName = newMovieCover.split('/');
-    if(fileName != null && fileName.length > 0){    
-        let fileExtension = fileName[fileName.length - 1].split('.');
-        if(fileExtension != null && fileExtension.length > 0){
-            coverExtension = fileExtension[fileExtension.length - 1];
-        }
-    }
-
-    //remove spaces and special chars from movie title
-    //generate small guid with nanoid package
-    //create new movie cover name with file extension
-    let newCoverName = movieTitle.replace(/[^A-Z0-9]+/ig, "") + '_' + nanoid(7) + '.' + coverExtension;
-   
-    //TODO: Get config path for covers folder
-    //let path = "C:\\Users\\AndrePC\\Downloads\\TesteFrameJunkie";
-    let newPath = moviesCoversPath.concat(newCoverName);
-
-    //oldPath = newMovieCover
-    renameFile(newMovieCover, newPath);
-
-    return { newCoverName, newPath };
-}
-
-async function renameFile(oldPath, newPath) {
-    try 
-    {
-        await fs.rename(oldPath, newPath);
-        console.log('Rename complete!');
-        
-    } catch (err) 
-    {
-        logger.error(error);
-        console.error(error);
     }
 }
 
