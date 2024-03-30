@@ -26,6 +26,114 @@ function loadNewTvShow() {
 		$('#tvshow-year').append(optionHtml);
 	}
 
+    //init numberstyle
+    $.fn.numberstyle = function(options) {
+	  
+		/*
+		 * Default settings
+		 */
+		var settings = $.extend({
+		  value: 0,
+		  step: undefined,
+		  min: undefined,
+		  max: undefined
+		}, options );
+	
+		/*
+		 * Init every element
+		 */
+		return this.each(function(i) {
+			
+		  /*
+		   * Base options
+		   */
+		  var input = $(this);
+			  
+		  /*
+		   * Add new DOM
+		   */
+          if(input.closest('.numberstyle-qty')[0] == undefined){
+                var container = document.createElement('div'),
+                btnAdd = document.createElement('div'),
+                btnRem = document.createElement('div'),
+                min = (settings.min) ? settings.min : input.attr('min'),
+                max = (settings.max) ? settings.max : input.attr('max'),
+                value = (settings.value) ? settings.value : parseFloat(input.val());
+
+                container.className = 'numberstyle-qty';
+                btnAdd.className = (max && value >= max ) ? 'qty-btn qty-add disabled' : 'qty-btn qty-add';
+                btnAdd.innerHTML = '+';
+                btnRem.className = (min && value <= min) ? 'qty-btn qty-rem disabled' : 'qty-btn qty-rem';
+                btnRem.innerHTML = '-';
+                input.wrap(container);
+                input.closest('.numberstyle-qty').prepend(btnRem).append(btnAdd);
+          }	 
+	
+		  /*
+		   * Attach events
+		   */
+		  // use .off() to prevent triggering twice
+		  $(document).off('click','.qty-btn').on('click','.qty-btn',function(e){
+			
+			var input = $(this).siblings('input'),
+				sibBtn = $(this).siblings('.qty-btn'),
+				step = (settings.step) ? parseFloat(settings.step) : parseFloat(input.attr('step')),
+				min = (settings.min) ? settings.min : ( input.attr('min') ) ? input.attr('min') : undefined,
+				max = (settings.max) ? settings.max : ( input.attr('max') ) ? input.attr('max') : undefined,
+				oldValue = parseFloat(input.val()),
+				newVal;
+			
+			//Add value
+			if ( $(this).hasClass('qty-add') ) {   
+			  
+			  newVal = (oldValue >= max) ? oldValue : oldValue + step,
+			  newVal = (newVal > max) ? max : newVal;
+			  
+			  if (newVal == max) {
+				$(this).addClass('disabled');
+			  }
+			  sibBtn.removeClass('disabled');
+			 
+			//Remove value
+			} else {
+			  
+			  newVal = (oldValue <= min) ? oldValue : oldValue - step,
+			  newVal = (newVal < min) ? min : newVal; 
+			  
+			  if (newVal == min) {
+				$(this).addClass('disabled');
+			  }
+			  sibBtn.removeClass('disabled');
+			  
+			}
+			  
+			//Update value
+			input.val(newVal).trigger('change');
+				
+		  });
+		  
+		  input.off('change').on('change',function(){
+			
+			const val = parseFloat(input.val()),
+				  min = (settings.min) ? settings.min : ( input.attr('min') ) ? input.attr('min') : undefined,
+				  max = (settings.max) ? settings.max : ( input.attr('max') ) ? input.attr('max') : undefined;
+			
+			if ( val > max ) {
+			  input.val(max);   
+			}
+			
+			if ( val < min ) {
+			  input.val(min);
+			}
+		  });
+		  
+		});
+	};	
+	  
+	//Init number controller
+	$('#tvshow-seasons').numberstyle();
+    $('#tvshow-episodes').numberstyle();
+
 	$('#tvshow-year').val(Number(crrYear)); //init TvShow Year
 
     //BUTTONS SECTION
@@ -101,6 +209,9 @@ function loadNewTvShow() {
             let tvShowTitle = $('#tvshow-title').val(),
             tvShowYear = $('#tvshow-year').val(),
             isFavTvShow = $('#tvshow-isfav').prop("checked"),
+            tvShowSeasons = $('#tvshow-seasons').val(),
+            tvShowEpisodes = $('#tvshow-episodes').val(),
+            isComplete = $('#tvshow-iscomplete').prop("checked"),
             tvShowRating = 0,
             tvShowObservations = $('#tvshow-observations-id').val(),
             tvShowCover = newTvShowCover;
@@ -113,7 +224,7 @@ function loadNewTvShow() {
                 }
             });
 
-            validateAndSaveTvShow(tvShowTitle, tvShowYear, isFavTvShow, tvShowRating, tvShowObservations, tvShowCover);            
+            validateAndSaveTvShow(tvShowTitle, tvShowYear, isFavTvShow, tvShowSeasons, tvShowEpisodes, isComplete, tvShowRating, tvShowObservations, tvShowCover);            
         }else{
             showToastMessage("Frame Junkie", validationResult.ErrorMessage);
         }
@@ -130,8 +241,17 @@ function clearNewTvShowForm(){
     var crrYear = new Date().getFullYear();	
     $('#tvshow-year').val(Number(crrYear)); 
 
-     //Is Favorite
+    //Is Favorite
     $('#tvshow-isfav').prop("checked", false);
+
+    //Seasons
+    $('#tvshow-seasons').val(0);
+
+    //Episodes
+    $('#tvshow-episodes').val(0);
+
+    //Is Complete
+    $('#tvshow-iscomplete').prop("checked", false);
 
     //TvShow Rating
     var starElements = document.getElementsByClassName("star");
@@ -173,6 +293,18 @@ function validateNewTvShow(){
         resultOuput.ErrorMessage = "Tv show year is not valid!";
     }
 
+    //TvShow Seasons
+    else if($('#tvshow-seasons').val() == null || $('#tvshow-seasons').val() == '' || $('#tvshow-seasons').val() == ' ' || $('#tvshow-seasons').val() < 1){
+        resultOuput.IsValid = false;
+        resultOuput.ErrorMessage = "Tv show seasons not set!";
+    }
+
+    //TvShow Episodes
+    else if($('#tvshow-episodes').val() == null || $('#tvshow-episodes').val() == '' || $('#tvshow-episodes').val() == ' ' || $('#tvshow-episodes').val() < 1){
+        resultOuput.IsValid = false;
+        resultOuput.ErrorMessage = "Tv show epidoses not set!";
+    }
+
     //TvShow Cover
     else if(!hasNewTvShowCover)
     {
@@ -202,7 +334,7 @@ function validateNewTvShow(){
     return resultOuput;
 }
 
-async function validateAndSaveTvShow(tvShowTitle, tvShowYear, isFavTvShow, tvShowRating, tvShowObservations, tvShowCover) {
+async function validateAndSaveTvShow(tvShowTitle, tvShowYear, isFavTvShow, tvShowSeasons, tvShowEpisodes, isComplete, tvShowRating, tvShowObservations, tvShowCover) {
     let queryStrTile = '%' + tvShowTitle + '%';
 
     let result = knex('TvShows')
@@ -228,7 +360,7 @@ async function validateAndSaveTvShow(tvShowTitle, tvShowYear, isFavTvShow, tvSho
                 showToastMessage("Frame Junkie", "This tv show already exists!");
             else{
                 //Save new tv show
-                saveTvShow(tvShowsCoversPath, tvShowTitle, tvShowYear, isFavTvShow, tvShowRating, tvShowObservations, tvShowCover);
+                saveTvShow(tvShowsCoversPath, tvShowTitle, tvShowYear, isFavTvShow, tvShowSeasons, tvShowEpisodes, isComplete, tvShowRating, tvShowObservations, tvShowCover);
                 
             }            
         });
@@ -238,17 +370,17 @@ async function validateAndSaveTvShow(tvShowTitle, tvShowYear, isFavTvShow, tvSho
     }
 }
 
-async function saveTvShow(tvShowsCoversPath, tvShowTitle, tvShowYear, isFavTvShow, tvShowRating, tvShowObservations, tvShowCover) {
+async function saveTvShow(tvShowsCoversPath, tvShowTitle, tvShowYear, isFavTvShow, tvShowSeasons, tvShowEpisodes, isComplete, tvShowRating, tvShowObservations, tvShowCover) {
     
     let tvShowData = { 
         TvShowTitle: tvShowTitle, 
         TvShowYear: tvShowYear,
-        TvShowSeasons: 0,
-        TvShowEpisodes: 0,
+        TvShowSeasons: tvShowSeasons,
+        TvShowEpisodes: tvShowEpisodes,
         NrViews: 1, 
         IsFavorite: isFavTvShow, 
         TvShowRating: tvShowRating, 
-        IsFinished: 0,
+        IsFinished: isComplete,
         Observations: tvShowObservations,
         CreateDate: new Date().toISOString(),
         Deleted: 0

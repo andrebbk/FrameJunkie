@@ -28,16 +28,47 @@
                         </div>
                     </div>            
 
-                    <!--IS FAVORITE-->
-                    <div class="is-favorite-container">
-                        <div style="margin-top: 26px; margin-right: 10px;">
-                            <text class="label-form-field">Is Favorite</text>
-                        </div>                
-                        <div>
-                            <input type="checkbox" id="tvshow-isfav" class="toggleBtn" /><label class="toggleLabel" for="tvshow-isfav">Toggle</label>
-                        </div>
-                    </div>   
+                    <div style="display: flex;">
+                        <!--IS FAVORITE-->
+                        <div class="is-favorite-container">
+                            <div style="margin-top: 26px; margin-right: 10px;">
+                                <text class="label-form-field">Is Favorite</text>
+                            </div>                
+                            <div>
+                                <input type="checkbox" id="tvshow-isfav" class="toggleBtn" /><label class="toggleLabel" for="tvshow-isfav">Toggle</label>
+                            </div>
+                        </div>   
 
+                        <!--SEASONS-->
+                        <div class="seasons-container" style="margin-left: 40px;">
+                            <div style="margin-top: 26px; margin-right: 10px;">
+                                <text class="label-form-field">Seasons</text>
+                            </div>                
+                            <div style="color: grey; zoom: 0.9; margin-left: 5px;">
+                                <input id="tvshow-seasons" class="numberstyle" type="number" min="0" step="1" value="0" max="1000">
+                            </div>
+                        </div>    
+
+                        <!--EPISODES-->
+                        <div class="seasons-container" style="margin-left: 40px;">
+                            <div style="margin-top: 26px; margin-right: 10px;">
+                                <text class="label-form-field">Episodes</text>
+                            </div>                
+                            <div style="color: grey; zoom: 0.9; margin-left: 5px;">
+                                <input id="tvshow-episodes" class="numberstyle" type="number" min="0" step="1" value="0" max="1000">
+                            </div>
+                        </div>    
+
+                        <!--IS COMPLETE-->
+                        <div class="is-finished-container" style="margin-left: 40px;">
+                            <div style="margin-top: 26px; margin-right: 10px;">
+                                <text class="label-form-field">Is Complete</text>
+                            </div>                
+                            <div>
+                                <input type="checkbox" id="tvshow-iscomplete" class="toggleBtn" /><label class="toggleLabel" for="tvshow-iscomplete">Toggle</label>
+                            </div>
+                        </div>   
+                    </div>   
 
                     <!--TVSHOW RATING-->
                     <div class="tvshow-rating-container">
