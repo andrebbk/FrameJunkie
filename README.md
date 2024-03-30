@@ -4,6 +4,6 @@ ElectronJs App to manage and control movies and tvshows
 - ElectronJS
 - SQLITE
 - KnexJS
-- Chart JS
+- ChartJS
 - DataTables.net
 - HTML, JS, JQUERY, CSS, Bootstrap
