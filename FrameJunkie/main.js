@@ -440,8 +440,11 @@ function createWindow() {
                 .update({ 
                     TvShowTitle: tvShowDataToEdit.tvShowTitle, 
                     TvShowYear: tvShowDataToEdit.tvShowYear,
+                    TvShowSeasons: tvShowDataToEdit.tvShowSeasons,
+                    TvShowEpisodes: tvShowDataToEdit.tvShowEpisodes,
                     NrViews: tvShowDataToEdit.tvShowNrViews,
                     IsFavorite: tvShowDataToEdit.isFavTvShow, 
+                    IsFinished: tvShowDataToEdit.isCompleteTvShow,
                     TvShowRating: tvShowDataToEdit.tvShowRating, 
                     Observations: tvShowDataToEdit.tvShowObservations
                 }, ['TvShowId'])

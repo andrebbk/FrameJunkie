@@ -42,6 +42,12 @@
                             <!--TVSHOW YEAR-->
                             <h1 id='tvshow-details-year' style="color: white; font-size:25px; margin-bottom: 60px;"></h1>        
             
+                            <!--TVSHOW SEASONS-->
+                            <h1 id='tvshow-details-seasons' style="color: white; font-size:30px; margin-bottom: 20px;"></h1>
+
+                            <!--TVSHOW EPISODES-->
+                            <h1 id='tvshow-details-episodes' style="color: white; font-size:30px; margin-bottom: 20px;"></h1>
+
                             <!--TVSHOW VIEWS-->
                             <h1 id='tvshow-details-views' style="color: white; font-size:30px; margin-bottom: 20px;"></h1>
     
@@ -65,7 +71,7 @@
                             </div>
                             
                             <!--TVSHOW OBSERVATIONS-->
-                            <div id="tvshow-details-observations-container" class="tvshow-observations-container" style="margin-top: 80px !important;">
+                            <div id="tvshow-details-observations-container" class="tvshow-observations-container" style="margin-top: 30px !important;">
                                 <label class="label-form-field">Observations</label>
                                 <p id="tvshow-details-observations" class="tvshow-details-description-style"></p>
                             </div>
@@ -95,18 +101,49 @@
                                         <select id="tvshow-edit-year">                    
                                         </select>
                                     </div>
-                                </div>            
+                                </div>                     
             
-                                <!--IS FAVORITE-->
-                                <div class="is-favorite-container">
-                                    <div style="margin-top: 26px; margin-right: 10px;">
-                                        <text class="label-form-field">Is Favorite</text>
-                                    </div>                
-                                    <div>
-                                        <input type="checkbox" id="switch_IsFav" /><label for="switch_IsFav" id="switch_IsFav_Label">Toggle</label>
-                                    </div>
+                                <div style="display: flex;">
+                                    <!--IS FAVORITE-->
+                                    <div class="is-favorite-container">
+                                        <div style="margin-top: 26px; margin-right: 10px;">
+                                            <text class="label-form-field">Is Favorite</text>
+                                        </div>                
+                                        <div>
+                                            <input type="checkbox" id="switch_IsFav" /><label for="switch_IsFav" id="switch_IsFav_Label">Toggle</label>
+                                        </div>
+                                    </div>   
+            
+                                    <!--SEASONS-->
+                                    <div class="seasons-container" style="margin-left: 40px;">
+                                        <div style="margin-top: 26px; margin-right: 10px;">
+                                            <text class="label-form-field">Seasons</text>
+                                        </div>                
+                                        <div style="color: grey; zoom: 0.9; margin-left: 5px;">
+                                            <input id="tvshow-edit-seasons" class="numberstyle" type="number" min="0" step="1" value="0" max="1000">
+                                        </div>
+                                    </div>    
+            
+                                    <!--EPISODES-->
+                                    <div class="seasons-container" style="margin-left: 40px;">
+                                        <div style="margin-top: 26px; margin-right: 10px;">
+                                            <text class="label-form-field">Episodes</text>
+                                        </div>                
+                                        <div style="color: grey; zoom: 0.9; margin-left: 5px;">
+                                            <input id="tvshow-edit-episodes" class="numberstyle" type="number" min="0" step="1" value="0" max="1000">
+                                        </div>
+                                    </div>    
+            
+                                    <!--IS COMPLETE-->
+                                    <div class="is-complete-container" style="margin-left: 40px;">
+                                        <div style="margin-top: 26px; margin-right: 10px;">
+                                            <text class="label-form-field">Is Complete</text>
+                                        </div>                
+                                        <div>
+                                            <input type="checkbox" id="switch_IsComplete" /><label for="switch_IsComplete" id="switch_IsComplete_Label">Toggle</label>
+                                        </div>
+                                    </div>   
                                 </div>   
-            
             
                                 <!--TVSHOW RATING-->
                                 <div class="tvshow-rating-container">

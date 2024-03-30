@@ -127,9 +127,15 @@ async function loadTvShowDetails(){
             $('#tvshow-details-title', '#tvshow_detail_container').text(tvShowData.TvShowTitle);
             $('#tvshow-details-year', '#tvshow_detail_container').text(tvShowData.TvShowYear);
 
+            let tvShowSeasonsText = tvShowData.TvShowSeasons + (tvShowData.TvShowSeasons === 1 ? " SEASON" : " SEASONS");
+            $('#tvshow-details-seasons', '#tvshow_detail_container').text(tvShowSeasonsText);
+
+            let tvShowEpisodesText = tvShowData.TvShowEpisodes + (tvShowData.TvShowEpisodes === 1 ? " EPISODE" : " EPISODES");
+            $('#tvshow-details-episodes', '#tvshow_detail_container').text(tvShowEpisodesText);
+
             loadedTvShowNrViews = tvShowData.NrViews;
             let tvShowViewsText = tvShowData.NrViews + (tvShowData.NrViews === 1 ? " VIEW" : " VIEWS");
-            $('#tvshow-details-views', '#tvshow_detail_container').text(tvShowViewsText);
+            $('#tvshow-details-views', '#tvshow_detail_container').text(tvShowViewsText);            
 
             if(tvShowData.IsFavorite)
                 document.querySelector('#tvshow_detail_container #tvshow-details-fav').style.visibility = "visible";
@@ -256,7 +262,10 @@ $('#btnEditTvShow', '#tvshow_detail_container').off('click').on('click', async f
                 tvShowId: loadedTvShowId,
                 tvShowTitle: $('#tvshow-edit-title', '#me-container').val(),
                 tvShowYear: $('#tvshow-edit-year', '#me-container').val(),
+                tvShowSeasons: $('#tvshow-edit-seasons', '#me-container').val(),
+                tvShowEpisodes: $('#tvshow-edit-episodes', '#me-container').val(),
                 isFavTvShow: $('#switch_IsFav').prop("checked"),
+                isCompleteTvShow: $('#switch_IsComplete').prop("checked"),
                 tvShowRating: 0,
                 tvShowNrViews: $('#tvshow-edit-views', '#me-container').val(),
                 tvShowObservations: $('#tvshow-edit-observations', '#me-container').val(),
@@ -471,7 +480,9 @@ function loadEditTvShow() {
 	};	
 	  
 	//Init number controller
-	$('.numberstyle').numberstyle();
+	$('#tvshow-edit-views').numberstyle();
+	$('#tvshow-edit-seasons').numberstyle();
+    $('#tvshow-edit-episodes').numberstyle();
 
     //add star events
     const stars = document.querySelectorAll('#me-container .star');
@@ -514,11 +525,16 @@ async function loadTvShowToEdit(){
             //TvShow Data
             $('#tvshow-edit-title', '#me-container').val(tvShowData.TvShowTitle);
             $('#tvshow-edit-year', '#me-container').val(Number(tvShowData.TvShowYear));
+            $('#tvshow-edit-seasons', '#me-container').val(tvShowData.TvShowSeasons);
+            $('#tvshow-edit-episodes', '#me-container').val(tvShowData.TvShowEpisodes);
             $('#tvshow-edit-views', '#me-container').val(tvShowData.NrViews);
             $('#tvshow-edit-observations', '#me-container').text(tvShowData.Observations);
-
+            
             //Is Favorite
             $('#switch_IsFav').prop("checked", tvShowData.IsFavorite);
+
+            //Is Complete
+            $('#switch_IsComplete').prop("checked", tvShowData.IsFinished);
 
             //TvShow Rating
             let starElements = document.querySelectorAll('#me-container input[type=radio].star');
@@ -562,6 +578,18 @@ function validateTvShowToEdit(){
     else if($('#tvshow-edit-year', '#me-container').val() == null || ($('#tvshow-edit-year', '#me-container').val() != null && ($('#tvshow-edit-year', '#me-container').val() > Number(crrYear) || $('#tvshow-edit-year', '#me-container').val() < 1980))){
         resultOuput.IsValid = false;
         resultOuput.ErrorMessage = "Tv Show year is not valid!";
+    }
+
+    //TvShow Seasons
+    else if($('#tvshow-edit-seasons').val() == null || $('#tvshow-edit-seasons').val() == '' || $('#tvshow-edit-seasons').val() == ' ' || $('#tvshow-edit-seasons').val() < 1){
+        resultOuput.IsValid = false;
+        resultOuput.ErrorMessage = "Tv show seasons not set!";
+    }
+
+    //TvShow Episodes
+    else if($('#tvshow-edit-episodes').val() == null || $('#tvshow-edit-episodes').val() == '' || $('#tvshow-edit-episodes').val() == ' ' || $('#tvshow-edit-episodes').val() < 1){
+        resultOuput.IsValid = false;
+        resultOuput.ErrorMessage = "Tv show epidoses not set!";
     }
 
     //TvShow Cover

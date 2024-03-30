@@ -627,7 +627,7 @@ top: 55%;
 
 .tvshow-observations {
   margin-top: 10px;
-  width: 90%;
+  width: 100%;
   height: 100px;
   padding: 12px 20px;
   box-sizing: border-box;
@@ -665,8 +665,8 @@ top: 55%;
 
 #tvshow-details-fav{
   position: absolute;
-  top: 140;
-  left: 150;
+  top: 252px;
+  left: 135px;
   object-fit: contain;
 }
 
@@ -729,3 +729,52 @@ top: 55%;
   background-color: grey;
   color: white;
 }
+
+.is-complete-container {
+  display: block;
+  position: relative;
+}
+
+/* IS COMPLETE */
+#switch_IsComplete {
+	height: 0;
+	width: 0;
+	visibility: hidden;
+}
+
+#switch_IsComplete_Label {
+	cursor: pointer;
+	text-indent: -9999px;
+	width: 90px;
+	height: 45px;
+	background: grey;
+	display: block;
+	border-radius: 100px;
+	position: relative;
+}
+
+#switch_IsComplete_Label:after {
+	content: '';
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	width: 35px;
+	height: 35px;
+	background: #fff;
+	border-radius: 90px;
+	transition: 0.3s;
+}
+
+#switch_IsComplete:checked + label {
+	background: #800000;
+}
+
+#switch_IsComplete:checked + label:after {
+	left: calc(100% - 5px);
+	transform: translateX(-100%);
+}
+
+#switch_IsComplete:active:after {
+	width: 130px;
+}
+/* END IS COMPLETE */
