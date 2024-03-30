@@ -1,5 +1,6 @@
 const electron = require("electron");
 const ipc = electron.ipcRenderer;
+const Chart = require('chart.js');
 
 function loadDashBoardData(){
 	//STATS
@@ -34,37 +35,66 @@ function loadDashBoardData(){
     '<li>Novembro</li>' +		
     '<li>Dezembro</li>';
 
-	//MOVIES Views
+	//MOVIES Views - CHART
 	ipc.send("getMoviesViewsCount");
 	ipc.on("resultSent_mvc", function (event, result) {
 		for(var i = 0; i < result.length; i++){
 			moviesViews[result[i].month - 1] = result[i].monthNumber;
 		}
 
-		var ul_m = document.getElementById("movies_month_views");
-        ul_m.innerHTML = monthsHTML;
-		for(var i = 0; i < moviesViews.length; i++){
-			let newLi = document.createElement("li");
-			newLi.appendChild(document.createTextNode(moviesViews[i].toString()));
-			ul_m.appendChild(newLi);
-		}
+		var movieViewsGraphEle = document.getElementById('movie-views-chart').getContext('2d');
+		initHomeGraph(movieViewsGraphEle, 'Movie Views', moviesViews);
 	});	
 
-	//TVSHOWS - CHART
+	//TVSHOWS Views - CHART
 	ipc.send("getTvShowsViewsCount");
 	ipc.on("resultSent_tsvc", function (event, result) {
 		for(var i = 0; i < result.length; i++){
 			tvshowsViews[result[i].month - 1] = result[i].monthNumber;
 		}
 
-		var ul_tv = document.getElementById("tvshows_month_views");
-        ul_tv.innerHTML = monthsHTML;
-		for(var i = 0; i < tvshowsViews.length; i++){
-			let newLi = document.createElement("li");
-			newLi.appendChild(document.createTextNode(tvshowsViews[i].toString()));
-			ul_tv.appendChild(newLi);
-		}
+		var tvShowViewsGraphEle = document.getElementById('tvshows-views-chart').getContext('2d');
+		initHomeGraph(tvShowViewsGraphEle, 'Tv Show Views', tvshowsViews);
 	});	
+}
+
+function initHomeGraph(graphElement, datasetHoverLabel, graphData) {
+	new Chart(graphElement, {
+		type: 'bar',
+		data: {
+		labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],		
+		datasets: [{
+			label: datasetHoverLabel,
+			backgroundColor: 'rgb(204,204,204)',
+			borderColor: 'rgb(204,204,204)',
+			data: graphData
+        }]
+    },
+    // Configuration options go here
+	options: {
+		legend: { 
+			display: false,
+		},
+		scales: {
+			xAxes: [{
+				gridLines: {
+					display:false
+				},
+				ticks: {
+					fontColor: "#CCC", // this here
+				}
+			}],
+			yAxes: [{
+				gridLines: {
+					display:false
+				},
+				ticks: {
+					fontColor: "#CCC", // this here
+				} 
+			}]
+		}
+	}
+	});
 }
 
 module.exports = { loadDashBoardData }

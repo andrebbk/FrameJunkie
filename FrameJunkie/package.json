@@ -33,6 +33,7 @@
     },
     "devDependencies": {
         "electron": "^26.2.4",
+        "electron-chartjs": "^1.0.0",
         "electron-packager": "^17.1.2",
         "electron-rebuild": "^3.2.9",
         "electron-reload": "^2.0.0-alpha.1",

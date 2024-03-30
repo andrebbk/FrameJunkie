@@ -2,14 +2,16 @@
     <link rel="stylesheet" href="./css/Home/home.css" />
 </head>
 
-<div id="home_container" class="container" style="visibility: collapse; opacity: 0;">
-	<div style="display: flex; flex-direction: column;">
-		<div style="width: 100%; margin-top: 5px;">
-			<div class="cover atvImg homecard" style="float:left;">
-				<div style="width:40%; float:left; padding-top: 20px;">
-					<div id="img_movies" style="width:200px; height:200px;"></div>
-				</div>
-				<div style="width:60%; float:left; padding-top: 40px; padding-left: 70px;">
+<div id="home_container" class="home-container" style="visibility: collapse; opacity: 0; display: flex; justify-content: center;">
+
+	<div style="width: 95%; display: flex; flex-direction: column; opacity: 0.7; background: #4b3a27 !important; justify-content: center;">
+
+		<div style="width: 100%; display: flex; margin-top: 5px;">
+
+			<div class="cover atvImg homecard" style="justify-content:center; display: flex; width: 50%; align-items: center;">
+
+				<div id="img_movies" style="width:200px; height:200px;"></div>
+				<div style="padding-left: 20px; text-align: center;">
 					<h1>Movies</h1>
 					<h2 id="h_m_total">0</h2>
 					<h3>Total views:</h3>
@@ -17,32 +19,33 @@
 				</div>		
 			</div>
 		
-			<div class="cover atvImg homecard" style="float:left; margin-left:290px;">
-				<div style="width:40%; float:left; padding-top: 20px;">
-					<div id="img_tvshows" style="width:180px; height:180px;"></div>
-				</div>
-				<div style="width:60%; float:left; padding-top: 40px; padding-left: 55px;">
+			<div class="cover atvImg homecard" style="justify-content:center; display: flex; width: 50%; align-items: center;">
+
+				<div id="img_tvshows" style="width:180px; height:180px;"></div>
+				<div style="padding-left: 20px; text-align: center;">
 					<h1>Tv Shows</h1>
 					<h2 id="h_tv_total">0</h2>
 					<h3>Total views:</h3>
 					<h3 id="h_tv_total_views">0</h3>
 				</div>		
 			</div>
+
 		</div>		
 
-		<div style="width: 100%; margin-top: 50px;">
-			<div class="cover-graph atvImg homecard" style="float:left;">
-				<h1>Movies Views</h1>
-				<ul id="movies_month_views" style="width:60%; margin-top: 15px;  margin-left: 20px;">					
-				</ul>
+		<div style="width: 100%; display: flex; margin-top: 30px;">
+
+			<div class="cover-graph atvImg homecard" style="justify-content:center; display: flex; width: 50%; align-items: center;">
+				<div style="display: inherit; align-items: center; justify-content: center; width: 90%; height: 90%;">
+					<canvas id="movie-views-chart" style="position: relative; height:8vh; width:8vw"></canvas>
+				</div>				
 			</div>
 		
-			<div class="cover-graph atvImg homecard" style="float:left; margin-left: 290px;">
-				<h1>Tv Shows Views</h1>
-				<ul id="tvshows_month_views" style="width:60%; margin-top: 15px; margin-left: 20px;">
-				</ul>
+			<div class="cover-graph atvImg homecard" style="justify-content:center; display: flex; width: 50%; align-items: center;">
+				<div style="display: inherit; align-items: center; justify-content: center; width: 90%; height: 90%;">
+					<canvas id="tvshows-views-chart" style="position: relative; height:8vh; width:8vw"></canvas>
+				</div>				
 			</div>
-		</div>
-		
+		</div>		
 	</div>	
+
 </div>

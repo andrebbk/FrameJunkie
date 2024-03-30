@@ -13,39 +13,22 @@ const { loadNewTvShow } = require('./menu_newTvShow.js');
 const { loadSettings } = require('./menu_settings.js'); 
 
 //INIT WITH HOME
-/*fs.readFile('./Views/Home/home.html', (err, data) => {
-
-    setTimeout(async () => {
-        document.getElementById('content-main-app').innerHTML += data;
-
-        loadDashBoardData();       
-
-        //Show data container
-        document.getElementById('loading_container').remove();
-        document.getElementById('home_container').style.visibility = "visible";
-    
-        $("#home_container").animate({"opacity": 1}, 600);
-    }, 1000);            
-});*/
-
-//TEST INIT
-fs.readFile(path.join(__dirname, '../../Views/TvShows/tvshows.html'), (err, data) => {
+fs.readFile(path.join(__dirname, '../../Views/Home/home.html'), (err, data) => {
     if(err != null) 
         alert(err);
     else{
         setTimeout(async () => {
-            document.getElementById('content-main-app').innerHTML += data;                
-
-            loadTvShows();                
-            await new Promise(resolve => setTimeout(resolve, 1000)); // 1 sec
-
+            document.getElementById('content-main-app').innerHTML += data;
+    
+            loadDashBoardData();       
+    
             //Show data container
             document.getElementById('loading_container').remove();
-            document.getElementById('tvshows_container').style.visibility = "visible";
+            document.getElementById('home_container').style.visibility = "visible";
         
-            $("#tvshows_container").animate({"opacity": 1}, 600);
-        }, 1000);            
-    }      		
+            $("#home_container").animate({"opacity": 1 }, 600);
+        }, 1000);  
+    }              
 });
 
  //BUTTONS
