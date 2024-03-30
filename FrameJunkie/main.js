@@ -125,6 +125,8 @@ function createWindow() {
 
         //Get movies
         ipcMain.on("getMovies", function(e, mTitle, mYear, mIsFav, mRating, crrPage) {
+            if(crrPage == null || crrPage == '' || crrPage == undefined) crrPage = 0;
+            
             let result = knex
             .select('*')
             .from('v_Movies')
@@ -312,7 +314,9 @@ function createWindow() {
 
 
         //Get tvshows
-        ipcMain.on("getTvShows", function(e, tTitle, tYear, tIsFav, tRating, crrPage) {
+        ipcMain.on("getTvShows", function(e, tTitle, tYear, tIsFav, tRating, tIsComplete, crrPage) {
+            if(crrPage == null || crrPage == '' || crrPage == undefined) crrPage = 0;
+
             let result = knex
             .select('*')
             .from('v_TvShows')
@@ -336,6 +340,9 @@ function createWindow() {
 
             if(tRating && tRating > 0 && tRating <= 10)
                 result = result.where('TvShowRating', tRating);
+
+            if(tIsComplete)
+                result = result.where('IsFinished', 1);
 
             result.then(function (rows){          
                 win.webContents.send('resultSent_tvshows', rows);

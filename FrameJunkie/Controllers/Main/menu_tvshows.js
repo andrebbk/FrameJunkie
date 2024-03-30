@@ -233,13 +233,15 @@ function loadTvShows(){
 
 		$('#fltr-tvshow-rating').val('0'); //Rating
 	
+		$('#fltr-tvshow-iscomplete').prop("checked", false); //Is Complete
+
 		//Reset pagination
 		currentPage = 0;
 	});
 
 	$('#btnSearchTvShows').on('click', function (event){
 		
-		var tTitle = null, tYear = null, tIsFav = null, tRating = null;
+		var tTitle = null, tYear = null, tIsFav = null, tRating = null, tIsComplete = null;
 
 		if($('#fltr-tvshow-title').val() != null && $('#fltr-tvshow-title').val() != '' && $('#fltr-tvshow-title').val() != ' ')
 			tTitle = $('#fltr-tvshow-title').val();
@@ -253,15 +255,18 @@ function loadTvShows(){
 		if($('#fltr-tvshow-rating').val() != null && $('#fltr-tvshow-rating').val() != '' && $('#fltr-tvshow-rating').val() != '0')
 			tRating = $('#fltr-tvshow-rating').val();
 
+		if($('#fltr-tvshow-iscomplete').prop("checked") != null && $('#fltr-tvshow-iscomplete').prop("checked"))
+			tIsComplete = $('#fltr-tvshow-iscomplete').prop("checked");
+
 		currentPage = 0;
-		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, currentPage);		
+		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, tIsComplete, currentPage);		
 	});
 
 	$('#btn_previous').on('click', function (event){
 		
 		if(currentPage === 0) return;
 
-		var tTitle = null, tYear = null, tIsFav = null, tRating = null;
+		var tTitle = null, tYear = null, tIsFav = null, tRating = null, tIsComplete = null;
 
 		if($('#fltr-tvshow-title').val() != null && $('#fltr-tvshow-title').val() != '' && $('#fltr-tvshow-title').val() != ' ')
 			tTitle = $('#fltr-tvshow-title').val();
@@ -275,15 +280,18 @@ function loadTvShows(){
 		if($('#fltr-tvshow-rating').val() != null && $('#fltr-tvshow-rating').val() != '' && $('#fltr-tvshow-rating').val() != '0')
 			tRating = $('#fltr-tvshow-rating').val();
 
+		if($('#fltr-tvshow-iscomplete').prop("checked") != null && $('#fltr-tvshow-iscomplete').prop("checked"))
+			tIsComplete = $('#fltr-tvshow-iscomplete').prop("checked");
+
 		currentPage -= 1;
-		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, currentPage);		
+		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, tIsComplete, currentPage);	
 	});
 
 	$('#btn_next').on('click', function (event){
 		
 		if(currentPage >= maxPage) return;
 
-		var tTitle = null, tYear = null, tIsFav = null, tRating = null;
+		var tTitle = null, tYear = null, tIsFav = null, tRating = null, tIsComplete = null;
 
 		if($('#fltr-tvshow-title').val() != null && $('#fltr-tvshow-title').val() != '' && $('#fltr-tvshow-title').val() != ' ')
 			tTitle = $('#fltr-tvshow-title').val();
@@ -297,13 +305,16 @@ function loadTvShows(){
 		if($('#fltr-tvshow-rating').val() != null && $('#fltr-tvshow-rating').val() != '' && $('#fltr-tvshow-rating').val() != '0')
 			tRating = $('#fltr-tvshow-rating').val();
 
+		if($('#fltr-tvshow-iscomplete').prop("checked") != null && $('#fltr-tvshow-iscomplete').prop("checked"))
+			tIsComplete = $('#fltr-tvshow-iscomplete').prop("checked");
+
 		currentPage += 1;
-		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, currentPage);		
+		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, tIsComplete, currentPage);		
 	});
 
 	//Reload tvshows list after delete one
 	ipc.on("reload-tvshows-list", function (event, deletedTvShow) {	
-		let tTitle = null, tYear = null, tIsFav = null, tRating = null;
+		let tTitle = null, tYear = null, tIsFav = null, tRating = null, tIsComplete = null;
 
 		if($('#fltr-tvshow-title').val() != null && $('#fltr-tvshow-title').val() != '' && $('#fltr-tvshow-title').val() != ' ')
 			tTitle = $('#fltr-tvshow-title').val();
@@ -317,8 +328,11 @@ function loadTvShows(){
 		if($('#fltr-tvshow-rating').val() != null && $('#fltr-tvshow-rating').val() != '' && $('#fltr-tvshow-rating').val() != '0')
 			tRating = $('#fltr-tvshow-rating').val();
 
+		if($('#fltr-tvshow-iscomplete').prop("checked") != null && $('#fltr-tvshow-iscomplete').prop("checked"))
+			tIsComplete = $('#fltr-tvshow-iscomplete').prop("checked");
+
 		//RELOAD
-		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, currentPage);			
+		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, tIsComplete, currentPage);		
 
 		if(deletedTvShow != undefined && deletedTvShow != null && deletedTvShow != ""){
 			setTimeout(() => { showToastMessage('Frame Junkie', deletedTvShow + ' deleted successfully!'); }, 400);
