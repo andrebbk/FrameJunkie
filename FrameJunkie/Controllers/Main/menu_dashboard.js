@@ -37,24 +37,36 @@ function loadDashBoardData(){
 
 	//MOVIES Views - CHART
 	ipc.send("getMoviesViewsCount");
-	ipc.on("resultSent_mvc", function (event, result) {
-		for(var i = 0; i < result.length; i++){
-			moviesViews[result[i].month - 1] = result[i].monthNumber;
+	ipc.on("resultSent_mvc", function (event, result) {	
+		if(result != undefined && result.length > 0){
+			for(var i = 0; i < result.length; i++){
+				moviesViews[result[i].month - 1] = result[i].monthNumber;
+			}
+	
+			var movieViewsGraphEle = document.getElementById('movie-views-chart').getContext('2d');
+			initHomeGraph(movieViewsGraphEle, 'Movie Views', moviesViews);
+		}		
+		else{
+			let noMovieViewsDataHtml = '<h1>No movie views submitted</h1>'
+			$('#movie_views_container_graph').html(noMovieViewsDataHtml);
 		}
-
-		var movieViewsGraphEle = document.getElementById('movie-views-chart').getContext('2d');
-		initHomeGraph(movieViewsGraphEle, 'Movie Views', moviesViews);
 	});	
 
 	//TVSHOWS Views - CHART
 	ipc.send("getTvShowsViewsCount");
 	ipc.on("resultSent_tsvc", function (event, result) {
-		for(var i = 0; i < result.length; i++){
-			tvshowsViews[result[i].month - 1] = result[i].monthNumber;
+		if(result != undefined && result.length > 0){
+			for(var i = 0; i < result.length; i++){
+				tvshowsViews[result[i].month - 1] = result[i].monthNumber;
+			}
+	
+			var tvShowViewsGraphEle = document.getElementById('tvshows-views-chart').getContext('2d');
+			initHomeGraph(tvShowViewsGraphEle, 'Tv Show Views', tvshowsViews);
+		}		
+		else{
+			let noTvShowViewsDataHtml = '<h1>No tv show views submitted</h1>'
+			$('#tvshow_views_container_graph').html(noTvShowViewsDataHtml);
 		}
-
-		var tvShowViewsGraphEle = document.getElementById('tvshows-views-chart').getContext('2d');
-		initHomeGraph(tvShowViewsGraphEle, 'Tv Show Views', tvshowsViews);
 	});	
 }
 
@@ -81,7 +93,7 @@ function initHomeGraph(graphElement, datasetHoverLabel, graphData) {
 					display:false
 				},
 				ticks: {
-					fontColor: "#CCC", // this here
+					fontColor: "#CCC" // this here
 				}
 			}],
 			yAxes: [{
@@ -90,6 +102,10 @@ function initHomeGraph(graphElement, datasetHoverLabel, graphData) {
 				},
 				ticks: {
 					fontColor: "#CCC", // this here
+					suggestedMin: 0,    // minimum will be 0, unless there is a lower value.
+                	beginAtZero: true,   // minimum value will be 0.
+					// forces step size to be 1 unit
+					stepSize: 1
 				} 
 			}]
 		}
