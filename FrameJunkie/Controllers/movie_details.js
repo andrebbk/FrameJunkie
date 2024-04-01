@@ -215,7 +215,15 @@ $('#btn_exit_movie_details').off('click').on('click', function(event){
 
 
 //ADD MOVIE VIEW
-$('#btnAddMovieView', '#movie_detail_container').off('click').on('click', function(event){       
+$('#btnAddMovieView', '#movie_detail_container').off('click').on('click', function(event){               
+     $("#movie-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
+     document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.visibility = "collapse";    
+     document.querySelector('#movie-details-container #moviedetails_partial #md-container').style.height = 0;    
+     $("#movie-details-container #moviedetails_partial #md-container").animate({"opacity": 0 }, 0);
+ 
+     //Show loading
+     addAndShowLoading();
+
     addNewMovieView();
 });
 

@@ -222,7 +222,15 @@ $('#btn_exit_tvshow_details').off('click').on('click', function(event){
 
 
 //ADD TV SHOW VIEW
-$('#btnAddTvShowView', '#tvshow_detail_container').off('click').on('click', function(event){       
+$('#btnAddTvShowView', '#tvshow_detail_container').off('click').on('click', function(event){          
+    $("#tvshow-details-container .details-buttons-container").animate({"opacity": 0 }, 0);
+    document.querySelector('#tvshow-details-container #tvshowdetails_partial #md-container').style.visibility = "collapse";    
+    document.querySelector('#tvshow-details-container #tvshowdetails_partial #md-container').style.height = 0;    
+    $("#tvshow-details-container #tvshowdetails_partial #md-container").animate({"opacity": 0 }, 0);
+
+    //Show loading
+    addAndShowLoading();
+
     addNewTvShowView();
 });
 
