@@ -465,10 +465,22 @@ let saveTvShowCover = (tvShowsCoversPath, tvShowTitle, newTvShowCover) => {
 async function renameFile(oldPath, newPath) {
     try 
     {
-        await fs.rename(oldPath, newPath);
-        console.log('Rename complete!');
+        //ERROR EXDEV: cross-device link not permitted
+        //This error occurs because you are moving a file from one drive to another one.
+        //On most platforms, this can’t be done using a simple rename operation.
+        //await fs.rename(oldPath, newPath);
+
+        await fs.copyFile(oldPath, newPath);
+
+        await fs.unlink(oldPath, (err) => {
+            if (err) {
+              console.error(err);
+            } else {
+              console.log('File is deleted.');
+            }
+        });     
         
-    } catch (err) 
+    } catch (error) 
     {
         logger.error(error);
         console.error(error);
