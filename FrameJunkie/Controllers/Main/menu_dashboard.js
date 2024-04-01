@@ -3,6 +3,13 @@ const ipc = electron.ipcRenderer;
 const Chart = require('chart.js');
 
 function loadDashBoardData(){
+	ipc.removeAllListeners("getStats");
+	ipc.removeAllListeners("resultSent_stats");
+	ipc.removeAllListeners("getMoviesViewsCount");
+	ipc.removeAllListeners("resultSent_mvc");
+	ipc.removeAllListeners("getTvShowsViewsCount");
+	ipc.removeAllListeners("resultSent_tsvc");
+
 	//STATS
 	ipc.send("getStats");
 	ipc.on("resultSent_stats", function (event, result) {

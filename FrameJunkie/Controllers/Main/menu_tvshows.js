@@ -11,6 +11,9 @@ let itemsPerPage = 50;
 let popupWindow = null;
 
 function loadTvShows(){
+	ipc.removeAllListeners("getTvShows");
+	ipc.removeAllListeners("resultSent_tvshows");
+	ipc.removeAllListeners("reload-tvshows-list");
 
 	//Load Filters
 	$('#fltr-tvshow-year').html('');
@@ -223,7 +226,7 @@ function loadTvShows(){
 	}
 
 	//BUTTONS
-	$('#btnClearTvShowsFilters').on('click', function (event){
+	$('#btnClearTvShowsFilters').off('click').on('click', function (event){
 		
 		$('#fltr-tvshow-title').val(''); //Title
 
@@ -239,7 +242,7 @@ function loadTvShows(){
 		currentPage = 0;
 	});
 
-	$('#btnSearchTvShows').on('click', function (event){
+	$('#btnSearchTvShows').off('click').on('click', function (event){
 		
 		var tTitle = null, tYear = null, tIsFav = null, tRating = null, tIsComplete = null;
 
@@ -262,7 +265,7 @@ function loadTvShows(){
 		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, tIsComplete, currentPage);		
 	});
 
-	$('#btn_previous').on('click', function (event){
+	$('#btn_previous').off('click').on('click', function (event){
 		
 		if(currentPage === 0) return;
 
@@ -287,7 +290,7 @@ function loadTvShows(){
 		ipc.send("getTvShows", tTitle, tYear, tIsFav, tRating, tIsComplete, currentPage);	
 	});
 
-	$('#btn_next').on('click', function (event){
+	$('#btn_next').off('click').on('click', function (event){
 		
 		if(currentPage >= maxPage) return;
 

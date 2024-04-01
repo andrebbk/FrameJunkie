@@ -11,6 +11,9 @@ let itemsPerPage = 50;
 let popupWindow = null;
 
 function loadMovies(){
+	ipc.removeAllListeners("getMovies");
+	ipc.removeAllListeners("resultSent_movies");
+	ipc.removeAllListeners("reload-movies-list");
 
 	//Load Filters
 	$('#fltr-movie-year').html('');
@@ -223,7 +226,7 @@ function loadMovies(){
 	}
 
 	//BUTTONS
-	$('#btnClearMovieFilters').on('click', function (event){
+	$('#btnClearMovieFilters').off('click').on('click', function (event){
 		
 		$('#fltr-movie-title').val(''); //Title
 
@@ -237,7 +240,7 @@ function loadMovies(){
 		currentPage = 0;
 	});
 
-	$('#btnSearchMovies').on('click', function (event){
+	$('#btnSearchMovies').off('click').on('click', function (event){
 		
 		var mTitle = null, mYear = null, mIsFav = null, mRating = null;
 
@@ -257,7 +260,7 @@ function loadMovies(){
 		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);		
 	});
 
-	$('#btn_previous').on('click', function (event){
+	$('#btn_previous').off('click').on('click', function (event){
 		
 		if(currentPage === 0) return;
 
@@ -279,7 +282,7 @@ function loadMovies(){
 		ipc.send("getMovies", mTitle, mYear, mIsFav, mRating, currentPage);		
 	});
 
-	$('#btn_next').on('click', function (event){
+	$('#btn_next').off('click').on('click', function (event){
 		
 		if(currentPage >= maxPage) return;
 
