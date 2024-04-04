@@ -746,6 +746,18 @@ async function deleteMovie(){
                     force: true,
                 });  
             }
+
+            //delete movie views            
+            let deletedMovieViews = await knex('MovieView')
+            .del()
+            .where({ MovieId: loadedMovieId })
+            .then(function(resp) {                    
+                output = true;
+                return resp;
+            }).catch(err => {
+                logger.error(err);
+                console.log(err);
+            });   
         }
     }
     catch(error){

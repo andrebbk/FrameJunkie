@@ -775,6 +775,18 @@ async function deleteTvShow(){
                     force: true,
                 });  
             }
+
+            //delete tv show views            
+            let deletedTvShowViews = await knex('TvShowView')
+            .del()
+            .where({ TvShowId: loadedTvShowId })
+            .then(function(resp) {                    
+                output = true;
+                return resp;
+            }).catch(err => {
+                logger.error(err);
+                console.log(err);
+            });  
         }
     }
     catch(error){

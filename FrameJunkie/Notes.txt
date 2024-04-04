@@ -10,7 +10,5 @@
 
     3
     USE THIS COMMAND INSTEAD
-    - npm run build (electron builder)
-
-    TODO
-    - When deleting a movie or a tv show also delete item views
+    - npm run build (electron builder) NOTE: installation folder cannot have spaces
+    
