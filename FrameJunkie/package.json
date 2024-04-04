@@ -1,8 +1,8 @@
 {
     "name": "frame-junkie",
-    "productName": "Frame Junkie",
+    "productName": "FrameJunkie",
     "version": "1.0.0",
-    "description": "Desktop App Movies Manager",
+    "description": "Desktop app movies & tvShows manager",
     "main": "main.js",
     "author": "Andre Silva",
     "license": "BBK",
@@ -14,7 +14,6 @@
         "datatables.net-dt": "^2.0.1",
         "electron-debug": "^3.2.0",
         "electron-log": "^5.1.1",
-        "electron-rebuild": "^3.2.9",
         "electron-reload": "^2.0.0-alpha.1",
         "enum": "^3.0.4",
         "jquery": "^3.7.1",
@@ -22,25 +21,49 @@
         "moment": "^2.30.1",
         "nanoid": "^3.0.0",
         "path-equal": "^1.2.5",
-        "remote": "^0.2.6",
+        "remote": "^0.0.7",
         "sqlite3": "^5.1.6",
         "v8-compile-cache": "^2.4.0"
     },
     "scripts": {
         "start": "electron .",
         "rebuild": "electron-rebuild -f -w sqlite3",
-        "package": "npx electron-packager ./ FrameJunkie --win --overwrite --icon=./Content/Icons/action-movie.ico"
+        "package": "npx electron-packager ./ FrameJunkie --win --overwrite --icon=./Content/Icons/action-movie.ico",
+        "build": "electron-builder"
+    },
+    "build": {
+        "appId": "frame-junkie",
+        "copyright": "Copyright @2021-2022 André Silva",
+        "buildVersion": "1",
+        "includeSubNodeModules": true,
+        "asar": false,
+        "win": {
+            "target": [
+                "nsis"
+            ],
+            "icon": "action-movie.ico"
+        },
+        "nsis": {
+            "oneClick": false,
+            "installerIcon": "action-movie.ico",
+            "uninstallerIcon": "action-movie.ico",
+            "uninstallDisplayName": "Frame Junkie Uninstaller",
+            "deleteAppDataOnUninstall": true,
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true,
+            "shortcutName": "Frame Junkie",
+            "license": "license.md",
+            "allowToChangeInstallationDirectory": true
+        }
     },
     "devDependencies": {
-        "electron": "^26.2.4",
+        "electron": "^26.6.10",
+        "electron-builder": "^24.13.3",
         "electron-chartjs": "^1.0.0",
         "electron-packager": "^17.1.2",
         "electron-rebuild": "^3.2.9",
         "electron-reload": "^2.0.0-alpha.1",
+        "jQuery": "^1.7.4",
         "path-equal": "^1.2.5"
-    },
-    "directories": {
-        "buildResources": "build",
-        "app": "build"
     }
 }

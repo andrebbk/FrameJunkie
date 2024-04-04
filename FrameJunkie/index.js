@@ -9,8 +9,8 @@ let timer1, timer2;
 
 $(function (){
   //Load partial views
-  $('#topbar').load(path.join(__dirname, '/Views/Main/top_bar.html'));
-  $('#main-container').load(path.join(__dirname, '/Views/Main/menu.html'));
+  $('#topbar').load(path.join(__dirname, './Views/Main/top_bar.html'));
+  $('#main-container').load(path.join(__dirname, './Views/Main/menu.html'));
 
   //close notification event
   closeIcon.addEventListener("click", () => {

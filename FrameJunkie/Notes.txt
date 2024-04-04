@@ -1,8 +1,16 @@
 1#Do this after every build package
 
+    1   
     - Copy db file to final app folder (npx electron-packager . does not copy BD structure/schema)
 
-    USE THIS COMMAND INSTEAD
+    2
     - npm run package 
     - Then copy all content from node_modules project folder into the final app folder
     - And db file into the final app folder
+
+    3
+    USE THIS COMMAND INSTEAD
+    - npm run build (electron builder)
+
+    TODO
+    - When deleting a movie or a tv show also delete item views
