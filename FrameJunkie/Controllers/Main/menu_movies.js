@@ -21,7 +21,7 @@ function loadMovies(){
 	$('#fltr-movie-year').append(optionHtml);
 
 	var crrYear = new Date().getFullYear();	
-	for (let y = Number(crrYear); y > 1979; y--) {
+	for (let y = Number(crrYear); y > 1959; y--) {
 		var optionHtml = '<option value="' + y + '">' + y + '</option>';
 		$('#fltr-movie-year').append(optionHtml);
 	}

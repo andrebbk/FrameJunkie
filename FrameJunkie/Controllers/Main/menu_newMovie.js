@@ -21,7 +21,7 @@ function loadNewMovie() {
 	$('#movie-year').html('');
 
 	var crrYear = new Date().getFullYear();	
-	for (let y = Number(crrYear); y > 1979; y--) {
+	for (let y = Number(crrYear); y > 1959; y--) {
 		var optionHtml = '<option value="' + y + '">' + y + '</option>';
 		$('#movie-year').append(optionHtml);
 	}
@@ -168,7 +168,7 @@ function validateNewMovie(){
     }
 
     //Movie Year
-    else if($('#movie-year').val() == null || ($('#movie-year').val() != null && ($('#movie-year').val() > Number(crrYear) || $('#movie-year').val() < 1980))){
+    else if($('#movie-year').val() == null || ($('#movie-year').val() != null && ($('#movie-year').val() > Number(crrYear) || $('#movie-year').val() < 1960))){
         resultOuput.IsValid = false;
         resultOuput.ErrorMessage = "Movie year is not valid!";
     }

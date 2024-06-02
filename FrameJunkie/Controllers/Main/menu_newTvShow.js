@@ -21,7 +21,7 @@ function loadNewTvShow() {
 	$('#tvshow-year').html('');
 
 	var crrYear = new Date().getFullYear();	
-	for (let y = Number(crrYear); y > 1979; y--) {
+	for (let y = Number(crrYear); y > 1959; y--) {
 		var optionHtml = '<option value="' + y + '">' + y + '</option>';
 		$('#tvshow-year').append(optionHtml);
 	}
@@ -288,7 +288,7 @@ function validateNewTvShow(){
     }
 
     //TvShow Year
-    else if($('#tvshow-year').val() == null || ($('#tvshow-year').val() != null && ($('#tvshow-year').val() > Number(crrYear) || $('#tvshow-year').val() < 1980))){
+    else if($('#tvshow-year').val() == null || ($('#tvshow-year').val() != null && ($('#tvshow-year').val() > Number(crrYear) || $('#tvshow-year').val() < 1960))){
         resultOuput.IsValid = false;
         resultOuput.ErrorMessage = "Tv show year is not valid!";
     }

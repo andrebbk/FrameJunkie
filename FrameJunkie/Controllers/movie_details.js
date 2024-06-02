@@ -328,7 +328,7 @@ function loadEditMovie() {
 	$('#movie-edit-year', '#me-container').html('');
 
 	var crrYear = new Date().getFullYear();	
-	for (let y = Number(crrYear); y > 1979; y--) {
+	for (let y = Number(crrYear); y > 1959; y--) {
 		var optionHtml = '<option value="' + y + '">' + y + '</option>';
 		$('#movie-edit-year', '#me-container').append(optionHtml);
 	}
@@ -566,7 +566,7 @@ function validateMovieToEdit(){
     }
 
     //Movie Year
-    else if($('#movie-edit-year', '#me-container').val() == null || ($('#movie-edit-year', '#me-container').val() != null && ($('#movie-edit-year', '#me-container').val() > Number(crrYear) || $('#movie-edit-year', '#me-container').val() < 1980))){
+    else if($('#movie-edit-year', '#me-container').val() == null || ($('#movie-edit-year', '#me-container').val() != null && ($('#movie-edit-year', '#me-container').val() > Number(crrYear) || $('#movie-edit-year', '#me-container').val() < 1960))){
         resultOuput.IsValid = false;
         resultOuput.ErrorMessage = "Movie year is not valid!";
     }
