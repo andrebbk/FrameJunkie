@@ -203,10 +203,8 @@ function validateNewMovie(){
 }
 
 async function validateAndSaveMovie(movieTitle, movieYear, isFavMovie, movieRating, movieObservations, movieCover) {
-    let queryStrTile = '%' + movieTitle + '%';
-
     let result = knex('Movies')
-    .whereLike('MovieTitle', queryStrTile)
+    .where('MovieTitle', movieTitle)
     .where('MovieYear', movieYear)
     .where('Deleted', 0)
     .select('MovieId')

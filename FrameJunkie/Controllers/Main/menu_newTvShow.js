@@ -335,10 +335,8 @@ function validateNewTvShow(){
 }
 
 async function validateAndSaveTvShow(tvShowTitle, tvShowYear, isFavTvShow, tvShowSeasons, tvShowEpisodes, isComplete, tvShowRating, tvShowObservations, tvShowCover) {
-    let queryStrTile = '%' + tvShowTitle + '%';
-
     let result = knex('TvShows')
-    .whereLike('TvShowTitle', queryStrTile)
+    .where('TvShowTitle', tvShowTitle)
     .where('TvShowYear', tvShowYear)
     .where('Deleted', 0)
     .select('TvShowId')

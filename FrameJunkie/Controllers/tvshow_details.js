@@ -636,11 +636,9 @@ function validateTvShowToEdit(){
 }
 
 async function validateDBAndSaveTvShow(tvShowDataToEdit) {
-    let queryStrTile = '%' + tvShowDataToEdit.tvShowTitle + '%';
-
     let result = knex('TvShows')
     .whereNot('TvShowId', tvShowDataToEdit.tvShowId)
-    .whereLike('TvShowTitle', queryStrTile)
+    .where('TvShowTitle', tvShowDataToEdit.tvShowTitle)
     .where('TvShowYear', tvShowDataToEdit.tvShowYear)
     .select('TvShowId')
     .first();

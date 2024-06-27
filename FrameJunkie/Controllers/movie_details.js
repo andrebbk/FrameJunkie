@@ -607,11 +607,9 @@ function validateMovieToEdit(){
 }
 
 async function validateDBAndSaveMovie(movieDataToEdit) {
-    let queryStrTile = '%' + movieDataToEdit.movieTitle + '%';
-
     let result = knex('Movies')
     .whereNot('MovieId', movieDataToEdit.movieId)
-    .whereLike('MovieTitle', queryStrTile)
+    .where('MovieTitle', movieDataToEdit.movieTitle)
     .where('MovieYear', movieDataToEdit.movieYear)
     .select('MovieId')
     .first();
